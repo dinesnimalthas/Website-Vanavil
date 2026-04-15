@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>SC Vanavil – Datenbank befüllen</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0b111e; color: #e2e8f0; padding: 40px; }
+    h1 { color: #3b82f6; margin-bottom: 8px; }
+    p.sub { color: #94a3b8; margin-bottom: 30px; }
+    .btn { padding: 12px 28px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; margin: 8px 8px 8px 0; }
+    .btn-seed { background: #1d4ed8; color: #fff; }
+    .btn-seed:hover { background: #2563eb; }
+    .btn-delete { background: #dc2626; color: #fff; }
+    .btn-delete:hover { background: #ef4444; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    #log { margin-top: 24px; background: #1e293b; border-radius: 8px; padding: 20px; font-family: monospace; font-size: 14px; max-height: 500px; overflow-y: auto; white-space: pre-wrap; }
+    .success { color: #4ade80; }
+    .error { color: #f87171; }
+    .info { color: #60a5fa; }
+    .warn { color: #fbbf24; }
+  </style>
+</head>
+<body>
+  <h1>SC Vanavil – Testdaten</h1>
+  <p class="sub">Befüllt die Firestore-Datenbank mit realistischen Beispieldaten. Kann jederzeit wieder gelöscht werden.</p>
+
+  <button class="btn btn-seed" id="btnSeed" onclick="seedAll()">Testdaten einfügen</button>
+  <button class="btn btn-delete" id="btnDelete" onclick="deleteAll()">Alle Testdaten löschen</button>
+
+  <div id="log"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script>
+    // ── Firebase Init ──
+    const firebaseConfig = {
+      apiKey: "AIzaSyC_dcpat7i6G6QoUtW40zqR4XH3ierU_LM",
+      authDomain: "sc-vanavil-web-2026-d388a.firebaseapp.com",
+      projectId: "sc-vanavil-web-2026-d388a",
+      storageBucket: "sc-vanavil-web-2026-d388a.firebasestorage.app",
+      messagingSenderId: "966715248430",
+      appId: "1:966715248430:web:abf14f442a1a1e52fbf4bf"
+    };
+
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    const logEl = document.getElementById('log');
+    function log(msg, cls = 'info') {
+      logEl.innerHTML += `<span class="${cls}">${msg}</span>\n`;
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    // ── Sample Data ──
+
+    const sampleNews = [
+      {
+        title: "Saisonstart 2026 – SC Vanavil ist bereit!",
+        category: "News",
+        summary: "Die Vorbereitung auf die neue STFA-Saison läuft auf Hochtouren. Das Team hat in den letzten Wochen intensiv trainiert und ist bereit für die kommenden Herausforderungen. Trainer Rajan zeigt sich optimistisch.",
+        image: "",
+        date: "2026-04-10T09:00:00.000Z",
+        author: "admin@vanavil.ch"
+      },
+      {
+        title: "Neuzugang: Arun Thamilselvan verstärkt das Mittelfeld",
+        category: "Verein",
+        summary: "Wir freuen uns, Arun Thamilselvan als neuen Spieler bei SC Vanavil begrüssen zu dürfen. Der 22-jährige Mittelfeldspieler wechselt von Tamil Eelam FC Zürich zu uns und bringt viel Erfahrung aus der STFA-Liga mit.",
+        image: "",
+        date: "2026-04-05T14:30:00.000Z",
+        author: "admin@vanavil.ch"
+      },
+      {
+        title: "STFA Cup 2026 – Auslosung steht fest",
+        category: "Turnier",
+        summary: "Die Gruppen für den STFA Cup 2026 wurden ausgelost. SC Vanavil trifft in der Gruppenphase auf Tamil Stars Bern, FC Jaffna Basel und Tamil Youth Winterthur. Das erste Spiel findet am 3. Mai statt.",
+        image: "",
+        date: "2026-03-28T11:00:00.000Z",
+        author: "admin@vanavil.ch"
+      },
+      {
+        title: "Juniorentraining ab sofort jeden Mittwoch",
+        category: "Junioren",
+        summary: "Ab April bieten wir ein wöchentliches Juniorentraining an. Jeden Mittwoch von 17:00 bis 18:30 auf der Allmend in Luzern. Kinder zwischen 8 und 14 Jahren sind herzlich willkommen. Anmeldung über das Kontaktformular.",
+        image: "",
+        date: "2026-03-20T08:00:00.000Z",
+        author: "admin@vanavil.ch"
+      },
+      {
+        title: "Rückblick: Winterturnier in Bern",
+        category: "Turnier",
+        summary: "Beim Winterturnier in Bern konnte SC Vanavil den dritten Platz erreichen. Ein starkes Ergebnis gegen Teams aus der ganzen Schweiz. Besonders Stürmer Kajan überzeugte mit drei Toren im Turnier.",
+        image: "",
+        date: "2026-02-15T16:00:00.000Z",
+        author: "admin@vanavil.ch"
+      },
+      {
+        title: "Vereinsversammlung: Neue Vorstandsmitglieder gewählt",
+        category: "Verein",
+        summary: "An der Jahresversammlung wurden neue Vorstandsmitglieder gewählt. Suresh Balasingam übernimmt das Amt des Kassiers, während Priya Rajendran neu als Beisitzerin fungiert. Wir danken dem abtretenden Vorstand für die geleistete Arbeit.",
+        image: "",
+        date: "2026-01-20T19:00:00.000Z",
+        author: "admin@vanavil.ch"
+      },
+      {
+        title: "Trikot-Sponsor gesucht für Saison 2026",
+        category: "Community",
+        summary: "Für die kommende Saison suchen wir einen Hauptsponsor für unsere Trikots. Interessierte Unternehmen können sich gerne bei uns melden. Alle Infos zum Sponsoring-Paket findet ihr auf unserer Kontaktseite.",
+        image: "",
+        date: "2026-01-05T10:00:00.000Z",
+        author: "admin@vanavil.ch"
+      }
+    ];
+
+    const sampleMatches = [
+      {
+        homeTeam: "SC Vanavil",
+        awayTeam: "Tamil Stars Bern",
+        date: "2026-05-03",
+        time: "15:00",
+        location: "Allmend, Luzern",
+        status: ""
+      },
+      {
+        homeTeam: "FC Jaffna Basel",
+        awayTeam: "SC Vanavil",
+        date: "2026-05-10",
+        time: "14:00",
+        location: "Rankhof, Basel",
+        status: ""
+      },
+      {
+        homeTeam: "SC Vanavil",
+        awayTeam: "Tamil Youth Winterthur",
+        date: "2026-05-17",
+        time: "16:00",
+        location: "Allmend, Luzern",
+        status: ""
+      },
+      {
+        homeTeam: "Tamil Eelam FC Zürich",
+        awayTeam: "SC Vanavil",
+        date: "2026-05-24",
+        time: "15:30",
+        location: "Heerenschürli, Zürich",
+        status: ""
+      },
+      {
+        homeTeam: "SC Vanavil",
+        awayTeam: "FC Lanka St. Gallen",
+        date: "2026-06-07",
+        time: "15:00",
+        location: "Allmend, Luzern",
+        status: ""
+      },
+      {
+        homeTeam: "Tamil Tigers Aarau",
+        awayTeam: "SC Vanavil",
+        date: "2026-06-14",
+        time: "14:30",
+        location: "Schachen, Aarau",
+        status: ""
+      }
+    ];
+
+    const sampleTournaments = [
+      {
+        name: "STFA Cup 2026 – Gruppenphase",
+        date: "2026-05-03",
+        location: "Allmend, Luzern",
+        category: "Senior"
+      },
+      {
+        name: "Zentralschweizer Tamil-Turnier",
+        date: "2026-06-21",
+        location: "Sportanlage Tribschen, Luzern",
+        category: "Senior"
+      },
+      {
+        name: "STFA Junioren-Cup",
+        date: "2026-07-12",
+        location: "Sportplatz Grenzhof, Luzern",
+        category: "Junioren"
+      },
+      {
+        name: "STFA Sommerturnier 2026",
+        date: "2026-08-15",
+        location: "Sportanlage Deutweg, Winterthur",
+        category: "Senior"
+      }
+    ];
+
+    const samplePlayers = [
+      { name: "Kajan Sritharan", position: "Stürmer", number: 9, photoURL: "", spielerausweisURL: "", photoStoragePath: "", ausweisStoragePath: "" },
+      { name: "Arun Thamilselvan", position: "Mittelfeld", number: 8, photoURL: "", spielerausweisURL: "", photoStoragePath: "", ausweisStoragePath: "" },
+      { name: "Diluxan Balasingam", position: "Mittelfeld", number: 10, photoURL: "", spielerausweisURL: "", photoStoragePath: "", ausweisStoragePath: "" },
+      { name: "Vithusan Navaratnam", position: "Torwart", number: 1, photoURL: "", spielerausweisURL: "", photoStoragePath: "", ausweisStoragePath: "" },
+      { name: "Sanjay Rajaratnam", position: "Verteidiger", number: 4, photoURL: "", spielerausweisURL: "", photoStoragePath: "", ausweisStoragePath: "" },
+      { name: "Tharsan Kumarasamy", position: "Verteidiger", number: 5, photoURL: "", spielerausweisURL: "", photoStoragePath: "", ausweisStoragePath: "" },
+      { name: "Nithilan Sivakumar", position: "Mittelfeld", number: 6, photoURL: "", spielerausweisURL: "", photoStoragePath: "", ausweisStoragePath: "" },
+      { name: "Pradeep Jeyakanth", position: "Stürmer", number: 11, photoURL: "", spielerausweisURL: "", photoStoragePath: "", ausweisStoragePath: "" },
+      { name: "Kishoran Ramanathan", position: "Verteidiger", number: 3, photoURL: "", spielerausweisURL: "", photoStoragePath: "", ausweisStoragePath: "" },
+      { name: "Luxman Thirunavukkarasu", position: "Mittelfeld", number: 7, photoURL: "", spielerausweisURL: "", photoStoragePath: "", ausweisStoragePath: "" },
+      { name: "Rajan Sivapatham", position: "Verteidiger", number: 2, photoURL: "", spielerausweisURL: "", photoStoragePath: "", ausweisStoragePath: "" },
+      { name: "Dinesh Pakeerathan", position: "Stürmer", number: 14, photoURL: "", spielerausweisURL: "", photoStoragePath: "", ausweisStoragePath: "" },
+      { name: "Aravind Yoganathan", position: "Torwart", number: 12, photoURL: "", spielerausweisURL: "", photoStoragePath: "", ausweisStoragePath: "" },
+      { name: "Thenujan Pathmanathan", position: "Mittelfeld", number: 16, photoURL: "", spielerausweisURL: "", photoStoragePath: "", ausweisStoragePath: "" },
+      { name: "Kabilan Shanmugarajah", position: "Stürmer", number: 17, photoURL: "", spielerausweisURL: "", photoStoragePath: "", ausweisStoragePath: "" }
+    ];
+
+    // Junior players
+    const sampleJuniors = [
+      { name: "Yalini Rajendran", position: "Mittelfeld", number: 10, photoURL: "", spielerausweisURL: "", photoStoragePath: "", ausweisStoragePath: "" },
+      { name: "Tharsikan Bala", position: "Stürmer", number: 9, photoURL: "", spielerausweisURL: "", photoStoragePath: "", ausweisStoragePath: "" },
+      { name: "Ashwin Kugan", position: "Torwart", number: 1, photoURL: "", spielerausweisURL: "", photoStoragePath: "", ausweisStoragePath: "" },
+      { name: "Nirosh Suthan", position: "Verteidiger", number: 4, photoURL: "", spielerausweisURL: "", photoStoragePath: "", ausweisStoragePath: "" },
+      { name: "Sajen Theva", position: "Mittelfeld", number: 7, photoURL: "", spielerausweisURL: "", photoStoragePath: "", ausweisStoragePath: "" }
+    ];
+
+    // ── Seed Function ──
+    async function seedAll() {
+      const btn = document.getElementById('btnSeed');
+      btn.disabled = true;
+      logEl.innerHTML = '';
+
+      try {
+        // Auth
+        log('Melde an als Admin...', 'info');
+        try {
+          await auth.signInWithEmailAndPassword('admin@vanavil.ch', prompt('Admin-Passwort eingeben:'));
+          log('Angemeldet als ' + auth.currentUser.email, 'success');
+        } catch (e) {
+          log('Login fehlgeschlagen: ' + e.message, 'error');
+          btn.disabled = false;
+          return;
+        }
+
+        // News
+        log('\n── News einfügen ──', 'info');
+        for (const item of sampleNews) {
+          const ref = await db.collection('news').add(item);
+          log('  + ' + item.title.substring(0, 50) + '...  [' + ref.id + ']', 'success');
+        }
+
+        // Matches
+        log('\n── Spiele einfügen ──', 'info');
+        for (const item of sampleMatches) {
+          const ref = await db.collection('matches').add(item);
+          log('  + ' + item.homeTeam + ' vs ' + item.awayTeam + '  [' + ref.id + ']', 'success');
+        }
+
+        // Tournaments
+        log('\n── Turniere einfügen ──', 'info');
+        for (const item of sampleTournaments) {
+          const ref = await db.collection('tournaments').add(item);
+          log('  + ' + item.name + '  [' + ref.id + ']', 'success');
+        }
+
+        // Players
+        log('\n── Spieler einfügen (Erste Mannschaft) ──', 'info');
+        const seniorIds = [];
+        for (const item of samplePlayers) {
+          item.createdAt = new Date().toISOString();
+          const ref = await db.collection('players').add(item);
+          seniorIds.push(ref.id);
+          log('  + #' + item.number + ' ' + item.name + ' (' + item.position + ')  [' + ref.id + ']', 'success');
+        }
+
+        log('\n── Spieler einfügen (Junioren) ──', 'info');
+        const juniorIds = [];
+        for (const item of sampleJuniors) {
+          item.createdAt = new Date().toISOString();
+          const ref = await db.collection('players').add(item);
+          juniorIds.push(ref.id);
+          log('  + #' + item.number + ' ' + item.name + ' (' + item.position + ')  [' + ref.id + ']', 'success');
+        }
+
+        // Roster
+        log('\n── Kader zuweisen ──', 'info');
+        await db.collection('roster').doc('erste-mannschaft').set({
+          playerIds: seniorIds,
+          updatedAt: new Date().toISOString()
+        });
+        log('  + Erste Mannschaft: ' + seniorIds.length + ' Spieler', 'success');
+
+        await db.collection('roster').doc('junioren').set({
+          playerIds: juniorIds,
+          updatedAt: new Date().toISOString()
+        });
+        log('  + Junioren: ' + juniorIds.length + ' Spieler', 'success');
+
+        await db.collection('roster').doc('academy').set({
+          playerIds: [],
+          updatedAt: new Date().toISOString()
+        });
+        log('  + Academy: 0 Spieler (leer)', 'success');
+
+        // Gallery (placeholder entries without images)
+        log('\n── Galerie-Einträge einfügen ──', 'info');
+        const galleryItems = [
+          { title: "Teamfoto Saison 2026", description: "Das offizielle Mannschaftsfoto der neuen Saison" },
+          { title: "Winterturnier Bern 2026", description: "Impressionen vom Winterturnier in Bern" },
+          { title: "Training in Luzern", description: "Trainingseindrücke von der Allmend" },
+          { title: "Vereinsversammlung 2026", description: "Bilder von der Jahresversammlung" },
+          { title: "STFA Pokal 2025", description: "Highlights vom letztjährigen Pokalturnier" }
+        ];
+        for (const item of galleryItems) {
+          item.imageURL = "";
+          item.storagePath = "";
+          item.createdAt = new Date(Date.now() - galleryItems.indexOf(item) * 86400000 * 7).toISOString();
+          const ref = await db.collection('gallery').add(item);
+          log('  + ' + item.title + '  [' + ref.id + ']', 'success');
+        }
+
+        log('\n════════════════════════════════════', 'success');
+        log('FERTIG! Alle Testdaten wurden eingefügt.', 'success');
+        log('7 News, 6 Spiele, 4 Turniere, 20 Spieler, 3 Kader, 5 Galerie-Einträge', 'success');
+        log('════════════════════════════════════', 'success');
+        log('\nHinweis: Galerie-Bilder und Spielerfotos müssen über das Admin-Panel hochgeladen werden.', 'warn');
+
+      } catch (e) {
+        log('FEHLER: ' + e.message, 'error');
+        console.error(e);
+      }
+
+      btn.disabled = false;
+    }
+
+    // ── Delete Function ──
+    async function deleteAll() {
+      if (!confirm('Wirklich ALLE Testdaten löschen? Das betrifft ALLE Einträge in allen Collections!')) return;
+
+      const btn = document.getElementById('btnDelete');
+      btn.disabled = true;
+      logEl.innerHTML = '';
+
+      try {
+        // Auth
+        log('Melde an als Admin...', 'info');
+        try {
+          await auth.signInWithEmailAndPassword('admin@vanavil.ch', prompt('Admin-Passwort eingeben:'));
+          log('Angemeldet als ' + auth.currentUser.email, 'success');
+        } catch (e) {
+          log('Login fehlgeschlagen: ' + e.message, 'error');
+          btn.disabled = false;
+          return;
+        }
+
+        const collections = ['news', 'matches', 'tournaments', 'players', 'gallery'];
+
+        for (const col of collections) {
+          log('\n── ' + col + ' löschen ──', 'info');
+          const snap = await db.collection(col).get();
+          let count = 0;
+          for (const doc of snap.docs) {
+            await doc.ref.delete();
+            count++;
+          }
+          log('  ' + count + ' Dokumente gelöscht', 'warn');
+        }
+
+        // Roster docs
+        log('\n── Kader löschen ──', 'info');
+        const rosterDocs = ['erste-mannschaft', 'junioren', 'academy'];
+        for (const docId of rosterDocs) {
+          try {
+            await db.collection('roster').doc(docId).delete();
+            log('  ' + docId + ' gelöscht', 'warn');
+          } catch (e) {
+            log('  ' + docId + ' nicht gefunden (OK)', 'info');
+          }
+        }
+
+        log('\n════════════════════════════════════', 'warn');
+        log('FERTIG! Alle Daten wurden gelöscht.', 'warn');
+        log('════════════════════════════════════', 'warn');
+
+      } catch (e) {
+        log('FEHLER: ' + e.message, 'error');
+        console.error(e);
+      }
+
+      btn.disabled = false;
+    }
+  </script>
+</body>
+</html>

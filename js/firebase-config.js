@@ -57,8 +57,10 @@ const firebaseConfig = {
 let db = null;
 let auth = null;
 let storage = null;
+let _initialized = false;
 
 function initFirebase() {
+  if (_initialized) return true;
   if (typeof firebase !== 'undefined') {
     firebase.initializeApp(firebaseConfig);
     db = firebase.firestore();
@@ -66,6 +68,7 @@ function initFirebase() {
     if (firebase.storage) {
       storage = firebase.storage();
     }
+    _initialized = true;
     console.log('Firebase initialized');
     return true;
   }
