@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News | SC Vanavil Luzern</title>
+  <meta name="description" content="Aktuelle News und Updates von SC Vanavil Luzern">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="./" class="logo">
+        <div class="logo-icon">SV</div>
+        <div class="logo-text">SC Vanavil <span>Luzern • Since 1993</span></div>
+      </a>
+      
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      
+      <nav class="nav-menu" id="navMenu">
+        <a href="./" class="nav-link">Home</a>
+        <a href="news.html" class="nav-link active">News</a>
+        <a href="spielplan.html" class="nav-link">Spielplan</a>
+        <a href="mannschaft.html" class="nav-link">Mannschaft</a>
+        <a href="galerie.html" class="nav-link">Galerie</a>
+        <a href="kontakt.html" class="nav-link">Kontakt</a>
+        <a href="kontakt.html#mitglied" class="nav-cta">Mitglied werden</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <h1>News & Updates</h1>
+        <p>Bleib auf dem Laufenden mit aktuellen Nachrichten von SC Vanavil Luzern</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="grid grid-3" id="newsContainer">
+          <div class="loading"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© <span id="currentYear"></span> SC Vanavil Luzern</p>
+        <a href="admin.html" style="opacity: 0.5;">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/firebase-config.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      setTimeout(async () => {
+        const news = await window.VanavilDB.getNews(20);
+        const container = document.getElementById('newsContainer');
+        
+        if (news.length > 0) {
+          window.VanavilUI.renderNewsCards(news, container, true);
+        } else {
+          container.innerHTML = '<div class="empty-state" style="text-align:center;padding:3rem"><p>Aktuell keine News vorhanden.</p></div>';
+        }
+      }, 500);
+    });
+  </script>
+</body>
+</html>

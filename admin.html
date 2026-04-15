@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | SC Vanavil Luzern</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  
+  <style>
+    .admin-container { max-width: 800px; margin: 0 auto; padding: 2rem; }
+    .admin-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .admin-section h2 { margin-bottom: 1rem; font-size: 1.25rem; }
+    .admin-tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .admin-tab { padding: 0.75rem 1.5rem; border-radius: var(--radius-sm); background: var(--bg-glass); border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; transition: all 0.2s; }
+    .admin-tab:hover, .admin-tab.active { background: var(--accent); color: var(--text-dark); border-color: var(--accent); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .item-list { margin-top: 1rem; }
+    .item-card { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 0.5rem; }
+    .item-actions { display: flex; gap: 0.5rem; }
+    .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-success { background: var(--success); color: white; }
+    #authSection { text-align: center; padding: 4rem 2rem; }
+    .file-input-wrap { position: relative; }
+    .file-input-wrap input[type=file] { padding: 0.6rem; background: var(--bg-glass); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); width: 100%; }
+    .admin-container { max-width: 900px; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="./" class="logo">
+        <div class="logo-icon">SV</div>
+        <div class="logo-text">SC Vanavil <span>Admin Panel</span></div>
+      </a>
+      <div>
+        <a href="./" class="btn btn-secondary">← Zurück zur Website</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Auth Section (shown when not logged in) -->
+    <section id="authSection" class="section">
+      <div class="admin-container">
+        <div class="card">
+          <h2>🔐 Admin Login</h2>
+          <p class="text-muted mb-3">Melde dich an, um Inhalte zu verwalten.</p>
+          
+          <form id="loginForm" style="max-width: 300px; margin: 0 auto;">
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-input" id="email" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Passwort</label>
+              <input type="password" class="form-input" id="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Einloggen</button>
+          </form>
+          
+          <p class="text-muted mt-3" style="font-size: 0.85rem;">
+            Zugang nur für autorisierte Admins.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Admin Dashboard (shown when logged in) -->
+    <section id="adminDashboard" class="section" style="display: none;">
+      <div class="admin-container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+          <div>
+            <h1>Admin Dashboard</h1>
+            <p class="text-muted">Verwalte News, Spiele, Spieler, Kader und Galerie</p>
+          </div>
+          <button class="btn btn-secondary" id="logoutBtn">Logout</button>
+        </div>
+
+        <div class="admin-tabs">
+          <button class="admin-tab active" data-tab="news">📰 News</button>
+          <button class="admin-tab" data-tab="matches">⚽ Spiele</button>
+          <button class="admin-tab" data-tab="players">👤 Spieler</button>
+          <button class="admin-tab" data-tab="roster">📋 Kader</button>
+          <button class="admin-tab" data-tab="gallery">🖼️ Galerie</button>
+          <button class="admin-tab" data-tab="settings">⚙️ Einstellungen</button>
+          <button class="admin-tab" data-tab="help">❓ Hilfe</button>
+        </div>
+
+        <!-- News Tab -->
+        <div id="news" class="tab-content active">
+          <div class="admin-section">
+            <h2>Neue News erstellen</h2>
+            <form id="newsForm">
+              <div class="form-group">
+                <label class="form-label">Titel *</label>
+                <input type="text" class="form-input" id="newsTitle" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Kategorie</label>
+                <select class="form-input" id="newsCategory">
+                  <option value="News">News</option>
+                  <option value="Turnier">Turnier</option>
+                  <option value="Verein">Verein</option>
+                  <option value="Junioren">Junioren</option>
+                  <option value="Community">Community</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Bild-URL</label>
+                <input type="url" class="form-input" id="newsImage" placeholder="https://... oder images/foto.jpg">
+                <small class="text-muted">Link zu Bild (Instagram, Google Drive, oder lokal in /images/)</small>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Zusammenfassung *</label>
+                <textarea class="form-textarea" id="newsSummary" rows="3" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">News veröffentlichen</button>
+            </form>
+          </div>
+
+          <div class="admin-section">
+            <h2>Bestehende News</h2>
+            <div id="newsList" class="item-list">
+              <div class="loading"><div class="spinner"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Matches Tab -->
+        <div id="matches" class="tab-content">
+          <div class="admin-section">
+            <h2>Neues Spiel/Turnier erfassen</h2>
+            <form id="matchForm">
+              <div class="grid grid-2">
+                <div class="form-group">
+                  <label class="form-label">Heimteam *</label>
+                  <input type="text" class="form-input" id="homeTeam" value="SC Vanavil" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Gegner *</label>
+                  <input type="text" class="form-input" id="awayTeam" required>
+                </div>
+              </div>
+              <div class="grid grid-2">
+                <div class="form-group">
+                  <label class="form-label">Datum *</label>
+                  <input type="date" class="form-input" id="matchDate" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Uhrzeit</label>
+                  <input type="time" class="form-input" id="matchTime">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Ort</label>
+                <input type="text" class="form-input" id="matchLocation" placeholder="z.B. Sportanlage Allmend, Luzern">
+              </div>
+              <button type="submit" class="btn btn-primary">Spiel speichern</button>
+            </form>
+          </div>
+
+          <div class="admin-section">
+            <h2>Geplante Spiele</h2>
+            <div id="matchesList" class="item-list">
+              <div class="loading"><div class="spinner"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Players Tab -->
+        <div id="players" class="tab-content">
+          <div class="admin-section">
+            <h2>Neuen Spieler erfassen</h2>
+            <form id="playerForm">
+              <div class="grid grid-2">
+                <div class="form-group">
+                  <label class="form-label">Name *</label>
+                  <input type="text" class="form-input" id="playerName" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Position</label>
+                  <select class="form-input" id="playerPosition">
+                    <option value="">– Wählen –</option>
+                    <option value="Torwart">Torwart</option>
+                    <option value="Verteidiger">Verteidiger</option>
+                    <option value="Mittelfeld">Mittelfeld</option>
+                    <option value="Stürmer">Stürmer</option>
+                  </select>
+                </div>
+              </div>
+              <div class="grid grid-2">
+                <div class="form-group">
+                  <label class="form-label">Trikotnummer</label>
+                  <input type="number" class="form-input" id="playerNumber" min="1" max="99">
+                </div>
+                <div></div>
+              </div>
+              <div class="grid grid-2">
+                <div class="form-group">
+                  <label class="form-label">Spielerfoto</label>
+                  <div class="file-input-wrap">
+                    <input type="file" id="playerPhoto" accept="image/*">
+                  </div>
+                  <div id="playerPhotoPreview" class="upload-preview"></div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Spielerausweis (PDF / Bild)</label>
+                  <div class="file-input-wrap">
+                    <input type="file" id="playerAusweis" accept="image/*,application/pdf">
+                  </div>
+                  <small class="text-muted">Nur für Admins sichtbar</small>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">Spieler speichern</button>
+            </form>
+          </div>
+
+          <div class="admin-section">
+            <h2>Alle Spieler</h2>
+            <div id="playersList" class="item-list">
+              <div class="loading"><div class="spinner"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Roster Tab -->
+        <div id="roster" class="tab-content">
+          <div class="admin-section">
+            <h2>Kader verwalten</h2>
+            <div class="form-group">
+              <label class="form-label">Team auswählen</label>
+              <select class="form-input" id="rosterTeamSelect">
+                <option value="erste-mannschaft">Erste Mannschaft</option>
+                <option value="junioren">Junioren</option>
+                <option value="academy">Academy</option>
+              </select>
+            </div>
+
+            <div class="roster-manager">
+              <div class="roster-col">
+                <h4>Verfügbare Spieler</h4>
+                <div id="rosterAvailable"></div>
+              </div>
+              <div class="roster-col">
+                <h4>Im Kader</h4>
+                <div id="rosterCurrent"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gallery Tab -->
+        <div id="gallery" class="tab-content">
+          <div class="admin-section">
+            <h2>Bild hochladen</h2>
+            <form id="galleryForm">
+              <div class="form-group">
+                <label class="form-label">Titel</label>
+                <input type="text" class="form-input" id="galleryTitle" placeholder="z.B. Teamfoto 2026">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Beschreibung</label>
+                <input type="text" class="form-input" id="galleryDesc" placeholder="Optionale Beschreibung">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Bild *</label>
+                <div class="file-input-wrap">
+                  <input type="file" id="galleryFile" accept="image/*" required>
+                </div>
+                <div id="galleryPreview" class="upload-preview"></div>
+              </div>
+              <button type="submit" class="btn btn-primary">Bild hochladen</button>
+            </form>
+          </div>
+
+          <div class="admin-section">
+            <h2>Galerie</h2>
+            <div id="galleryList" class="gallery-admin-grid"></div>
+          </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settings" class="tab-content">
+          <div class="admin-section">
+            <h2>Teamfoto (Startseite)</h2>
+            <p class="text-muted mb-2">Dieses Bild erscheint prominent auf der Hauptseite.</p>
+            <form id="teamPhotoForm">
+              <div class="form-group">
+                <label class="form-label">Teamfoto hochladen</label>
+                <div class="file-input-wrap">
+                  <input type="file" id="teamPhotoFile" accept="image/*">
+                </div>
+                <div id="teamPhotoPreview" class="upload-preview" style="margin-top:0.75rem"></div>
+              </div>
+              <button type="submit" class="btn btn-primary">Teamfoto speichern</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Help Tab -->
+        <div id="help" class="tab-content">
+          <div class="admin-section">
+            <h2>Anleitung</h2>
+            
+            <h3 class="mt-3">News erstellen</h3>
+            <p class="text-muted">Gib Titel, Kategorie und eine kurze Zusammenfassung ein. Die News erscheint sofort auf der Website.</p>
+            
+            <h3 class="mt-3">Spiele erfassen</h3>
+            <p class="text-muted">Trage Heimteam, Gegner, Datum und Ort ein. Das Spiel erscheint automatisch auf der Spielplan-Seite.</p>
+            
+            <h3 class="mt-3">Spieler erfassen</h3>
+            <p class="text-muted">Unter "Spieler" kannst du einen neuen Spieler mit Foto und Spielerausweis anlegen. Der Ausweis ist nur für Admins sichtbar.</p>
+            
+            <h3 class="mt-3">Kader verwalten</h3>
+            <p class="text-muted">Unter "Kader" kannst du Spieler einem Team zuordnen (Erste Mannschaft, Junioren, Academy). Nutze die Pfeile, um Spieler hinzuzufügen oder zu entfernen.</p>
+            
+            <h3 class="mt-3">Galerie</h3>
+            <p class="text-muted">Lade Bilder hoch, die auf der öffentlichen Galerie-Seite angezeigt werden.</p>
+            
+            <h3 class="mt-3">Teamfoto</h3>
+            <p class="text-muted">Unter "Einstellungen" kannst du das Teamfoto setzen, das auf der Startseite groß angezeigt wird.</p>
+            
+            <h3 class="mt-3">Probleme?</h3>
+            <p class="text-muted">Bei technischen Fragen wende dich an den Website-Ersteller.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/firebase-config.js"></script>
+  <script>
+    // ===== State =====
+    let allPlayers = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      window.VanavilDB.init();
+      
+      // Auth state listener
+      window.VanavilDB.onAuthStateChange((user) => {
+        document.getElementById('authSection').style.display = user ? 'none' : 'block';
+        document.getElementById('adminDashboard').style.display = user ? 'block' : 'none';
+        
+        if (user) {
+          loadNews();
+          loadMatches();
+          loadPlayers();
+          loadGallery();
+          loadTeamPhotoPreview();
+        }
+      });
+      
+      // Login form
+      document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        const result = await window.VanavilDB.adminLogin(email, password);
+        if (!result.success) {
+          alert('Login fehlgeschlagen: ' + result.error);
+        }
+      });
+      
+      // Logout
+      document.getElementById('logoutBtn').addEventListener('click', async () => {
+        await window.VanavilDB.adminLogout();
+      });
+      
+      // Tabs
+      document.querySelectorAll('.admin-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          tab.classList.add('active');
+          document.getElementById(tab.dataset.tab).classList.add('active');
+        });
+      });
+      
+      // ===== News Form =====
+      document.getElementById('newsForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const newsData = {
+          title: document.getElementById('newsTitle').value,
+          category: document.getElementById('newsCategory').value,
+          image: document.getElementById('newsImage').value || '',
+          summary: document.getElementById('newsSummary').value
+        };
+        const id = await window.VanavilDB.addNews(newsData);
+        if (id) { alert('News veröffentlicht!'); e.target.reset(); loadNews(); }
+        else { alert('Fehler beim Speichern'); }
+      });
+      
+      // ===== Match Form =====
+      document.getElementById('matchForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const matchData = {
+          homeTeam: document.getElementById('homeTeam').value,
+          awayTeam: document.getElementById('awayTeam').value,
+          date: document.getElementById('matchDate').value,
+          time: document.getElementById('matchTime').value || 'TBA',
+          location: document.getElementById('matchLocation').value || 'TBA'
+        };
+        const id = await window.VanavilDB.addMatch(matchData);
+        if (id) { alert('Spiel gespeichert!'); e.target.reset(); document.getElementById('homeTeam').value = 'SC Vanavil'; loadMatches(); }
+        else { alert('Fehler beim Speichern'); }
+      });
+
+      // ===== Player Form =====
+      document.getElementById('playerForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type=submit]');
+        btn.disabled = true; btn.textContent = 'Speichern…';
+
+        const name = document.getElementById('playerName').value.trim();
+        const position = document.getElementById('playerPosition').value;
+        const number = document.getElementById('playerNumber').value;
+        const photoFile = document.getElementById('playerPhoto').files[0];
+        const ausweisFile = document.getElementById('playerAusweis').files[0];
+
+        let photoURL = '';
+        let spielerausweisURL = '';
+        let photoStoragePath = '';
+        let ausweisStoragePath = '';
+        const ts = Date.now();
+
+        if (photoFile) {
+          photoStoragePath = 'players/photos/' + ts + '_' + photoFile.name;
+          photoURL = await window.VanavilDB.uploadFile(photoStoragePath, photoFile);
+        }
+        if (ausweisFile) {
+          ausweisStoragePath = 'players/ausweise/' + ts + '_' + ausweisFile.name;
+          spielerausweisURL = await window.VanavilDB.uploadFile(ausweisStoragePath, ausweisFile);
+        }
+
+        const id = await window.VanavilDB.addPlayer({
+          name, position, number: number ? Number(number) : null,
+          photoURL: photoURL || '', spielerausweisURL: spielerausweisURL || '',
+          photoStoragePath, ausweisStoragePath
+        });
+
+        btn.disabled = false; btn.textContent = 'Spieler speichern';
+        if (id) { alert('Spieler gespeichert!'); e.target.reset(); document.getElementById('playerPhotoPreview').innerHTML = ''; loadPlayers(); }
+        else { alert('Fehler beim Speichern'); }
+      });
+
+      // Photo preview
+      document.getElementById('playerPhoto').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        const preview = document.getElementById('playerPhotoPreview');
+        if (file) {
+          const url = URL.createObjectURL(file);
+          preview.innerHTML = '<img src="' + url + '" alt="Vorschau">';
+        } else { preview.innerHTML = ''; }
+      });
+
+      // ===== Roster =====
+      document.getElementById('rosterTeamSelect').addEventListener('change', loadRoster);
+
+      // ===== Gallery Form =====
+      document.getElementById('galleryForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type=submit]');
+        btn.disabled = true; btn.textContent = 'Hochladen…';
+
+        const title = document.getElementById('galleryTitle').value.trim();
+        const description = document.getElementById('galleryDesc').value.trim();
+        const file = document.getElementById('galleryFile').files[0];
+        if (!file) { alert('Bitte ein Bild auswählen'); btn.disabled = false; btn.textContent = 'Bild hochladen'; return; }
+
+        const ts = Date.now();
+        const storagePath = 'gallery/' + ts + '_' + file.name;
+        const imageURL = await window.VanavilDB.uploadFile(storagePath, file);
+
+        if (!imageURL) { alert('Upload fehlgeschlagen'); btn.disabled = false; btn.textContent = 'Bild hochladen'; return; }
+
+        const id = await window.VanavilDB.addGalleryImage({ title, description, imageURL, storagePath });
+        btn.disabled = false; btn.textContent = 'Bild hochladen';
+        if (id) { alert('Bild hochgeladen!'); e.target.reset(); document.getElementById('galleryPreview').innerHTML = ''; loadGallery(); }
+        else { alert('Fehler beim Speichern'); }
+      });
+
+      document.getElementById('galleryFile').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        const preview = document.getElementById('galleryPreview');
+        if (file) { preview.innerHTML = '<img src="' + URL.createObjectURL(file) + '" alt="Vorschau">'; }
+        else { preview.innerHTML = ''; }
+      });
+
+      // ===== Team Photo (Settings) =====
+      document.getElementById('teamPhotoForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type=submit]');
+        btn.disabled = true; btn.textContent = 'Speichern…';
+
+        const file = document.getElementById('teamPhotoFile').files[0];
+        if (!file) { alert('Bitte ein Bild auswählen'); btn.disabled = false; btn.textContent = 'Teamfoto speichern'; return; }
+
+        const storagePath = 'team/teamfoto_' + Date.now() + '_' + file.name;
+        const teamPhotoURL = await window.VanavilDB.uploadFile(storagePath, file);
+
+        if (!teamPhotoURL) { alert('Upload fehlgeschlagen'); btn.disabled = false; btn.textContent = 'Teamfoto speichern'; return; }
+
+        await window.VanavilDB.updateSettings({ teamPhotoURL, teamPhotoStoragePath: storagePath });
+        btn.disabled = false; btn.textContent = 'Teamfoto speichern';
+        alert('Teamfoto gespeichert!');
+        loadTeamPhotoPreview();
+      });
+
+      document.getElementById('teamPhotoFile').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        const preview = document.getElementById('teamPhotoPreview');
+        if (file) { preview.innerHTML = '<img src="' + URL.createObjectURL(file) + '" alt="Vorschau" style="max-width:100%;max-height:200px;border-radius:8px;">'; }
+      });
+    });
+
+    // ===== LOAD FUNCTIONS =====
+
+    async function loadNews() {
+      const news = await window.VanavilDB.getNews(20);
+      const container = document.getElementById('newsList');
+      if (news.length === 0) { container.innerHTML = '<p class="text-muted">Noch keine News vorhanden.</p>'; return; }
+      container.innerHTML = news.map(item => `
+        <div class="item-card">
+          <div>
+            <strong>${escapeHtml(item.title)}</strong>
+            <small class="text-muted" style="display: block;">${item.category} • ${new Date(item.date).toLocaleDateString('de-CH')}</small>
+          </div>
+          <div class="item-actions">
+            <button class="btn btn-sm btn-danger" onclick="deleteNews('${item.id}')">Löschen</button>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    async function loadMatches() {
+      const matches = await window.VanavilDB.getAllMatches();
+      const container = document.getElementById('matchesList');
+      if (matches.length === 0) { container.innerHTML = '<p class="text-muted">Noch keine Spiele erfasst.</p>'; return; }
+      container.innerHTML = matches.map(match => `
+        <div class="item-card">
+          <div>
+            <strong>${escapeHtml(match.homeTeam)} vs ${escapeHtml(match.awayTeam)}</strong>
+            <small class="text-muted" style="display: block;">${match.date} • ${match.time} • ${match.location}</small>
+          </div>
+          <div class="item-actions">
+            <button class="btn btn-sm btn-danger" onclick="deleteMatch('${match.id}')">Löschen</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function loadPlayers() {
+      allPlayers = await window.VanavilDB.getPlayers();
+      const container = document.getElementById('playersList');
+      if (allPlayers.length === 0) { container.innerHTML = '<p class="text-muted">Noch keine Spieler erfasst.</p>'; return; }
+      container.innerHTML = allPlayers.map(p => `
+        <div class="player-list-item">
+          <div class="player-list-thumb" style="${p.photoURL ? "background-image:url('" + escapeHtml(p.photoURL) + "')" : ''}">
+            ${!p.photoURL ? escapeHtml(p.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase()) : ''}
+          </div>
+          <div class="player-list-info">
+            <strong>${escapeHtml(p.name)}</strong>
+            <small>${escapeHtml(p.position || '–')}${p.number ? ' • #' + p.number : ''}</small>
+          </div>
+          <div class="item-actions">
+            ${p.spielerausweisURL ? '<a href="' + escapeHtml(p.spielerausweisURL) + '" target="_blank" class="btn btn-sm btn-secondary">Ausweis</a>' : ''}
+            <button class="btn btn-sm btn-danger" onclick="deletePlayer('${p.id}','${p.photoStoragePath || ''}','${p.ausweisStoragePath || ''}')">Löschen</button>
+          </div>
+        </div>
+      `).join('');
+      // Also refresh roster if visible
+      loadRoster();
+    }
+
+    async function loadRoster() {
+      const team = document.getElementById('rosterTeamSelect').value;
+      const rosterIds = await window.VanavilDB.getRoster(team);
+      const inRoster = allPlayers.filter(p => rosterIds.includes(p.id));
+      const available = allPlayers.filter(p => !rosterIds.includes(p.id));
+
+      const availContainer = document.getElementById('rosterAvailable');
+      const currentContainer = document.getElementById('rosterCurrent');
+
+      availContainer.innerHTML = available.length === 0
+        ? '<p class="text-muted" style="font-size:0.85rem">Alle Spieler sind im Kader</p>'
+        : available.map(p => `
+          <div class="roster-player-item">
+            <span>${escapeHtml(p.name)}${p.number ? ' #' + p.number : ''}</span>
+            <button onclick="rosterAdd('${team}','${p.id}')" title="Zum Kader hinzufügen">→</button>
+          </div>
+        `).join('');
+
+      currentContainer.innerHTML = inRoster.length === 0
+        ? '<p class="text-muted" style="font-size:0.85rem">Kein Spieler zugewiesen</p>'
+        : inRoster.map(p => `
+          <div class="roster-player-item">
+            <span>${escapeHtml(p.name)}${p.number ? ' #' + p.number : ''}</span>
+            <button onclick="rosterRemove('${team}','${p.id}')" title="Aus Kader entfernen">←</button>
+          </div>
+        `).join('');
+    }
+
+    async function loadGallery() {
+      const images = await window.VanavilDB.getGallery(100);
+      const container = document.getElementById('galleryList');
+      if (images.length === 0) { container.innerHTML = '<p class="text-muted">Noch keine Bilder vorhanden.</p>'; return; }
+      container.innerHTML = images.map(img => `
+        <div class="gallery-admin-item">
+          <img src="${escapeHtml(img.imageURL)}" alt="${escapeHtml(img.title || '')}">
+          ${img.title ? '<div class="gallery-admin-label">' + escapeHtml(img.title) + '</div>' : ''}
+          <button class="gallery-delete-btn" onclick="deleteGalleryImg('${img.id}','${img.storagePath || ''}')" title="Löschen">&times;</button>
+        </div>
+      `).join('');
+    }
+
+    async function loadTeamPhotoPreview() {
+      const settings = await window.VanavilDB.getSettings();
+      const preview = document.getElementById('teamPhotoPreview');
+      if (settings.teamPhotoURL) {
+        preview.innerHTML = '<p class="text-muted" style="margin-bottom:0.5rem">Aktuelles Teamfoto:</p><img src="' + escapeHtml(settings.teamPhotoURL) + '" alt="Teamfoto" style="max-width:100%;max-height:200px;border-radius:8px;border:1px solid var(--border);">';
+      } else {
+        preview.innerHTML = '<p class="text-muted">Noch kein Teamfoto gesetzt.</p>';
+      }
+    }
+
+    // ===== ACTION FUNCTIONS =====
+
+    async function deleteNews(id) {
+      if (confirm('News wirklich löschen?')) { await window.VanavilDB.deleteDocument('news', id); loadNews(); }
+    }
+    
+    async function deleteMatch(id) {
+      if (confirm('Spiel wirklich löschen?')) { await window.VanavilDB.deleteDocument('matches', id); loadMatches(); }
+    }
+
+    async function deletePlayer(id, photoPath, ausweisPath) {
+      if (!confirm('Spieler wirklich löschen?')) return;
+      if (photoPath) await window.VanavilDB.deleteFile(photoPath);
+      if (ausweisPath) await window.VanavilDB.deleteFile(ausweisPath);
+      await window.VanavilDB.deleteDocument('players', id);
+      loadPlayers();
+    }
+
+    async function rosterAdd(team, playerId) {
+      const current = await window.VanavilDB.getRoster(team);
+      if (!current.includes(playerId)) {
+        current.push(playerId);
+        await window.VanavilDB.setRoster(team, current);
+      }
+      loadRoster();
+    }
+
+    async function rosterRemove(team, playerId) {
+      let current = await window.VanavilDB.getRoster(team);
+      current = current.filter(id => id !== playerId);
+      await window.VanavilDB.setRoster(team, current);
+      loadRoster();
+    }
+
+    async function deleteGalleryImg(id, storagePath) {
+      if (!confirm('Bild wirklich löschen?')) return;
+      await window.VanavilDB.deleteGalleryImage(id, storagePath);
+      loadGallery();
+    }
+    
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>

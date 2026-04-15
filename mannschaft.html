@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mannschaft | SC Vanavil Luzern</title>
+  <meta name="description" content="Unsere Mannschaften und der Vorstand von SC Vanavil Luzern">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="./" class="logo">
+        <div class="logo-icon">SV</div>
+        <div class="logo-text">SC Vanavil <span>Luzern • Since 1993</span></div>
+      </a>
+      
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      
+      <nav class="nav-menu" id="navMenu">
+        <a href="./" class="nav-link">Home</a>
+        <a href="news.html" class="nav-link">News</a>
+        <a href="spielplan.html" class="nav-link">Spielplan</a>
+        <a href="mannschaft.html" class="nav-link active">Mannschaft</a>
+        <a href="galerie.html" class="nav-link">Galerie</a>
+        <a href="kontakt.html" class="nav-link">Kontakt</a>
+        <a href="kontakt.html#mitglied" class="nav-cta">Mitglied werden</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <h1>Das Team</h1>
+        <p>Wer wir sind und was wir machen</p>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="section">
+      <div class="container">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2 class="mb-2">Über SC Vanavil</h2>
+            <p class="text-muted mb-2">
+              1993 wurde der Verein gegründet.
+              "Vanavil" (வானவில்) bedeutet auf Tamil "Regenbogen".
+            </p>
+            <p class="text-muted mb-2">
+              Wir sind ein tamilischer Club aus Luzern. STFA-Mitglied von Anfang an.
+              Jedes Jahr an den Turnieren – Summer Cup, Maveerar Cup und mehr.
+            </p>
+            <p class="text-muted">
+              Unsere Junioren stehen aktuell auf Platz 3 der STFA-Rangliste.
+              Nicht schlecht für einen kleinen Verein.
+            </p>
+          </div>
+          
+          <div class="card">
+            <h2 class="mb-2">Unsere Werte</h2>
+            <ul style="list-style: none; padding: 0;">
+              <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 1rem;">
+                <span style="font-size: 1.5rem;">⚽</span>
+                <div>
+                  <strong>Training</strong>
+                  <p class="text-muted" style="margin: 0; font-size: 0.9rem;">Regelmässig – auch wenn es regnet</p>
+                </div>
+              </li>
+              <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 1rem;">
+                <span style="font-size: 1.5rem;">🤝</span>
+                <div>
+                  <strong>Zusammenhalt</strong>
+                  <p class="text-muted" style="margin: 0; font-size: 0.9rem;">Zusammen auf dem Platz, zusammen nach dem Match</p>
+                </div>
+              </li>
+              <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 1rem;">
+                <span style="font-size: 1.5rem;">🏆</span>
+                <div>
+                  <strong>Turniere</strong>
+                  <p class="text-muted" style="margin: 0; font-size: 0.9rem;">STFA-Cups, Grümpeliturniere, alles was geht</p>
+                </div>
+              </li>
+              <li style="padding: 0.75rem 0; display: flex; align-items: center; gap: 1rem;">
+                <span style="font-size: 1.5rem;">👋</span>
+                <div>
+                  <strong>Offen</strong>
+                  <p class="text-muted" style="margin: 0; font-size: 0.9rem;">Jeder kann kommen, der kicken will</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Teams -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Unsere Teams</h2>
+          <p>Von Junioren bis zur ersten Mannschaft</p>
+        </div>
+
+        <!-- Erste Mannschaft -->
+        <div style="margin-bottom: 3rem;">
+          <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span style="font-size:1.5rem">🏆</span> Erste Mannschaft
+          </h3>
+          <div class="player-grid" id="rosterErste">
+            <div class="loading"><div class="spinner"></div></div>
+          </div>
+        </div>
+
+        <!-- Junioren -->
+        <div style="margin-bottom: 3rem;">
+          <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span style="font-size:1.5rem">⭐</span> Junioren
+            <span style="font-size:0.8rem; color: var(--accent); font-weight:600; margin-left:0.5rem;">#3 STFA Ranking</span>
+          </h3>
+          <div class="player-grid" id="rosterJunioren">
+            <div class="loading"><div class="spinner"></div></div>
+          </div>
+        </div>
+
+        <!-- Academy -->
+        <div style="margin-bottom: 2rem;">
+          <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span style="font-size:1.5rem">🌟</span> Academy
+          </h3>
+          <div class="player-grid" id="rosterAcademy">
+            <div class="loading"><div class="spinner"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Vorstand -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Vorstand</h2>
+          <p>Die Menschen hinter dem Verein</p>
+        </div>
+        
+        <div class="grid grid-4">
+          <div class="card text-center">
+            <div style="width: 100px; height: 100px; border-radius: 50%; background: var(--bg-glass); margin: 0 auto 1rem; display: grid; place-items: center; font-size: 2.5rem;">
+              👤
+            </div>
+            <h3 style="font-size: 1rem;">Präsident</h3>
+          </div>
+          
+          <div class="card text-center">
+            <div style="width: 100px; height: 100px; border-radius: 50%; background: var(--bg-glass); margin: 0 auto 1rem; display: grid; place-items: center; font-size: 2.5rem;">
+              👤
+            </div>
+            <h3 style="font-size: 1rem;">Vizepräsident</h3>
+          </div>
+          
+          <div class="card text-center">
+            <div style="width: 100px; height: 100px; border-radius: 50%; background: var(--bg-glass); margin: 0 auto 1rem; display: grid; place-items: center; font-size: 2.5rem;">
+              👤
+            </div>
+            <h3 style="font-size: 1rem;">Trainer</h3>
+          </div>
+          
+          <div class="card text-center">
+            <div style="width: 100px; height: 100px; border-radius: 50%; background: var(--bg-glass); margin: 0 auto 1rem; display: grid; place-items: center; font-size: 2.5rem;">
+              👤
+            </div>
+            <h3 style="font-size: 1rem;">Kassier</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section">
+      <div class="container">
+        <div class="card text-center" style="padding: 3rem;">
+          <h2>Werde Teil des Teams</h2>
+          <p class="text-muted" style="max-width: 500px; margin: 1rem auto;">
+            Du möchtest mitspielen? Wir suchen immer motivierte Spieler für alle Altersklassen.
+          </p>
+          <a href="kontakt.html#mitglied" class="btn btn-primary mt-2">Jetzt Mitglied werden</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© <span id="currentYear"></span> SC Vanavil Luzern</p>
+        <a href="admin.html" style="opacity: 0.5;">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/firebase-config.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      window.VanavilDB.init();
+
+      setTimeout(async () => {
+        const allPlayers = await window.VanavilDB.getPlayers();
+        const teams = [
+          { key: 'erste-mannschaft', containerId: 'rosterErste' },
+          { key: 'junioren',         containerId: 'rosterJunioren' },
+          { key: 'academy',          containerId: 'rosterAcademy' }
+        ];
+
+        for (const team of teams) {
+          const ids = await window.VanavilDB.getRoster(team.key);
+          const players = ids.map(id => allPlayers.find(p => p.id === id)).filter(Boolean);
+          const container = document.getElementById(team.containerId);
+
+          if (players.length > 0) {
+            window.VanavilUI.renderPlayerCards(players, container);
+          } else {
+            container.innerHTML = '<p class="text-muted">Kader wird bald erg\u00e4nzt.</p>';
+          }
+        }
+      }, 500);
+    });
+  </script>
+</body>
+</html>

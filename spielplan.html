@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spielplan & Turniere | SC Vanavil Luzern</title>
+  <meta name="description" content="Spielplan, Turniere und Resultate von SC Vanavil Luzern">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="./" class="logo">
+        <div class="logo-icon">SV</div>
+        <div class="logo-text">SC Vanavil <span>Luzern • Since 1993</span></div>
+      </a>
+      
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      
+      <nav class="nav-menu" id="navMenu">
+        <a href="./" class="nav-link">Home</a>
+        <a href="news.html" class="nav-link">News</a>
+        <a href="spielplan.html" class="nav-link active">Spielplan</a>
+        <a href="mannschaft.html" class="nav-link">Mannschaft</a>
+        <a href="galerie.html" class="nav-link">Galerie</a>
+        <a href="kontakt.html" class="nav-link">Kontakt</a>
+        <a href="kontakt.html#mitglied" class="nav-cta">Mitglied werden</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <h1>Spielplan & Turniere</h1>
+        <p>Alle kommenden Spiele, STFA-Turniere und Resultate</p>
+      </div>
+    </section>
+
+    <!-- STFA Live Ticker Banner -->
+    <section class="section" style="padding-top: 0;">
+      <div class="container">
+        <div class="stfa-banner">
+          <div>
+            <h3>🔴 STFA Live Ticker</h3>
+            <p>Verfolge alle Spiele live auf der offiziellen STFA-Plattform</p>
+          </div>
+          <a href="https://stfainfo.ch/live-ticker" target="_blank" rel="noopener" class="btn btn-primary">
+            Zum Live Ticker →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Upcoming Matches -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Nächste Spiele</h2>
+          <p>Kommende Begegnungen unserer Mannschaften</p>
+        </div>
+        
+        <div class="grid grid-2" id="matchesContainer">
+          <div class="loading"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STFA Tournaments -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2>STFA Turniere 2026</h2>
+          <p>Offizielle Turniere der Swiss Tamil Football Association</p>
+        </div>
+        
+        <div id="tournamentsContainer">
+          <!-- STFA Turnierdaten von stfainfo.ch -->
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Datum</th>
+                  <th>Turnier</th>
+                  <th>Ort</th>
+                  <th>Kategorien</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>26. April</strong></td>
+                  <td>STFA Summer Cup 2026</td>
+                  <td>Affoltern am Albis</td>
+                  <td><span class="card-tag">Senior 9</span> <span class="card-tag">Senior 7</span></td>
+                </tr>
+                <tr>
+                  <td><strong>10. Mai</strong></td>
+                  <td>Eesan Memoriyal Cup</td>
+                  <td>Köniz, Schwarzenburgstrasse 321</td>
+                  <td><span class="card-tag">Senior 11</span></td>
+                </tr>
+                <tr>
+                  <td><strong>24. Mai</strong></td>
+                  <td>Annaipoopathy Cup 2026</td>
+                  <td>Lausanne (UNIL/EPFL)</td>
+                  <td><span class="card-tag">Senior</span> <span class="card-tag">Women</span></td>
+                </tr>
+                <tr>
+                  <td><strong>7. Juni</strong></td>
+                  <td>Shanker Cup 2026</td>
+                  <td>Affoltern am Albis</td>
+                  <td><span class="card-tag">Senior</span></td>
+                </tr>
+                <tr>
+                  <td><strong>21. Juni</strong></td>
+                  <td>Bluestar Lausanne Cup 2026</td>
+                  <td>Lausanne (UNIL/EPFL)</td>
+                  <td><span class="card-tag">Senior</span></td>
+                </tr>
+                <tr>
+                  <td><strong>4.-5. Juli</strong></td>
+                  <td>Maveerar Cup 2026</td>
+                  <td>TBA</td>
+                  <td><span class="card-tag">Junior U9-U21</span> <span class="card-tag">Women</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <div class="text-center mt-4">
+          <a href="https://stfainfo.ch/images/STFA_Documents/25_26_tournament_Overview.pdf" target="_blank" class="btn btn-outline">
+            📄 Komplette Turnierübersicht (PDF)
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- STFA Ranking -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2>STFA Rangliste</h2>
+          <p>Aktuelle Platzierung in der Swiss Tamil Football Association</p>
+        </div>
+        
+        <div class="grid grid-2">
+          <div class="card">
+            <h3 class="mb-2">Senior - Top 5</h3>
+            <div class="table-container" style="border: none;">
+              <table class="data-table">
+                <tbody>
+                  <tr><td>1.</td><td>FC City Boys Zürich</td><td><strong>143</strong></td></tr>
+                  <tr><td>2.</td><td>SC Blue Star Lausanne</td><td><strong>137</strong></td></tr>
+                  <tr><td>3.</td><td>Young Birds FC Luzern</td><td><strong>136</strong></td></tr>
+                  <tr><td>4.</td><td>SC Young Star Lyss</td><td><strong>122</strong></td></tr>
+                  <tr><td>5.</td><td>Tamil Youth St. Gallen</td><td><strong>118</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <div class="card" style="border-color: var(--accent);">
+            <h3 class="mb-2">Junior - Top 5</h3>
+            <div class="table-container" style="border: none;">
+              <table class="data-table">
+                <tbody>
+                  <tr><td>1.</td><td>SC Young Star Lyss</td><td><strong>114</strong></td></tr>
+                  <tr><td>2.</td><td>FC City Boys Zürich</td><td><strong>99</strong></td></tr>
+                  <tr style="background: rgba(255, 183, 3, 0.1);">
+                    <td>3.</td>
+                    <td><strong style="color: var(--accent);">SC Vanavil Luzern</strong></td>
+                    <td><strong style="color: var(--accent);">94</strong></td>
+                  </tr>
+                  <tr><td>4.</td><td>Thaiman SC Zug</td><td><strong>72</strong></td></tr>
+                  <tr><td>5.</td><td>SC Royal Bern</td><td><strong>71</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        
+        <div class="text-center mt-4">
+          <a href="https://stfainfo.ch" target="_blank" class="btn btn-secondary">
+            Komplette Rangliste auf STFA →
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© <span id="currentYear"></span> SC Vanavil Luzern</p>
+        <a href="admin.html" style="opacity: 0.5;">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/firebase-config.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      setTimeout(async () => {
+        const matches = await window.VanavilDB.getMatches(10);
+        const container = document.getElementById('matchesContainer');
+        
+        if (matches.length > 0) {
+          window.VanavilUI.renderMatchCards(matches, container);
+        } else {
+          container.innerHTML = '<div class="empty-state"><p>Spiele werden vom Admin erfasst.</p></div>';
+        }
+      }, 500);
+    });
+  </script>
+</body>
+</html>

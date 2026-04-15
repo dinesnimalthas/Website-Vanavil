@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galerie | SC Vanavil Luzern</title>
+  <meta name="description" content="Fotogalerie von SC Vanavil Luzern – Turniere, Training und Teamevents">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="./" class="logo">
+        <div class="logo-icon">SV</div>
+        <div class="logo-text">SC Vanavil <span>Luzern • Since 1993</span></div>
+      </a>
+      
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      
+      <nav class="nav-menu" id="navMenu">
+        <a href="./" class="nav-link">Home</a>
+        <a href="news.html" class="nav-link">News</a>
+        <a href="spielplan.html" class="nav-link">Spielplan</a>
+        <a href="mannschaft.html" class="nav-link">Mannschaft</a>
+        <a href="galerie.html" class="nav-link active">Galerie</a>
+        <a href="kontakt.html" class="nav-link">Kontakt</a>
+        <a href="kontakt.html#mitglied" class="nav-cta">Mitglied werden</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <h1>Galerie</h1>
+        <p>Bilder von Turnieren, Training und Teamevents</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="gallery-grid" id="galleryGrid">
+          <div class="loading" style="grid-column:1/-1"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Lightbox -->
+  <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Bildansicht">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Schliessen">&times;</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <div class="lightbox-info">
+      <strong id="lightboxTitle"></strong>
+      <span id="lightboxDesc"></span>
+    </div>
+    <div class="lightbox-controls">
+      <button class="lightbox-btn" id="lightboxPrev" aria-label="Vorheriges Bild">&#8249;</button>
+      <button class="lightbox-btn" id="lightboxNext" aria-label="Nächstes Bild">&#8250;</button>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; <span id="currentYear"></span> SC Vanavil Luzern</p>
+        <a href="admin.html" style="opacity: 0.5;">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/firebase-config.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    let galleryImages = [];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      window.VanavilDB.init();
+
+      setTimeout(async () => {
+        galleryImages = await window.VanavilDB.getGallery(100);
+        const container = document.getElementById('galleryGrid');
+
+        if (galleryImages.length > 0) {
+          window.VanavilUI.renderGalleryGrid(galleryImages, container, openLightbox);
+        } else {
+          container.innerHTML = `
+            <div class="empty-state" style="grid-column:1/-1; text-align:center; padding:4rem 2rem">
+              <p class="text-muted">Bilder werden bald hinzugefügt.</p>
+            </div>
+          `;
+        }
+      }, 500);
+
+      // Lightbox controls
+      document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+      document.getElementById('lightboxPrev').addEventListener('click', () => navigateLightbox(-1));
+      document.getElementById('lightboxNext').addEventListener('click', () => navigateLightbox(1));
+      document.getElementById('lightbox').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) closeLightbox();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (!document.getElementById('lightbox').classList.contains('open')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') navigateLightbox(-1);
+        if (e.key === 'ArrowRight') navigateLightbox(1);
+      });
+    });
+
+    let currentIndex = 0;
+
+    function openLightbox(index) {
+      currentIndex = index;
+      updateLightbox();
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function navigateLightbox(dir) {
+      currentIndex = (currentIndex + dir + galleryImages.length) % galleryImages.length;
+      updateLightbox();
+    }
+
+    function updateLightbox() {
+      const img = galleryImages[currentIndex];
+      if (!img) return;
+      document.getElementById('lightboxImg').src = img.imageURL;
+      document.getElementById('lightboxImg').alt = img.title || '';
+      document.getElementById('lightboxTitle').textContent = img.title || '';
+      document.getElementById('lightboxDesc').textContent = img.description || '';
+    }
+  </script>
+</body>
+</html>

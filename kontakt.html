@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kontakt | SC Vanavil Luzern</title>
+  <meta name="description" content="Kontaktiere SC Vanavil Luzern - Mitglied werden, Training, Sponsoring">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="./" class="logo">
+        <div class="logo-icon">SV</div>
+        <div class="logo-text">SC Vanavil <span>Luzern • Since 1993</span></div>
+      </a>
+      
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      
+      <nav class="nav-menu" id="navMenu">
+        <a href="./" class="nav-link">Home</a>
+        <a href="news.html" class="nav-link">News</a>
+        <a href="spielplan.html" class="nav-link">Spielplan</a>
+        <a href="mannschaft.html" class="nav-link">Mannschaft</a>
+        <a href="galerie.html" class="nav-link">Galerie</a>
+        <a href="kontakt.html" class="nav-link active">Kontakt</a>
+        <a href="kontakt.html#mitglied" class="nav-cta">Mitglied werden</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <h1>Kontakt</h1>
+        <p>Frage? Willsch mitmache? Meld dich.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="grid grid-2">
+          <!-- Contact Info -->
+          <div>
+            <div class="card mb-3">
+              <h3 class="mb-2">📍 So erreichst du uns</h3>
+              
+              <div style="padding: 1rem 0; border-bottom: 1px solid var(--border);">
+                <strong>Email</strong>
+                <p class="text-muted" style="margin: 0.25rem 0 0;">
+                  <a href="mailto:info@scvanavil.ch" style="color: var(--accent-2);">info@scvanavil.ch</a>
+                </p>
+              </div>
+              
+              <div style="padding: 1rem 0; border-bottom: 1px solid var(--border);">
+                <strong>Instagram</strong>
+                <p class="text-muted" style="margin: 0.25rem 0 0;">
+                  <a href="https://instagram.com/scvanavil" target="_blank" style="color: var(--accent-2);">@scvanavil</a>
+                </p>
+              </div>
+              
+              <div style="padding: 1rem 0;">
+                <strong>Trainingsort</strong>
+                <p class="text-muted" style="margin: 0.25rem 0 0;">
+                  Sportanlage Allmend, Luzern<br>
+                  <small>(genaue Zeiten auf Anfrage)</small>
+                </p>
+              </div>
+            </div>
+            
+            <div class="card">
+              <h3 class="mb-2">🔗 Wichtige Links</h3>
+              <div class="footer-links">
+                <a href="https://stfainfo.ch" target="_blank" style="padding: 0.75rem 0; display: block; border-bottom: 1px solid var(--border);">
+                  STFA – Swiss Tamil Football Association →
+                </a>
+                <a href="https://stfainfo.ch/live-ticker" target="_blank" style="padding: 0.75rem 0; display: block; border-bottom: 1px solid var(--border);">
+                  STFA Live Ticker →
+                </a>
+                <a href="https://instagram.com/scvanavil" target="_blank" style="padding: 0.75rem 0; display: block;">
+                  Instagram @scvanavil →
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Membership Form -->
+          <div class="card" id="mitglied">
+            <h3 class="mb-2">⚽ Mitglied werden</h3>
+            <p class="text-muted mb-3">
+              Du möchtest mitspielen oder den Verein unterstützen? Füll das Formular aus und wir melden uns.
+            </p>
+            
+            <form id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+              <div class="form-group">
+                <label class="form-label">Name *</label>
+                <input type="text" name="name" class="form-input" required>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Email *</label>
+                <input type="email" name="email" class="form-input" required>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Telefon</label>
+                <input type="tel" name="phone" class="form-input">
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Interesse an *</label>
+                <select name="interest" class="form-input" required>
+                  <option value="">Bitte wählen...</option>
+                  <option value="spieler">Als Spieler mitmachen</option>
+                  <option value="junior">Junioren / Academy</option>
+                  <option value="sponsor">Sponsoring</option>
+                  <option value="supporter">Supporter / Fan</option>
+                  <option value="andere">Andere Anfrage</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Nachricht</label>
+                <textarea name="message" class="form-textarea" rows="4" placeholder="Erzähl uns mehr über dich..."></textarea>
+              </div>
+              
+              <button type="submit" class="btn btn-primary" style="width: 100%;">
+                Anfrage senden
+              </button>
+            </form>
+            
+            <p class="text-muted text-center mt-3" style="font-size: 0.8rem;">
+              * Pflichtfelder. Deine Daten werden nur für die Kontaktaufnahme verwendet.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sponsoring -->
+    <section class="section">
+      <div class="container">
+        <div class="stfa-banner" style="background: linear-gradient(135deg, #0a1628, #1a237e);">
+          <div>
+            <h3>🤝 Sponsoring & Partnerschaften</h3>
+            <p>Unterstütze unseren Verein und werde sichtbar in der Community.</p>
+          </div>
+          <a href="mailto:info@scvanavil.ch?subject=Sponsoring-Anfrage" class="btn btn-primary">
+            Sponsoring anfragen
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© <span id="currentYear"></span> SC Vanavil Luzern</p>
+        <a href="admin.html" style="opacity: 0.5;">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    // Simple form feedback
+    const form = document.getElementById('contactForm');
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        // Form will submit normally to Formspree
+        // You can add custom handling here if needed
+      });
+    }
+  </script>
+</body>
+</html>
