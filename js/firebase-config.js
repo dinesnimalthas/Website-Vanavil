@@ -257,7 +257,6 @@ async function uploadFile(storagePath, file) {
   try {
     const ref = storage.ref(storagePath);
     await ref.put(file);
-    // Small delay to ensure file is available
     return await ref.getDownloadURL();
   } catch (error) {
     console.error('Error uploading file:', error);

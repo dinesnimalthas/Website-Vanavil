@@ -566,15 +566,16 @@
       const container = document.getElementById('playersList');
       if (allPlayers.length === 0) { container.innerHTML = '<p class="text-muted">Noch keine Spieler erfasst.</p>'; return; }
 
-      // Auto-repair: fetch missing download URLs from storage paths
+      // Auto-repair: fetch missing or broken download URLs from storage paths
       for (const p of allPlayers) {
         let needsUpdate = false;
         const updates = {};
-        if (!p.photoURL && p.photoStoragePath) {
+        const isBroken = (url) => !url || url.includes('firebasestorage.googleapis.com/v0/b/');
+        if (isBroken(p.photoURL) && p.photoStoragePath) {
           const url = await window.VanavilDB.getFileURL(p.photoStoragePath);
           if (url) { p.photoURL = url; updates.photoURL = url; needsUpdate = true; }
         }
-        if (!p.spielerausweisURL && p.ausweisStoragePath) {
+        if (isBroken(p.spielerausweisURL) && p.ausweisStoragePath) {
           const url = await window.VanavilDB.getFileURL(p.ausweisStoragePath);
           if (url) { p.spielerausweisURL = url; updates.spielerausweisURL = url; needsUpdate = true; }
         }
