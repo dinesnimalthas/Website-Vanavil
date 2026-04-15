@@ -1,46 +1,39 @@
 /*
  * SC Vanavil Luzern - Main Stylesheet
- * Multi-Page Website with Firebase CMS
+ * Professional Football Club Design
  */
 
 :root {
-  /* Core palette */
-  --primary: #1a237e;
-  --primary-light: #534bae;
-  --accent: #ffb703;
-  --accent-2: #00d4ff;
-  --success: #4caf50;
-  --warning: #ff9800;
-  --danger: #f44336;
+  /* Core palette – sporty, modern */
+  --primary: #1d4ed8;
+  --primary-light: #3b82f6;
+  --primary-dark: #1e3a5f;
+  --accent: #f59e0b;
+  --accent-2: #22d3ee;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
 
   /* Backgrounds */
-  --bg-dark: #0a1628;
-  --bg-card: rgba(15, 30, 50, 0.85);
-  --bg-glass: rgba(255, 255, 255, 0.03);
+  --bg-dark: #0b111e;
+  --bg-card: rgba(13, 22, 40, 0.92);
+  --bg-glass: rgba(255, 255, 255, 0.04);
+  --bg-elevated: rgba(30, 58, 95, 0.35);
 
   /* Text */
-  --text: #f0f4ff;
-  --text-muted: #94a3c4;
-  --text-dark: #0a1628;
+  --text: #f1f5f9;
+  --text-muted: #8b9cc0;
+  --text-dark: #0b111e;
 
   /* Effects */
-  --border: rgba(255, 255, 255, 0.1);
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  --shadow-glow: 0 0 40px rgba(0, 212, 255, 0.15);
-  --radius: 16px;
-  --radius-sm: 8px;
+  --border: rgba(255, 255, 255, 0.08);
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 4px 24px rgba(29, 78, 216, 0.2);
+  --radius: 12px;
+  --radius-sm: 6px;
 
-  /* Gradient for accents */
-  --rainbow: linear-gradient(
-    90deg,
-    #f94144,
-    #f8961e,
-    #f9c74f,
-    #90be6d,
-    #43aa8b,
-    #577590,
-    #f94144
-  );
+  /* Brand gradient */
+  --brand-gradient: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
 }
 
 /* Reset & Base */
@@ -58,7 +51,7 @@ html {
 
 body {
   font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-  background: linear-gradient(135deg, #0a1628 0%, #0f2744 50%, #0a1628 100%);
+  background: var(--bg-dark);
   color: var(--text);
   min-height: 100vh;
   line-height: 1.6;
@@ -100,18 +93,10 @@ h3 {
 }
 
 .text-gradient {
-  background: var(--rainbow);
-  background-size: 200% auto;
+  background: var(--brand-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: gradient-shift 3s linear infinite;
-}
-
-@keyframes gradient-shift {
-  to {
-    background-position: 200% center;
-  }
 }
 
 /* Layout */
@@ -158,7 +143,7 @@ h3 {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(10, 22, 40, 0.9);
+  background: rgba(11, 17, 30, 0.95);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
 }
@@ -177,15 +162,16 @@ h3 {
 }
 
 .logo-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--rainbow);
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--brand-gradient);
   display: grid;
   place-items: center;
   font-weight: 800;
-  font-size: 1.1rem;
-  color: var(--bg-dark);
+  font-size: 1rem;
+  color: #fff;
+  letter-spacing: -0.02em;
 }
 
 .logo-text {
@@ -224,22 +210,23 @@ h3 {
 }
 
 .nav-link.active {
-  color: var(--accent);
+  color: var(--primary-light);
 }
 
 .nav-cta {
   margin-left: 1rem;
   padding: 0.5rem 1.25rem;
-  background: var(--accent);
-  color: var(--text-dark);
-  border-radius: 50px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 6px;
   font-weight: 600;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .nav-cta:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(255, 183, 3, 0.3);
+  background: var(--primary-light);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(29, 78, 216, 0.35);
 }
 
 /* Mobile Menu Toggle */
@@ -282,8 +269,9 @@ h3 {
 }
 
 .card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
   box-shadow: var(--shadow-glow);
+  border-color: rgba(29, 78, 216, 0.2);
 }
 
 .card-image {
@@ -306,11 +294,13 @@ h3 {
 
 .card-tag {
   padding: 0.25rem 0.75rem;
-  background: rgba(0, 212, 255, 0.15);
-  color: var(--accent-2);
-  border-radius: 50px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  background: rgba(29, 78, 216, 0.15);
+  color: var(--primary-light);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .card h3 {
@@ -328,24 +318,26 @@ h3 {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 50px;
+  padding: 0.75rem 1.75rem;
+  border-radius: 6px;
   font-weight: 600;
   font-size: 0.9rem;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
+  letter-spacing: 0.01em;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent), #ffd166);
-  color: var(--text-dark);
-  box-shadow: 0 4px 15px rgba(255, 183, 3, 0.3);
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(29, 78, 216, 0.35);
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 183, 3, 0.4);
+  background: var(--primary-light);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(29, 78, 216, 0.45);
 }
 
 .btn-secondary {
@@ -360,18 +352,19 @@ h3 {
 
 .btn-outline {
   background: transparent;
-  color: var(--accent);
-  border: 2px solid var(--accent);
+  color: var(--primary-light);
+  border: 2px solid var(--primary-light);
 }
 
 .btn-outline:hover {
-  background: var(--accent);
-  color: var(--text-dark);
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
 }
 
 /* ========== HERO SECTION ========== */
 .hero {
-  min-height: 80vh;
+  min-height: 85vh;
   display: flex;
   align-items: center;
   position: relative;
@@ -381,30 +374,24 @@ h3 {
 .hero::before {
   content: "";
   position: absolute;
-  top: -50%;
-  right: -20%;
-  width: 60%;
-  height: 100%;
-  background: radial-gradient(
-    circle,
-    rgba(0, 212, 255, 0.1) 0%,
-    transparent 70%
-  );
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 20%, rgba(29, 78, 216, 0.15) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 10% 80%, rgba(245, 158, 11, 0.06) 0%, transparent 60%);
   pointer-events: none;
 }
 
 .hero::after {
   content: "";
   position: absolute;
-  bottom: -30%;
-  left: -10%;
-  width: 50%;
-  height: 80%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 183, 3, 0.08) 0%,
-    transparent 70%
-  );
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
   pointer-events: none;
 }
 
@@ -419,15 +406,16 @@ h3 {
 
 .hero-text .kicker {
   display: inline-block;
-  padding: 0.5rem 1rem;
-  background: rgba(0, 212, 255, 0.1);
-  border: 1px solid rgba(0, 212, 255, 0.3);
-  border-radius: 50px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--accent-2);
+  padding: 0.4rem 1rem;
+  background: rgba(29, 78, 216, 0.12);
+  border: 1px solid rgba(29, 78, 216, 0.3);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--primary-light);
   margin-bottom: 1.5rem;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .hero-text h1 {
@@ -454,36 +442,24 @@ h3 {
 }
 
 .hero-logo-ring {
-  width: 280px;
-  height: 280px;
-  border-radius: 50%;
-  padding: 6px;
-  background: var(--rainbow);
-  animation: spin-slow 20s linear infinite;
-}
-
-@keyframes spin-slow {
-  to {
-    transform: rotate(360deg);
-  }
+  width: 260px;
+  height: 260px;
+  border-radius: var(--radius);
+  padding: 3px;
+  background: var(--brand-gradient);
+  position: relative;
 }
 
 .hero-logo-inner {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
+  border-radius: calc(var(--radius) - 2px);
   background: var(--bg-dark);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  animation: spin-reverse 20s linear infinite;
-}
-
-@keyframes spin-reverse {
-  to {
-    transform: rotate(-360deg);
-  }
+  position: relative;
 }
 
 .hero-logo-inner img {
@@ -493,9 +469,10 @@ h3 {
 }
 
 .hero-logo-inner span {
-  font-size: 2.5rem;
+  font-size: 3.5rem;
   font-weight: 800;
   color: var(--text);
+  letter-spacing: -0.02em;
 }
 
 /* Stats Row */
@@ -514,7 +491,7 @@ h3 {
 .stat-value {
   font-size: 2rem;
   font-weight: 800;
-  color: var(--accent);
+  color: #fff;
 }
 
 .stat-label {
@@ -540,7 +517,7 @@ h3 {
 .match-date .day {
   font-size: 1.75rem;
   font-weight: 800;
-  color: var(--accent);
+  color: var(--primary-light);
   line-height: 1;
 }
 
@@ -723,9 +700,9 @@ h3 {
 }
 
 .footer-social a:hover {
-  background: var(--accent);
-  color: var(--text-dark);
-  border-color: var(--accent);
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
 }
 
 .footer-bottom {
@@ -753,7 +730,7 @@ h3 {
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(0, 212, 255, 0.05) 0%,
+    rgba(29, 78, 216, 0.06) 0%,
     transparent 100%
   );
   pointer-events: none;
@@ -796,8 +773,8 @@ h3 {
 .form-input:focus,
 .form-textarea:focus {
   outline: none;
-  border-color: var(--accent-2);
-  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.15);
 }
 
 .form-textarea {
@@ -852,7 +829,7 @@ h3 {
   width: 40px;
   height: 40px;
   border: 3px solid var(--border);
-  border-top-color: var(--accent);
+  border-top-color: var(--primary-light);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -956,6 +933,7 @@ h3 {
     transform: translateY(0);
     opacity: 1;
     pointer-events: auto;
+    z-index: 99;
   }
 
   .nav-link {
@@ -988,8 +966,8 @@ h3 {
   }
 
   .hero-logo-ring {
-    width: 200px;
-    height: 200px;
+    width: 180px;
+    height: 180px;
   }
 
   .stats-row {
@@ -1115,8 +1093,8 @@ h3 {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  background: var(--accent);
-  color: var(--text-dark);
+  background: var(--primary);
+  color: #fff;
   font-weight: 800;
   font-size: 0.75rem;
   padding: 0.2rem 0.45rem;
@@ -1167,7 +1145,7 @@ h3 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, #00d4ff22 100%);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
   gap: 1rem;
   padding: 3rem;
 }
@@ -1357,7 +1335,7 @@ h3 {
 
 .upload-progress-bar {
   height: 100%;
-  background: var(--accent);
+  background: var(--primary-light);
   width: 0%;
   transition: width 0.3s;
   border-radius: 3px;
@@ -1420,7 +1398,7 @@ h3 {
 .roster-player-item button {
   background: none;
   border: none;
-  color: var(--accent);
+  color: var(--primary-light);
   cursor: pointer;
   font-size: 1rem;
   padding: 0.1rem 0.3rem;
@@ -1429,7 +1407,7 @@ h3 {
 }
 
 .roster-player-item button:hover {
-  background: rgba(255,183,3,0.2);
+  background: rgba(29,78,216,0.2);
 }
 
 /* ========== ADMIN: GALLERY LIST ========== */

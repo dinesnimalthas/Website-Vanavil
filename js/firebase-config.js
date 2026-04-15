@@ -256,10 +256,24 @@ async function uploadFile(storagePath, file) {
   if (!storage || !auth.currentUser) return null;
   try {
     const ref = storage.ref(storagePath);
-    const snapshot = await ref.put(file);
-    return await snapshot.ref.getDownloadURL();
+    await ref.put(file);
+    // Small delay to ensure file is available
+    return await ref.getDownloadURL();
   } catch (error) {
     console.error('Error uploading file:', error);
+    return null;
+  }
+}
+
+/**
+ * Get download URL for an existing file in Storage
+ */
+async function getFileURL(storagePath) {
+  if (!storage || !storagePath) return null;
+  try {
+    return await storage.ref(storagePath).getDownloadURL();
+  } catch (error) {
+    console.error('Error getting file URL:', error);
     return null;
   }
 }
@@ -465,6 +479,7 @@ window.VanavilDB = {
   // Storage
   uploadFile,
   deleteFile,
+  getFileURL,
   // Settings
   getSettings,
   updateSettings,
