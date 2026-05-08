@@ -68,7 +68,8 @@ function initNavigation() {
 
     // Close on outside click
     document.addEventListener('click', (e) => {
-      if (!toggle.contains(e.target) && !menu.contains(e.target)) {
+      // Only close if menu is open and the click is outside both the menu and the toggle button
+      if (menu.classList.contains('open') && !toggle.contains(e.target) && !menu.contains(e.target)) {
         closeNav();
       }
     });
