@@ -49,25 +49,33 @@ function initNavigation() {
   const menu = document.getElementById('navMenu');
   
   if (toggle && menu) {
+    const closeNav = () => {
+      toggle.classList.remove('active');
+      menu.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+
     toggle.addEventListener('click', () => {
-      toggle.classList.toggle('active');
-      menu.classList.toggle('open');
+      const isOpen = menu.classList.toggle('open');
+      toggle.classList.toggle('active', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
     });
-    
+
     // Close on link click
     menu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        toggle.classList.remove('active');
-        menu.classList.remove('open');
-      });
+      link.addEventListener('click', closeNav);
     });
-    
+
     // Close on outside click
     document.addEventListener('click', (e) => {
       if (!toggle.contains(e.target) && !menu.contains(e.target)) {
-        toggle.classList.remove('active');
-        menu.classList.remove('open');
+        closeNav();
       }
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeNav();
     });
   }
   
@@ -177,7 +185,9 @@ function renderNewsCards(news, container, featured = false) {
   
   container.innerHTML = news.map((item, index) => `
     <article class="card ${featured && index === 0 ? 'news-featured' : ''}">
-      <div class="card-image" style="background: linear-gradient(135deg, var(--bg-card), var(--primary-light));"></div>
+      <div class="card-image" style="${item.image
+        ? `background-image:url('${escapeHtml(item.image)}');background-size:cover;background-position:center;`
+        : 'background:linear-gradient(135deg,var(--bg-card),var(--primary-light));'}"></div>
       <div class="card-meta">
         <span class="card-tag">${item.category || 'News'}</span>
         <span>${formatDate(item.date)}</span>

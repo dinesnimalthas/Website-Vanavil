@@ -206,19 +206,31 @@
     </div>
   </footer>
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="js/firebase-config.js"></script>
   <script src="js/main.js"></script>
   <script>
-    // Simple form feedback
-    const form = document.getElementById('contactForm');
-    if (form) {
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('contactForm');
+      if (!form) return;
+
+      // If Formspree is not yet configured, handle gracefully
+      const isPlaceholder = form.action.includes('YOUR_FORM_ID');
+
       form.addEventListener('submit', function(e) {
-        // Form will submit normally to Formspree
-        // You can add custom handling here if needed
+        if (isPlaceholder) {
+          e.preventDefault();
+          const name = form.querySelector('[name=name]').value.trim();
+          const interest = form.querySelector('[name=interest]').value;
+          const message = form.querySelector('[name=message]').value.trim();
+          const subject = encodeURIComponent((interest || 'Anfrage') + ' – ' + (name || 'SC Vanavil Website'));
+          const body = encodeURIComponent((message ? message + '\n\n' : '') + 'Name: ' + name);
+          window.location.href = 'mailto:info@scvanavil.ch?subject=' + subject + '&body=' + body;
+        }
+        // If Formspree ID is set, form submits normally
       });
-    }
+    });
   </script>
 </body>
 </html>
