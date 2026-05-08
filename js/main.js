@@ -18,8 +18,26 @@ document.addEventListener('DOMContentLoaded', () => {
         adminBar.classList.toggle('visible', !!user);
       }
     });
+
+    // Load team photo into hero
+    loadHeroTeamPhoto();
   }
 });
+
+async function loadHeroTeamPhoto() {
+  const emblem = document.getElementById('heroEmblem');
+  if (!emblem) return;
+  try {
+    const settings = await window.VanavilDB.getSettings();
+    if (settings && settings.teamPhotoURL) {
+      emblem.innerHTML = '<img src="' + settings.teamPhotoURL + '" alt="Teamfoto SC Vanavil" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">';
+      emblem.style.overflow = 'hidden';
+      emblem.style.padding = '0';
+    }
+  } catch (e) {
+    // Fallback: keep the emblem text
+  }
+}
 
 // ========== NAVIGATION ==========
 function initNavigation() {
