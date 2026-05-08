@@ -397,15 +397,45 @@ a.card{display:block;}
   .hero-title{font-size:clamp(3.5rem,12vw,6rem);}
   .hero-stats{grid-template-columns:repeat(3,1fr);}
   .footer-grid,.footer-top{grid-template-columns:1fr 1fr;gap:2.5rem;}
+
+  /* Mobile nav overlay */
   .nav-menu,.nav-list{
-    position:fixed;top:64px;left:0;right:0;bottom:0;background:var(--bg);
-    flex-direction:column;justify-content:center;align-items:center;gap:.5rem;
+    position:fixed;top:0;left:0;right:0;bottom:0;
+    padding-top:80px; /* clear the sticky header */
+    background:rgba(13,13,13,.97);
+    flex-direction:column;justify-content:center;align-items:center;gap:.25rem;
     transform:translateX(100%);transition:transform .35s cubic-bezier(.23,1,.32,1);
-    border-top:1px solid var(--border);z-index:50;
+    overflow-y:auto;z-index:90;
+    border-top:none;
   }
-  .nav-menu.open,.nav-list.open{transform:translateX(0);z-index:100;}
-  .nav-link{font-size:1.1rem;padding:.75rem 2rem;}
-  .nav-cta,.nav-cta-link{font-size:.95rem;padding:.7rem 1.5rem;margin-left:0;margin-top:1rem;}
+  .nav-menu.open,.nav-list.open{transform:translateX(0);}
+
+  /* Ensure header sits above the nav overlay */
+  .site-header{z-index:95;}
+
+  /* Nav links — larger touch targets */
+  .nav-link{
+    font-size:1.15rem;padding:.9rem 2.5rem;
+    width:100%;text-align:center;border-radius:0;
+    color:var(--text-muted);
+  }
+  .nav-link:hover,.nav-link:focus{color:var(--text);background:rgba(255,255,255,.03);}
+
+  /* Replace underline with a left-side bar for active state on mobile */
+  .nav-link.active::after{display:none;}
+  .nav-link.active{
+    color:var(--accent);
+    background:rgba(196,151,62,.07);
+    border-left:3px solid var(--accent);
+  }
+
+  /* CTA button inside overlay */
+  .nav-cta,.nav-cta-link{
+    font-size:.95rem;padding:.85rem 2.5rem;
+    margin-left:0;margin-top:1.25rem;
+    width:auto;min-width:200px;text-align:center;
+  }
+
   .menu-toggle{display:flex;}
   .gallery-grid{columns:2;}
   .news-featured{grid-column:span 1;}
@@ -454,11 +484,12 @@ a.card{display:block;}
   border-left:2px solid var(--accent);padding-left:1.25rem;
 }
 
-/* Active nav indicator */
+/* Active nav indicator — desktop underline */
 .nav-link{position:relative;}
 .nav-link.active::after{
   content:'';position:absolute;bottom:-1px;left:.5rem;right:.5rem;
   height:2px;background:var(--accent);border-radius:2px;
+  pointer-events:none;
 }
 
 /* Hero ghost watermark word */
@@ -551,6 +582,10 @@ a.card{display:block;}
   color:var(--accent);margin-top:.5rem;opacity:0;transition:opacity .15s;
 }
 .player-card--clickable:hover .player-card-hint{opacity:1;}
+/* Always show hint on touch devices (no hover) */
+@media(hover:none){
+  .player-card--clickable .player-card-hint{opacity:1;}
+}
 
 .player-modal-overlay{
   position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:600;
@@ -601,4 +636,38 @@ a.card{display:block;}
   font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
   color:var(--text-muted);border:1px solid var(--border);border-radius:2px;
   display:inline-block;padding:.25rem .65rem;
+}
+
+/* ============================================================
+   RESPONSIVE — new elements
+   ============================================================ */
+@media(max-width:900px){
+  .team-photo-img{max-height:380px;}
+}
+@media(max-width:600px){
+  /* Team photo */
+  .team-photo-img{max-height:260px;object-position:center top;}
+
+  /* Player grid tighter on small screens */
+  .player-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.75rem;}
+  .player-card{padding:1.1rem .75rem;}
+  .player-photo{width:68px;height:68px;}
+
+  /* Player modal — full-width bottom sheet */
+  .player-modal-overlay{
+    align-items:flex-end;padding:0;
+    background:rgba(0,0,0,.75);
+  }
+  .player-modal{
+    width:100%;max-height:88vh;
+    border-radius:16px 16px 0 0;
+    border-bottom:none;
+    animation:modalInMobile .3s cubic-bezier(.16,1,.3,1);
+  }
+  @keyframes modalInMobile{from{transform:translateY(100%);}to{transform:translateY(0);}}
+  .player-modal-photo-wrap{border-radius:16px 16px 0 0;}
+  .player-modal-photo-wrap{aspect-ratio:3/2;}
+  .player-modal-close{width:40px;height:40px;font-size:1.3rem;top:.85rem;right:.85rem;}
+  .player-modal-body{padding:1.25rem 1.25rem 2rem;}
+  .player-modal-name{font-size:1.4rem;}
 }
