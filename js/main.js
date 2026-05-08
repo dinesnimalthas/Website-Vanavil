@@ -25,17 +25,21 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function loadHeroTeamPhoto() {
-  const emblem = document.getElementById('heroEmblem');
-  if (!emblem) return;
+  const section = document.getElementById('teamPhotoSection');
+  const img = document.getElementById('teamPhotoImg');
+  if (!section || !img) return;
   try {
     const settings = await window.VanavilDB.getSettings();
     if (settings && settings.teamPhotoURL) {
-      emblem.innerHTML = '<img src="' + settings.teamPhotoURL + '" alt="Teamfoto SC Vanavil" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">';
-      emblem.style.overflow = 'hidden';
-      emblem.style.padding = '0';
+      img.src = settings.teamPhotoURL;
+      section.style.display = '';
+      // Re-observe reveal elements inside the newly shown section
+      section.querySelectorAll('.reveal').forEach(el => {
+        if (typeof revealObserver !== 'undefined') revealObserver.observe(el);
+      });
     }
   } catch (e) {
-    // Fallback: keep the emblem text
+    // no team photo set yet
   }
 }
 
@@ -275,7 +279,7 @@ function escapeHtml(text) {
 /**
  * Render player cards for a given list of player objects
  */
-function renderPlayerCards(players, container) {
+function renderPlayerCards(players, container, onCardClick) {
   if (!container) return;
 
   if (players.length === 0) {
@@ -283,8 +287,8 @@ function renderPlayerCards(players, container) {
     return;
   }
 
-  container.innerHTML = players.map(p => `
-    <div class="player-card">
+  container.innerHTML = players.map((p, i) => `
+    <div class="player-card${onCardClick ? ' player-card--clickable' : ''}" data-player-index="${i}" ${onCardClick ? 'role="button" tabindex="0"' : ''}>
       <div class="player-photo" style="${p.photoURL ? `background-image:url('${escapeHtml(p.photoURL)}')` : ''}">
         ${!p.photoURL ? `<span class="player-initials">${escapeHtml(p.name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase())}</span>` : ''}
         ${p.number ? `<span class="player-number">#${escapeHtml(String(p.number))}</span>` : ''}
@@ -293,8 +297,19 @@ function renderPlayerCards(players, container) {
         <strong class="player-name">${escapeHtml(p.name)}</strong>
         <span class="player-position">${escapeHtml(p.position || '')}</span>
       </div>
+      ${onCardClick ? '<div class="player-card-hint">Details</div>' : ''}
     </div>
   `).join('');
+
+  if (onCardClick) {
+    container.querySelectorAll('.player-card').forEach((card, i) => {
+      const open = () => onCardClick(players[i]);
+      card.addEventListener('click', open);
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+      });
+    });
+  }
 }
 
 /**
