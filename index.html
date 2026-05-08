@@ -9,7 +9,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
   
   <!-- Styles -->
   <link rel="stylesheet" href="css/main.css">
@@ -51,76 +51,67 @@
   </header>
 
   <main>
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section class="hero">
-      <div class="container hero-content">
+      <span class="hero-bg-word" aria-hidden="true">VANAVIL</span>
+      <div class="container hero-body">
         <div class="hero-text">
-          <span class="kicker">STFA Mitglied · Seit 1993</span>
-          <h1>Wir sind <span class="text-gradient">Vanavil</span></h1>
-          <p>
-            Tamilischer Fussballverein aus Luzern. Seit 1993 dabei – vom Grümpeli
-            bis zum STFA-Turnier. Bei uns ist jeder willkommen, der gern kickt.
-          </p>
-          <div class="hero-actions">
-            <a href="kontakt.html#mitglied" class="btn btn-primary">Mitglied werden</a>
-            <a href="spielplan.html" class="btn btn-secondary">Nächstes Spiel →</a>
+          <div class="hero-eyebrow">
+            <div class="hero-eyebrow-line"></div>
+            <span class="label">STFA Mitglied &middot; Seit 1993</span>
           </div>
-          
-          <div class="stats-row">
-            <div class="stat-item">
-              <div class="stat-value">30+</div>
-              <div class="stat-label">Jahre</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-value">94</div>
-              <div class="stat-label">STFA Punkte</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-value">#3</div>
-              <div class="stat-label">Junior Ranking</div>
-            </div>
+          <h1 class="hero-title">SC<br><em>Vanavil</em></h1>
+          <p class="hero-desc">Tamilischer Fussballverein im Herzen der Schweiz. Seit 1993 – Teamgeist, Leidenschaft und Fussball, der verbindet.</p>
+          <div class="hero-actions">
+            <a href="spielplan.html" class="btn btn-solid">Nächstes Spiel</a>
+            <a href="kontakt.html#mitglied" class="btn btn-ghost">Mitglied werden</a>
           </div>
         </div>
-        
         <div class="hero-visual">
-          <div class="hero-logo-ring">
-            <div class="hero-logo-inner">
-              <span>SV</span>
-            </div>
+          <div class="hero-emblem">SV</div>
+          <div class="hero-visual-stats">
+            <div class="hero-visual-row"><span>Junioren Ranking</span><strong class="hl" data-count="3" data-prefix="#">#3 STFA</strong></div>
+            <div class="hero-visual-row"><span>STFA Punkte</span><strong data-count="94">94</strong></div>
+            <div class="hero-visual-row"><span>Gegründet</span><strong>1993</strong></div>
+            <div class="hero-visual-row"><span>Liga</span><strong>STFA</strong></div>
           </div>
         </div>
       </div>
     </section>
+
+    <!-- Ticker -->
+    <div class="ticker-wrap" aria-hidden="true">
+      <div class="ticker-track">
+        <span class="ticker-item">SC Vanavil Luzern <span class="ticker-dot"></span></span>
+        <span class="ticker-item">Seit 1993 <span class="ticker-dot"></span></span>
+        <span class="ticker-item">Tamilischer Fussball <span class="ticker-dot"></span></span>
+        <span class="ticker-item">STFA Mitglied <span class="ticker-dot"></span></span>
+        <span class="ticker-item">Teamgeist <span class="ticker-dot"></span></span>
+        <span class="ticker-item">Leidenschaft <span class="ticker-dot"></span></span>
+        <span class="ticker-item">Swiss Tamil Football <span class="ticker-dot"></span></span>
+        <span class="ticker-item">Luzern <span class="ticker-dot"></span></span>
+        <span class="ticker-item">SC Vanavil Luzern <span class="ticker-dot"></span></span>
+        <span class="ticker-item">Seit 1993 <span class="ticker-dot"></span></span>
+        <span class="ticker-item">Tamilischer Fussball <span class="ticker-dot"></span></span>
+        <span class="ticker-item">STFA Mitglied <span class="ticker-dot"></span></span>
+        <span class="ticker-item">Teamgeist <span class="ticker-dot"></span></span>
+        <span class="ticker-item">Leidenschaft <span class="ticker-dot"></span></span>
+        <span class="ticker-item">Swiss Tamil Football <span class="ticker-dot"></span></span>
+        <span class="ticker-item">Luzern <span class="ticker-dot"></span></span>
+      </div>
+    </div>
 
     <!-- STFA Banner -->
     <section class="section">
       <div class="container">
-        <div class="stfa-banner">
+        <div class="stfa-strip reveal">
           <div>
             <h3>Swiss Tamil Football Association</h3>
-            <p>Wir spielen in der STFA – der Liga für tamilische Vereine in der Schweiz.</p>
+            <p>Wir spielen in der STFA – der offiziellen Liga für tamilische Vereine in der Schweiz.</p>
           </div>
-          <div class="stfa-links">
-            <a href="https://stfainfo.ch/live-ticker" target="_blank" rel="noopener" class="btn btn-primary">
-              Live Ticker
-            </a>
-            <a href="https://stfainfo.ch" target="_blank" rel="noopener" class="btn btn-secondary">
-              STFA Website
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Teamfoto -->
-    <section class="section" id="teamPhotoSectionWrap">
-      <div class="container">
-        <div class="team-photo-section" id="teamPhotoSection">
-          <div class="team-photo-wrapper" id="teamPhotoWrapper">
-          </div>
-          <div class="team-photo-overlay" id="teamPhotoOverlay" style="display:none">
-            <h2>Unser Team</h2>
-            <p>SC Vanavil Luzern – Seit 1993</p>
+          <div class="stfa-strip-actions">
+            <a href="https://stfainfo.ch/live-ticker" target="_blank" rel="noopener" class="btn btn-solid">Live Ticker</a>
+            <a href="https://stfainfo.ch" target="_blank" rel="noopener" class="btn btn-ghost">STFA Website</a>
           </div>
         </div>
       </div>
@@ -129,35 +120,33 @@
     <!-- Upcoming Matches -->
     <section class="section">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header reveal">
+          <span class="section-num">01 — Spielplan</span>
           <h2>Nächste Spiele</h2>
-          <p>Unsere kommenden Begegnungen</p>
+          <p>Komm vorbei und unterstütze unser Team.</p>
         </div>
-        
-        <div class="grid grid-2" id="matchesContainer">
+        <div id="matchesContainer">
           <div class="loading"><div class="spinner"></div></div>
         </div>
-        
-        <div class="text-center mt-4">
-          <a href="spielplan.html" class="btn btn-outline">Alle Spiele & Turniere →</a>
+        <div class="text-center" style="margin-top:2.5rem">
+          <a href="spielplan.html" class="btn btn-outline">Alle Spiele &amp; Turniere</a>
         </div>
       </div>
     </section>
 
-    <!-- News Preview -->
-    <section class="section">
+    <!-- News -->
+    <section class="section" style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header reveal">
+          <span class="section-num">02 — News</span>
           <h2>Aktuelles</h2>
-          <p>News und Updates vom Verein</p>
+          <p>News und Updates vom Verein.</p>
         </div>
-        
         <div class="grid grid-3" id="newsContainer">
           <div class="loading"><div class="spinner"></div></div>
         </div>
-        
-        <div class="text-center mt-4">
-          <a href="news.html" class="btn btn-outline">Alle News →</a>
+        <div class="text-center" style="margin-top:2.5rem">
+          <a href="news.html" class="btn btn-outline">Alle News</a>
         </div>
       </div>
     </section>
@@ -165,27 +154,22 @@
     <!-- Instagram -->
     <section class="section instagram-section">
       <div class="container">
-        <div class="instagram-header">
+        <div class="instagram-header reveal">
           <h2>@scvanavil</h2>
-          <a href="https://instagram.com/scvanavil" target="_blank" rel="noopener" class="btn btn-secondary">
-            Folgen auf Instagram
-          </a>
+          <a href="https://instagram.com/scvanavil" target="_blank" rel="noopener" class="btn btn-ghost">Auf Instagram folgen</a>
         </div>
       </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="section">
+    <!-- CTA -->
+    <section class="section-cta-amber">
       <div class="container">
-        <div class="card" style="text-align: center; padding: 3rem;">
-          <h2>Werde Teil unserer Familie</h2>
-          <p class="text-muted" style="max-width: 500px; margin: 1rem auto;">
-            Ob als Spieler, Supporter oder Sponsor – bei SC Vanavil bist du willkommen.
-          </p>
-          <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
-            <a href="kontakt.html#mitglied" class="btn btn-primary">Mitglied werden</a>
-            <a href="kontakt.html" class="btn btn-secondary">Kontakt aufnehmen</a>
-          </div>
+        <span class="section-num">03 — Mitmachen</span>
+        <h2>Werde Teil von<br>SC Vanavil</h2>
+        <p class="cta-sub">Als Spieler, Junior, Gönner oder Sponsor – jeder ist willkommen. Gestalte die Zukunft des Vereins mit.</p>
+        <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+          <a href="kontakt.html#mitglied" class="btn btn-black">Mitglied werden</a>
+          <a href="kontakt.html" class="btn btn-outline-black">Sponsoring &amp; Kontakt</a>
         </div>
       </div>
     </section>
@@ -198,11 +182,10 @@
         <div class="footer-brand">
           <a href="./" class="logo">
             <div class="logo-icon">SV</div>
-            <div class="logo-text">SC Vanavil <span>Luzern</span></div>
+            <div class="logo-text">SC Vanavil <span>Luzern · 1993</span></div>
           </a>
           <p>Tamilischer Fussballverein in der Zentralschweiz. Gegründet 1993. Mitglied der Swiss Tamil Football Association.</p>
         </div>
-        
         <div>
           <h4 class="footer-heading">Navigation</h4>
           <div class="footer-links">
@@ -213,7 +196,6 @@
             <a href="galerie.html">Galerie</a>
           </div>
         </div>
-        
         <div>
           <h4 class="footer-heading">Verein</h4>
           <div class="footer-links">
@@ -222,37 +204,29 @@
             <a href="https://stfainfo.ch" target="_blank">STFA</a>
           </div>
         </div>
-        
         <div>
-          <h4 class="footer-heading">Social Media</h4>
+          <h4 class="footer-heading">Social</h4>
           <div class="footer-social">
             <a href="https://instagram.com/scvanavil" target="_blank" rel="noopener" aria-label="Instagram">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-              </svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
             </a>
             <a href="mailto:info@scvanavil.ch" aria-label="Email">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-              </svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
             </a>
           </div>
         </div>
       </div>
-      
       <div class="footer-bottom">
-        <p>© <span id="currentYear"></span> SC Vanavil Luzern. Alle Rechte vorbehalten.</p>
-        <p>
-          <a href="admin.html" style="opacity: 0.5;">Admin</a>
-        </p>
+        <p>&copy; <span id="currentYear"></span> SC Vanavil Luzern</p>
+        <p><a href="admin.html" style="opacity:.4">Admin</a></p>
       </div>
     </div>
   </footer>
 
   <!-- Admin Bar (hidden by default, shown when logged in) -->
   <div class="admin-bar" id="adminBar">
-    <span>Admin Mode</span>
-    <a href="admin.html" class="btn btn-primary" style="padding: 0.5rem 1rem;">Dashboard</a>
+    <span>Admin Modus</span>
+    <a href="admin.html" class="btn btn-primary" style="padding: 0.5rem 1rem; background: #fff; color: #000;">Dashboard</a>
     <button class="btn btn-secondary" id="adminLogoutBtn" style="padding: 0.5rem 1rem;">Logout</button>
   </div>
 
@@ -261,6 +235,20 @@
   <script src="js/main.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
+      // --- UI Enhancements ---
+      // Card hover effect
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        card.addEventListener('mousemove', e => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          card.style.setProperty('--mouse-x', `${x}px`);
+          card.style.setProperty('--mouse-y', `${y}px`);
+        });
+      });
+
+      // --- Data Loading ---
       setTimeout(async () => {
         // Load matches
         const matches = await window.VanavilDB.getMatches(4);
@@ -268,7 +256,7 @@
         if (matches.length > 0) {
           window.VanavilUI.renderMatchCards(matches, matchContainer);
         } else {
-          matchContainer.innerHTML = '<div class="empty-state"><p>Spiele werden bald ergänzt</p></div>';
+          matchContainer.innerHTML = '<div class="empty-state"><p>Die neuen Spieldaten werden bald aufgeschaltet.</p></div>';
         }
 
         // Load news
@@ -277,19 +265,50 @@
         if (news.length > 0) {
           window.VanavilUI.renderNewsCards(news, newsContainer, true);
         } else {
-          newsContainer.innerHTML = '<div class="empty-state"><p>News werden bald veröffentlicht</p></div>';
+          newsContainer.innerHTML = '<div class="empty-state"><p>Weitere News folgen in Kürze.</p></div>';
         }
-
-        // Load team photo
-        const settings = await window.VanavilDB.getSettings();
-        if (settings.teamPhotoURL) {
-          document.getElementById('teamPhotoWrapper').innerHTML = '<img src="' + settings.teamPhotoURL + '" alt="SC Vanavil Teamfoto">';
-          document.getElementById('teamPhotoOverlay').style.display = '';
-        } else {
-          document.getElementById('teamPhotoSectionWrap').style.display = 'none';
-        }
-      }, 500);
+      }, 300);
     });
+  </script>
+
+  <!-- Animation JS -->
+  <script>
+    // Scroll reveal
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // Number counter animation
+    function animateCount(el) {
+      const raw = el.dataset.count;
+      const target = parseFloat(raw);
+      const prefix = el.dataset.prefix || '';
+      const suffix = el.dataset.suffix || '';
+      const dur = 1600;
+      const start = performance.now();
+      (function tick(now) {
+        const p = Math.min((now - start) / dur, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = prefix + Math.floor(target * eased) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      })(start);
+    }
+    const counterObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.dataset.counted) {
+          entry.target.dataset.counted = '1';
+          animateCount(entry.target);
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
   </script>
 </body>
 </html>
