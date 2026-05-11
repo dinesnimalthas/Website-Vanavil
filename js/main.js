@@ -27,12 +27,19 @@ document.addEventListener('DOMContentLoaded', () => {
 async function loadHeroTeamPhoto() {
   const section = document.getElementById('teamPhotoSection');
   const img = document.getElementById('teamPhotoImg');
+  const heroBg = document.getElementById('heroBgPhoto');
+  const heroSection = document.getElementById('heroSection');
   if (!section || !img) return;
   try {
     const settings = await window.VanavilDB.getSettings();
     if (settings && settings.teamPhotoURL) {
       img.src = settings.teamPhotoURL;
       section.style.display = '';
+      // Show team photo as hero background
+      if (heroBg && heroSection) {
+        heroBg.style.backgroundImage = 'url(' + settings.teamPhotoURL + ')';
+        heroSection.classList.add('has-team-photo');
+      }
       // Re-observe reveal elements inside the newly shown section
       section.querySelectorAll('.reveal').forEach(el => {
         if (typeof revealObserver !== 'undefined') revealObserver.observe(el);
