@@ -104,21 +104,22 @@
             </p>
             
             <form id="contactForm" method="POST" action="https://formspree.io/f/xqeodaeg">
+
               <div class="form-group">
                 <label class="form-label">Name *</label>
                 <input type="text" name="name" class="form-input" required>
               </div>
-              
+
               <div class="form-group">
                 <label class="form-label">Email *</label>
                 <input type="email" name="email" class="form-input" required>
               </div>
-              
+
               <div class="form-group">
                 <label class="form-label">Telefon</label>
                 <input type="tel" name="phone" class="form-input">
               </div>
-              
+
               <div class="form-group">
                 <label class="form-label">Interesse an *</label>
                 <select name="interest" class="form-input" required>
@@ -130,15 +131,16 @@
                   <option value="andere">Andere Anfrage</option>
                 </select>
               </div>
-              
+
               <div class="form-group">
                 <label class="form-label">Nachricht</label>
                 <textarea name="message" class="form-textarea" rows="4" placeholder="Erzähl uns mehr über dich..."></textarea>
               </div>
-              
+
               <button type="submit" class="btn btn-primary" style="width: 100%;">
                 Anfrage senden
               </button>
+
             </form>
             
             <p class="text-muted text-center mt-3" style="font-size: 0.8rem;">
@@ -216,43 +218,48 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="js/firebase-config.js"></script>
   <script src="js/main.js"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('contactForm');
-    if (!form) return;
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('contactForm');
+      if (!form) return;
 
-    form.addEventListener('submit', async function(e) {
-      e.preventDefault();
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
 
-      const btn = form.querySelector('[type=submit]');
-      btn.disabled = true;
-      btn.textContent = 'Wird gesendet…';
+        const btn = form.querySelector('[type=submit]');
+        btn.disabled = true;
+        btn.textContent = 'Wird gesendet…';
 
-      try {
-        const res = await fetch(form.action, {
-          method: 'POST',
-          body: new FormData(form),
-          headers: { 'Accept': 'application/json' }
-        });
+        const data = Object.fromEntries(new FormData(form));
 
-        if (res.ok) {
-          form.innerHTML = `
-            <div style="text-align:center; padding: 3rem 1rem;">
-              <div style="font-size: 2.5rem; margin-bottom: 1rem;">✓</div>
-              <h3 style="margin-bottom: .75rem; color: var(--accent);">Nachricht gesendet!</h3>
-              <p style="color: var(--text-muted);">Wir melden uns so bald wie möglich bei dir.</p>
-            </div>
-          `;
-        } else {
-          throw new Error();
+        try {
+          const res = await fetch(form.action, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+          });
+
+          if (res.ok) {
+            form.innerHTML = `
+              <div style="text-align:center; padding: 3rem 1rem;">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem;">✓</div>
+                <h3 style="margin-bottom: .75rem; color: var(--accent);">Nachricht gesendet!</h3>
+                <p style="color: var(--text-muted);">Wir melden uns so bald wie möglich bei dir.</p>
+              </div>
+            `;
+          } else {
+            throw new Error();
+          }
+        } catch {
+          btn.disabled = false;
+          btn.textContent = 'Anfrage senden';
+          alert('Fehler beim Senden. Bitte versuch es nochmal oder schreib uns direkt an fcvanavil@gmail.com');
         }
-      } catch {
-        btn.disabled = false;
-        btn.textContent = 'Anfrage senden';
-        alert('Fehler beim Senden. Bitte versuch es nochmal oder schreib uns direkt an fcvanavil@gmail.com');
-      }
+      });
     });
-  });
-</script>
+  </script>
 </body>
 </html>
