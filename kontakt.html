@@ -103,11 +103,7 @@
               Du möchtest mitspielen oder den Verein unterstützen? Füll das Formular aus und wir melden uns.
             </p>
             
-            <form id="contactForm" name="kontakt" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-              <input type="hidden" name="form-name" value="kontakt">
-              <p style="display:none">
-                <label>Don’t fill this out: <input name="bot-field"></label>
-              </p>
+            <form id="contactForm" method="POST" action="https://formspree.io/f/xqeodaeg">
               <div class="form-group">
                 <label class="form-label">Name *</label>
                 <input type="text" name="name" class="form-input" required>
@@ -220,18 +216,43 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="js/firebase-config.js"></script>
   <script src="js/main.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById('contactForm');
-      if (!form) return;
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('contactForm');
+    if (!form) return;
 
-      form.addEventListener('submit', function(e) {
-        // Netlify Forms handles submission natively — no JS needed.
-        // This just shows a brief loading state on the button.
-        const btn = form.querySelector('[type=submit]');
-        if (btn) { btn.disabled = true; btn.textContent = 'Wird gesendet…'; }
-      });
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const btn = form.querySelector('[type=submit]');
+      btn.disabled = true;
+      btn.textContent = 'Wird gesendet…';
+
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (res.ok) {
+          form.innerHTML = `
+            <div style="text-align:center; padding: 3rem 1rem;">
+              <div style="font-size: 2.5rem; margin-bottom: 1rem;">✓</div>
+              <h3 style="margin-bottom: .75rem; color: var(--accent);">Nachricht gesendet!</h3>
+              <p style="color: var(--text-muted);">Wir melden uns so bald wie möglich bei dir.</p>
+            </div>
+          `;
+        } else {
+          throw new Error();
+        }
+      } catch {
+        btn.disabled = false;
+        btn.textContent = 'Anfrage senden';
+        alert('Fehler beim Senden. Bitte versuch es nochmal oder schreib uns direkt an fcvanavil@gmail.com');
+      }
     });
-  </script>
+  });
+</script>
 </body>
 </html>
