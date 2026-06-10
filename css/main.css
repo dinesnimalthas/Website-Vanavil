@@ -466,6 +466,7 @@ a.card{display:block;}
 }
 @media(max-width:600px){
   section,.section{padding:4rem 0;}
+  .section-cta-amber{padding:4rem 0;}
   .hero-title{font-size:clamp(2.8rem,14vw,4.5rem);}
   .hero-stats{grid-template-columns:1fr 1fr;}
   .hero-stats .hero-stat:last-child{grid-column:span 2;border-right:none;}
@@ -722,13 +723,14 @@ a.card{display:block;}
   background:rgba(196,151,62,.07);border:1px solid rgba(196,151,62,.2);
   margin:0 auto 1.5rem;display:grid;place-items:center;
 }
-.board-role{
-  font-family:'Space Grotesk',sans-serif;font-weight:700;
-  font-size:1rem;letter-spacing:-.01em;
-}
 .board-name{
-  font-size:.92rem;color:var(--text);font-weight:500;
-  margin-bottom:.35rem;line-height:1.4;
+  font-family:'Space Grotesk',sans-serif;font-weight:700;
+  font-size:1.05rem;letter-spacing:-.01em;
+  margin-bottom:.35rem;line-height:1.4;color:var(--text);
+}
+.board-role{
+  font-size:.72rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--accent);
 }
 .grid .card.match-card:hover{transform:none;}
 
@@ -764,10 +766,11 @@ a.card{display:block;}
 
 .player-modal-overlay{
   position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:600;
-  display:none;align-items:center;justify-content:center;padding:1.5rem;
+  display:flex;align-items:center;justify-content:center;padding:1.5rem;
   backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  opacity:0;pointer-events:none;transition:opacity .2s ease;
 }
-.player-modal-overlay.open{display:flex;}
+.player-modal-overlay.open{opacity:1;pointer-events:auto;}
 
 .player-modal{
   background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius);

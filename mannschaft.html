@@ -39,7 +39,7 @@
         <a href="./" class="nav-link">Home</a>
         <a href="news.html" class="nav-link">News</a>
         <a href="spielplan.html" class="nav-link">Spielplan</a>
-        <a href="mannschaft.html" class="nav-link active">Mannschaft</a>
+        <a href="mannschaft.html" class="nav-link">Mannschaft</a>
         <a href="galerie.html" class="nav-link">Galerie</a>
         <a href="kontakt.html" class="nav-link">Kontakt</a>
         <a href="kontakt.html#mitglied" class="nav-cta">Mitglied werden</a>
@@ -208,7 +208,14 @@
             <div class="board-avatar">
               <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </div>
-            <div class="board-name">Theepan Sundaralingam<br><span style="font-size:.8rem;opacity:.7">Yatheesan Somasundaram</span></div>
+            <div class="board-name">Theepan Sundaralingam</div>
+            <div class="board-role">Trainer</div>
+          </div>
+          <div class="board-card reveal">
+            <div class="board-avatar">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div class="board-name">Yatheesan Somasundaram</div>
             <div class="board-role">Trainer</div>
           </div>
           <div class="board-card reveal">
@@ -287,13 +294,16 @@
   <script src="js/main.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      setTimeout(async () => {
+      if (!window.VanavilDB) return;
+
+      const teams = [
+        { key: 'erste-mannschaft', containerId: 'rosterErste' },
+        { key: 'junioren',         containerId: 'rosterJunioren' },
+        { key: 'academy',          containerId: 'rosterAcademy' }
+      ];
+
+      try {
         const allPlayers = await window.VanavilDB.getPlayers();
-        const teams = [
-          { key: 'erste-mannschaft', containerId: 'rosterErste' },
-          { key: 'junioren',         containerId: 'rosterJunioren' },
-          { key: 'academy',          containerId: 'rosterAcademy' }
-        ];
 
         for (const team of teams) {
           const ids = await window.VanavilDB.getRoster(team.key);
@@ -306,7 +316,12 @@
             container.innerHTML = '<p class="text-muted">Kader wird bald erg\u00e4nzt.</p>';
           }
         }
-      }, 500);
+      } catch (e) {
+        teams.forEach(team => {
+          const container = document.getElementById(team.containerId);
+          if (container) container.innerHTML = '<p class="text-muted">Kader konnte nicht geladen werden.</p>';
+        });
+      }
     });
   </script>
 
