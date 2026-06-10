@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin.html
+Disallow: /seed-data.html
+
+Sitemap: https://scvanavil.ch/sitemap.xml

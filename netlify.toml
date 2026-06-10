@@ -18,6 +18,13 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
+# Block seed-data from public
+[[redirects]]
+  from   = "/seed-data.html"
+  to     = "/"
+  status = 301
+  force  = true
+
 # Redirect www → apex
 [[redirects]]
   from = "https://www.scvanavil.ch/*"
