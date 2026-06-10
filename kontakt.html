@@ -15,7 +15,7 @@
   <header class="site-header">
     <div class="container nav-container">
       <a href="./" class="logo">
-        <div class="logo-icon">SV</div>
+        <img src="images/Vanavil-Logo.png" alt="SC Vanavil" class="logo-img">
         <div class="logo-text">SC Vanavil <span>Luzern • Since 1993</span></div>
       </a>
       
@@ -54,7 +54,7 @@
               <div style="padding: 1rem 0; border-bottom: 1px solid var(--border);">
                 <strong>Email</strong>
                 <p class="text-muted" style="margin: 0.25rem 0 0;">
-                  <a href="mailto:info@scvanavil.ch" style="color: var(--primary-light);">info@scvanavil.ch</a>
+                  <a href="mailto:fcvanavil@gmail.com" style="color: var(--primary-light);">fcvanavil@gmail.com</a>
                 </p>
               </div>
               
@@ -97,7 +97,11 @@
               Du möchtest mitspielen oder den Verein unterstützen? Füll das Formular aus und wir melden uns.
             </p>
             
-            <form id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+            <form id="contactForm" name="kontakt" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+              <input type="hidden" name="form-name" value="kontakt">
+              <p style="display:none">
+                <label>Don’t fill this out: <input name="bot-field"></label>
+              </p>
               <div class="form-group">
                 <label class="form-label">Name *</label>
                 <input type="text" name="name" class="form-input" required>
@@ -151,7 +155,7 @@
             <h3>Sponsoring & Partnerschaften</h3>
             <p>Unterstütze unseren Verein und werde sichtbar in der Community.</p>
           </div>
-          <a href="mailto:info@scvanavil.ch?subject=Sponsoring-Anfrage" class="btn btn-primary">
+          <a href="mailto:fcvanavil@gmail.com?subject=Sponsoring-Anfrage" class="btn btn-primary">
             Sponsoring anfragen
           </a>
         </div>
@@ -164,7 +168,7 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <a href="./" class="logo">
-            <div class="logo-icon">SV</div>
+            <img src="images/Vanavil-Logo.png" alt="SC Vanavil" class="logo-img">
             <div class="logo-text">SC Vanavil <span>Luzern</span></div>
           </a>
           <p>Tamilischer Fussballverein in der Zentralschweiz. Gegründet 1993. Mitglied der Swiss Tamil Football Association.</p>
@@ -193,7 +197,7 @@
             <a href="https://instagram.com/scvanavil" target="_blank" rel="noopener" aria-label="Instagram">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
             </a>
-            <a href="mailto:info@scvanavil.ch" aria-label="Email">
+            <a href="mailto:fcvanavil@gmail.com" aria-label="Email">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
             </a>
           </div>
@@ -215,20 +219,11 @@
       const form = document.getElementById('contactForm');
       if (!form) return;
 
-      // If Formspree is not yet configured, handle gracefully
-      const isPlaceholder = form.action.includes('YOUR_FORM_ID');
-
       form.addEventListener('submit', function(e) {
-        if (isPlaceholder) {
-          e.preventDefault();
-          const name = form.querySelector('[name=name]').value.trim();
-          const interest = form.querySelector('[name=interest]').value;
-          const message = form.querySelector('[name=message]').value.trim();
-          const subject = encodeURIComponent((interest || 'Anfrage') + ' – ' + (name || 'SC Vanavil Website'));
-          const body = encodeURIComponent((message ? message + '\n\n' : '') + 'Name: ' + name);
-          window.location.href = 'mailto:info@scvanavil.ch?subject=' + subject + '&body=' + body;
-        }
-        // If Formspree ID is set, form submits normally
+        // Netlify Forms handles submission natively — no JS needed.
+        // This just shows a brief loading state on the button.
+        const btn = form.querySelector('[type=submit]');
+        if (btn) { btn.disabled = true; btn.textContent = 'Wird gesendet…'; }
       });
     });
   </script>
