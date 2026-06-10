@@ -598,6 +598,149 @@ a.card{display:block;}
 .grid .card{border-left:2px solid transparent;transition:border-color .2s,transform .2s;}
 .grid .card:hover{border-left-color:var(--accent);transform:translateY(-2px);}
 .grid .card.match-card{border-left:none;transform:none;}
+
+/* =====================================================
+   MANNSCHAFT PAGE — Cinematic Design
+   ===================================================== */
+
+/* Hero */
+.team-page-hero{
+  position:relative;overflow:hidden;
+  padding:7rem 0 5rem;
+  border-bottom:1px solid var(--border);
+}
+.team-hero-bg-word{
+  position:absolute;right:-.02em;bottom:0;
+  font-family:'Space Grotesk',sans-serif;font-size:clamp(7rem,22vw,18rem);
+  font-weight:800;letter-spacing:-.055em;line-height:1;
+  color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.04);
+  pointer-events:none;user-select:none;white-space:nowrap;
+}
+.team-hero-inner{
+  display:grid;grid-template-columns:1fr auto;align-items:flex-end;gap:4rem;
+}
+.team-hero-title{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(3.5rem,9vw,7rem);
+  font-weight:800;line-height:.9;letter-spacing:-.05em;
+  margin:1.5rem 0 1.75rem;
+}
+.team-hero-title em{font-style:normal;color:var(--accent);}
+.team-hero-desc{color:rgba(255,255,255,.72);font-size:1.05rem;line-height:1.75;max-width:480px;}
+.team-hero-stats{
+  display:flex;flex-direction:column;gap:0;
+  border-left:1px solid var(--border-md);padding-left:3rem;
+  flex-shrink:0;
+}
+.team-stat-block{
+  padding:1.25rem 0;border-bottom:1px solid var(--border);
+}
+.team-stat-block:last-child{border-bottom:none;}
+.team-stat-num{
+  display:block;font-family:'Space Grotesk',sans-serif;
+  font-size:2.4rem;font-weight:800;letter-spacing:-.04em;
+  line-height:1;color:var(--accent);
+}
+.team-stat-label{
+  display:block;font-size:.68rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--text-muted);margin-top:.3rem;
+}
+
+/* Identity bar */
+.team-identity-bar{
+  border-bottom:1px solid var(--border);
+  background:var(--surface);
+}
+.team-identity-inner{
+  display:flex;align-items:center;flex-wrap:wrap;padding:1.25rem 1rem;gap:0;
+}
+.team-identity-item{
+  display:flex;flex-direction:column;gap:.2rem;padding:.5rem 2rem;
+}
+.team-identity-item strong{
+  font-size:.65rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--text-muted);
+}
+.team-identity-item span{font-size:.95rem;font-weight:600;color:var(--text);}
+.team-identity-divider{
+  width:1px;height:2rem;background:var(--border-md);flex-shrink:0;
+}
+
+/* About grid */
+.team-about-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;
+}
+
+/* Values list */
+.team-values-list{display:flex;flex-direction:column;gap:0;}
+.team-value-row{
+  display:flex;align-items:flex-start;gap:1.25rem;
+  padding:1.25rem 0;border-bottom:1px solid var(--border);
+}
+.team-value-row:last-child{border-bottom:none;}
+.team-value-icon{
+  width:44px;height:44px;border-radius:6px;
+  background:rgba(196,151,62,.1);border:1px solid rgba(196,151,62,.2);
+  display:grid;place-items:center;flex-shrink:0;color:var(--accent);
+}
+.team-value-row strong{display:block;font-size:.95rem;margin-bottom:.2rem;}
+.team-value-row p{color:var(--text-muted);font-size:.88rem;margin:0;line-height:1.5;}
+
+/* Team section blocks */
+.team-section-block{margin-bottom:4rem;}
+.team-section-block:last-child{margin-bottom:0;}
+.team-section-header{
+  display:flex;align-items:center;gap:1rem;
+  margin-bottom:2rem;padding-bottom:1rem;
+  border-bottom:1px solid var(--border-md);
+}
+.team-section-header h3{
+  font-size:1.3rem;font-weight:700;letter-spacing:-.02em;
+}
+.team-section-badge{
+  font-size:.65rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  background:var(--accent);color:#000;padding:.25rem .6rem;border-radius:3px;
+}
+
+/* Player grid — bigger */
+.player-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1.25rem;}
+.player-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:6px;
+  padding:2rem 1.25rem 1.5rem;text-align:center;
+  transition:border-color .2s,transform .2s,box-shadow .2s;cursor:pointer;
+}
+.player-card:hover{
+  border-color:rgba(196,151,62,.35);transform:translateY(-4px);
+  box-shadow:0 8px 24px rgba(0,0,0,.3);
+}
+.player-photo{
+  width:100px;height:100px;border-radius:50%;background:var(--surface-2);
+  background-size:cover;background-position:center;margin:0 auto 1.25rem;
+  border:2px solid var(--border-md);display:grid;place-items:center;position:relative;
+}
+.player-number{
+  position:absolute;bottom:-8px;right:-8px;background:var(--accent);color:#000;
+  font-size:.7rem;font-weight:800;padding:.2rem .45rem;border-radius:4px;line-height:1.4;
+}
+.player-name{display:block;font-weight:700;font-size:1rem;margin-bottom:.3rem;}
+.player-position{font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;}
+
+/* Board (Vorstand) cards */
+.board-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:6px;
+  padding:2.5rem 1.5rem 2rem;text-align:center;
+  transition:border-color .2s,transform .2s;
+}
+.board-card:hover{border-color:rgba(196,151,62,.3);transform:translateY(-3px);}
+.board-avatar{
+  width:120px;height:120px;border-radius:50%;
+  background:rgba(196,151,62,.07);border:1px solid rgba(196,151,62,.2);
+  margin:0 auto 1.5rem;display:grid;place-items:center;
+}
+.board-role{
+  font-family:'Space Grotesk',sans-serif;font-weight:700;
+  font-size:1rem;letter-spacing:-.01em;
+}
 .grid .card.match-card:hover{transform:none;}
 
 /* ============================================================
@@ -692,9 +835,16 @@ a.card{display:block;}
   .team-photo-img{max-height:260px;object-position:center top;}
 
   /* Player grid tighter on small screens */
-  .player-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.75rem;}
-  .player-card{padding:1.1rem .75rem;}
-  .player-photo{width:68px;height:68px;}
+  .player-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;}
+  .player-card{padding:1.5rem .9rem 1.25rem;}
+  .player-photo{width:80px;height:80px;}
+  /* Mannschaft hero responsive */
+  .team-hero-inner{grid-template-columns:1fr;gap:2.5rem;}
+  .team-hero-stats{flex-direction:row;border-left:none;padding-left:0;border-top:1px solid var(--border-md);padding-top:1.5rem;gap:2rem;}
+  .team-stat-block{border-bottom:none;padding:0;}
+  .team-about-grid{grid-template-columns:1fr;}
+  .team-identity-inner{gap:0;justify-content:flex-start;}
+  .team-identity-item{padding:.5rem 1rem;}
 
   /* Player modal — full-width bottom sheet */
   .player-modal-overlay{
