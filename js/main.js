@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
   initCurrentYear();
   initAdminBar();
+  initRevealObserver();
   
   // Initialize Firebase if available
   if (window.VanavilDB) {
@@ -42,7 +43,7 @@ async function loadHeroTeamPhoto() {
       }
       // Re-observe reveal elements inside the newly shown section
       section.querySelectorAll('.reveal').forEach(el => {
-        if (typeof revealObserver !== 'undefined') revealObserver.observe(el);
+        if (window._revealObserver) window._revealObserver.observe(el);
       });
     }
   } catch (e) {
@@ -149,6 +150,21 @@ function initAdminBar() {
       location.reload();
     });
   }
+}
+
+// ========== SCROLL REVEAL ==========
+function initRevealObserver() {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  // expose so loadHeroTeamPhoto can re-observe dynamic elements
+  window._revealObserver = observer;
 }
 
 // ========== RENDER HELPERS ==========
