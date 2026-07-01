@@ -156,12 +156,45 @@
 
     /* ── Responsive ── */
     @media (max-width: 700px) {
+      /* Container & section spacing */
       .admin-container { padding: 1rem .75rem; }
+      .section { padding: 2rem 0; }
+
+      /* Dashboard header – stack title & logout vertically */
+      .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: .75rem;
+      }
+      .admin-header .btn { width: 100%; text-align: center; }
+
+      /* Tabs – make them pill-like and slightly larger tap targets */
+      .admin-tabs { gap: .3rem; }
+      .admin-tab { padding: .55rem .85rem; font-size: .8rem; }
+
+      /* Forms – collapse 2-col grids to 1 col */
+      .admin-container .grid-2,
+      .admin-container .grid { grid-template-columns: 1fr; gap: .75rem; }
+
+      /* Item cards – stack content & actions */
+      .item-card { flex-direction: column; align-items: flex-start; gap: .5rem; }
+      .item-actions { width: 100%; display: flex; justify-content: flex-end; }
+
+      /* Player list – wrap actions under info on very narrow screens */
+      .player-list-item { flex-wrap: wrap; gap: .5rem; }
+      .player-list-item .item-actions { flex: 0 0 100%; justify-content: flex-end; }
+
+      /* Roster manager – single column, full-width buttons */
       .roster-manager { grid-template-columns: 1fr; }
-      .item-card { flex-direction: column; align-items: flex-start; }
-      .item-actions { width: 100%; justify-content: flex-end; }
-      .gallery-admin-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+      .roster-player-item { gap: .5rem; }
+      .roster-player-item button { padding: .35rem 1rem; font-size: .82rem; }
+
+      /* Gallery */
+      .gallery-admin-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
       .gallery-delete-btn { opacity: 1; }
+
+      /* Section headings – smaller on mobile */
+      .admin-section h2 { font-size: 1rem; }
     }
   </style>
 </head>
@@ -208,22 +241,22 @@
     <!-- Admin Dashboard (shown when logged in) -->
     <section id="adminDashboard" class="section" style="display: none;">
       <div class="admin-container">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <div class="admin-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
           <div>
-            <h1>Admin Dashboard</h1>
-            <p class="text-muted">Verwalte News, Spiele, Spieler, Kader und Galerie</p>
+            <h1 style="font-size: clamp(1.4rem, 4vw, 2rem);">Admin Dashboard</h1>
+            <p class="text-muted" style="font-size: .9rem;">Verwalte News, Spiele, Spieler, Kader und Galerie</p>
           </div>
-          <button class="btn btn-secondary" id="logoutBtn">Logout</button>
+          <button class="btn btn-secondary" id="logoutBtn">Ausloggen</button>
         </div>
 
-        <div class="admin-tabs">
-          <button class="admin-tab active" data-tab="news">News</button>
-          <button class="admin-tab" data-tab="matches">Spiele</button>
-          <button class="admin-tab" data-tab="players">Spieler</button>
-          <button class="admin-tab" data-tab="roster">Kader</button>
-          <button class="admin-tab" data-tab="gallery">Galerie</button>
-          <button class="admin-tab" data-tab="settings">Einstellungen</button>
-          <button class="admin-tab" data-tab="help">Hilfe</button>
+        <div class="admin-tabs" role="tablist" aria-label="Admin-Bereiche">
+          <button class="admin-tab active" data-tab="news" role="tab">📰 News</button>
+          <button class="admin-tab" data-tab="matches" role="tab">⚽ Spiele</button>
+          <button class="admin-tab" data-tab="players" role="tab">👤 Spieler</button>
+          <button class="admin-tab" data-tab="roster" role="tab">📋 Kader</button>
+          <button class="admin-tab" data-tab="gallery" role="tab">🖼️ Galerie</button>
+          <button class="admin-tab" data-tab="settings" role="tab">⚙️ Einstellungen</button>
+          <button class="admin-tab" data-tab="help" role="tab">❓ Hilfe</button>
         </div>
 
         <!-- News Tab -->
@@ -746,7 +779,7 @@
         : available.map(p => `
           <div class="roster-player-item">
             <span>${escapeHtml(p.name)}${p.number ? ' #' + p.number : ''}</span>
-            <button onclick="rosterAdd('${team}','${p.id}')" title="Zum Kader hinzufügen">→</button>
+            <button onclick="rosterAdd('${team}','${p.id}')" title="Zum Kader hinzufügen">+ Hinzu</button>
           </div>
         `).join('');
 
@@ -755,7 +788,7 @@
         : inRoster.map(p => `
           <div class="roster-player-item">
             <span>${escapeHtml(p.name)}${p.number ? ' #' + p.number : ''}</span>
-            <button onclick="rosterRemove('${team}','${p.id}')" title="Aus Kader entfernen">←</button>
+            <button onclick="rosterRemove('${team}','${p.id}')" title="Aus Kader entfernen" style="background:var(--danger);color:#fff;">− Entfernen</button>
           </div>
         `).join('');
     }
