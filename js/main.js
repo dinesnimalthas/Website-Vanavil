@@ -2,54 +2,30 @@
  * SC Vanavil Luzern - Main JavaScript
  */
 // ========== PAGE LOADER ==========
+// Editorial brand reveal (crest → wordmark → gold rule → kicker), driven
+// purely by CSS animation-delay — no simulated progress bar/percentage.
 (function () {
-  const loader  = document.getElementById('vanavil-loader');
-  const fill    = document.getElementById('loaderBarFill');
-  const glow    = document.getElementById('loaderBarGlow');
-  const pct     = document.getElementById('loaderPercent');
-  if (!loader || !fill) return;
+  const loader = document.getElementById('vanavil-loader');
+  if (!loader) return;
 
-  // Nur einmal pro Browser-Session voll anzeigen — bei erneutem Besuch
-  // (z.B. Zurück-Navigation) blockiert kein künstliches Delay den Inhalt.
+  // Nur einmal pro Browser-Session in voller Länge zeigen — bei erneutem
+  // Besuch (z.B. Zurück-Navigation) erscheint der Inhalt sofort statt die
+  // Sequenz erneut abzuspielen.
   let alreadyShown = false;
   try { alreadyShown = sessionStorage.getItem('vanavilLoaderShown') === '1'; } catch (e) {}
+  if (alreadyShown) loader.classList.add('no-anim');
 
-  let progress = 0;
-  let done = false;
-
-  function setProgress(val) {
-    progress = Math.min(val, 100);
-    fill.style.width = progress + '%';
-    if (glow) glow.style.left = progress + '%';
-    if (pct)  pct.textContent = Math.round(progress) + '%';
-  }
-
-  function finish() {
-    done = true;
-    clearInterval(interval);
-    fill.style.transition = 'width 0.35s cubic-bezier(.16,1,.3,1)';
-    if (glow) glow.style.transition = 'left 0.35s cubic-bezier(.16,1,.3,1)';
-    setProgress(100);
-    setTimeout(() => loader.classList.add('hidden'), alreadyShown ? 0 : 450);
-    try { sessionStorage.setItem('vanavilLoaderShown', '1'); } catch (e) {}
-  }
-
-  // Simulierter Fortschritt — zügig bis 80 %, dann bewusst langsamer
-  const interval = setInterval(() => {
-    if (done) return;
-    const remaining = 88 - progress;
-    if (remaining <= 0) return;
-    setProgress(progress + remaining * 0.06 + 0.4);
-  }, 80);
-
-  // Mindestanzeigedauer nur beim ersten Besuch pro Session (Branding-Moment).
-  // Danach kein künstliches Delay mehr — die Seite zeigt Inhalt, sobald sie fertig ist.
-  const minDelay = new Promise(res => setTimeout(res, alreadyShown ? 0 : 600));
+  // Mindestanzeigedauer deckt die volle Reveal-Sequenz ab (~1.55s), damit
+  // sie nicht durch schnell geladene Seiten abgeschnitten wird.
+  const minDelay = new Promise(res => setTimeout(res, alreadyShown ? 0 : 1650));
 
   Promise.all([
     minDelay,
     new Promise(res => window.addEventListener('load', res))
-  ]).then(finish);
+  ]).then(() => {
+    loader.classList.add('hidden');
+    try { sessionStorage.setItem('vanavilLoaderShown', '1'); } catch (e) {}
+  });
 })();
 
 document.addEventListener('DOMContentLoaded', () => {
