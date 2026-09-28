@@ -3,15 +3,20 @@
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
+# css/main.css and js/*.js keep the same filename across deploys (no
+# content hash), so they must NOT be cached as "immutable" - otherwise
+# returning visitors keep an old version for up to a year after every
+# update. Short cache + must-revalidate = browser does a cheap
+# conditional request (304) and always gets the current file.
 [[headers]]
   for = "/css/*"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    Cache-Control = "public, max-age=0, must-revalidate"
 
 [[headers]]
   for = "/js/*"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    Cache-Control = "public, max-age=0, must-revalidate"
 
 [[headers]]
   for = "/images/*"
