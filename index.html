@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SC Vanavil Luzern | Tamil Football Club seit 1993</title>
   <meta name="description" content="Offizielle Website von SC Vanavil Luzern - Tamilischer Fussballverein in der Schweiz seit 1993. Mitglied der Swiss Tamil Football Association (STFA).">
-  <link rel="icon" href="images/Vanavil-Logo.png" type="image/png">
+  <link rel="icon" href="images/favicon-64.png" type="image/png">
   <meta property="og:title" content="SC Vanavil Luzern | Tamil Football Club seit 1993">
   <meta property="og:description" content="Tamilischer Fussballverein im Herzen der Schweiz. Seit 1993 – Teamgeist, Leidenschaft und Fussball, der verbindet.">
   <meta property="og:image" content="https://scvanavil.ch/images/Vanavil-Logo.png">
@@ -16,16 +16,18 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.gstatic.com">
+  <link rel="preconnect" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
   
   <!-- Styles -->
   <link rel="stylesheet" href="css/main.css">
   
   <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 </head>
 <body>
   <!-- Loading Screen -->
@@ -33,7 +35,7 @@
 <div id="vanavil-loader" aria-hidden="true">
   <div class="loader-inner">
     <div class="loader-logo-wrap">
-      <img src="images/Vanavil-Logo.png" alt="" width="72" height="72">
+      <picture><source srcset="images/Vanavil-Logo-72.webp" type="image/webp"><img src="images/Vanavil-Logo-72.png" alt="" width="72" height="72"></picture>
       <div class="loader-logo-ring"></div>
     </div>
     <div class="loader-wordmark">SC VANAVIL</div>
@@ -49,7 +51,7 @@
   <header class="site-header">
     <div class="container nav-container">
       <a href="./" class="logo">
-        <img src="images/Vanavil-Logo.png" alt="SC Vanavil" class="logo-img" width="40" height="40" loading="eager">
+        <picture><source srcset="images/Vanavil-Logo-40.webp" type="image/webp"><img src="images/Vanavil-Logo-40.png" alt="SC Vanavil" class="logo-img" width="40" height="40" loading="eager"></picture>
         <div class="logo-text">
           SC Vanavil
           <span>Luzern • Since 1993</span>
@@ -93,7 +95,7 @@
           </div>
         </div>
         <div class="hero-visual">
-          <div class="hero-emblem" id="heroEmblem"><img src="images/Vanavil-Logo.png" alt="SC Vanavil" width="180" height="180" loading="eager"></div>
+          <div class="hero-emblem" id="heroEmblem"><picture><source srcset="images/Vanavil-Logo-180.webp" type="image/webp"><img src="images/Vanavil-Logo-180.png" alt="SC Vanavil" width="180" height="180" loading="eager" fetchpriority="high"></picture></div>
           <div class="hero-visual-stats">
             <div class="hero-visual-row"><span>Heimstadt</span><strong class="hl">Luzern</strong></div>
             <div class="hero-visual-row"><span>Land</span><strong>Schweiz</strong></div>
@@ -223,7 +225,7 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <a href="./" class="logo">
-            <img src="images/Vanavil-Logo.png" alt="SC Vanavil" class="logo-img" width="40" height="40" loading="lazy">
+            <picture><source srcset="images/Vanavil-Logo-40.webp" type="image/webp"><img src="images/Vanavil-Logo-40.png" alt="SC Vanavil" class="logo-img" width="40" height="40" loading="lazy"></picture>
             <div class="logo-text">SC Vanavil <span>Luzern · 1993</span></div>
           </a>
           <p>Tamilischer Fussballverein in der Zentralschweiz. Gegründet 1993. Mitglied der Swiss Tamil Football Association.</p>
@@ -291,7 +293,7 @@
       });
 
       // --- Data Loading ---
-      setTimeout(async () => {
+      
         // Load matches
         const matches = await window.VanavilDB.getMatches(4);
         const matchContainer = document.getElementById('matchesContainer');
@@ -309,7 +311,7 @@
         } else {
           newsContainer.innerHTML = '<div class="empty-state"><p>Weitere News folgen in Kürze.</p></div>';
         }
-      }, 300);
+      
     });
   </script>
 

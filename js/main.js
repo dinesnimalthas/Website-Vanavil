@@ -9,6 +9,11 @@
   const pct     = document.getElementById('loaderPercent');
   if (!loader || !fill) return;
 
+  // Nur einmal pro Browser-Session voll anzeigen — bei erneutem Besuch
+  // (z.B. Zurück-Navigation) blockiert kein künstliches Delay den Inhalt.
+  let alreadyShown = false;
+  try { alreadyShown = sessionStorage.getItem('vanavilLoaderShown') === '1'; } catch (e) {}
+
   let progress = 0;
   let done = false;
 
@@ -19,6 +24,16 @@
     if (pct)  pct.textContent = Math.round(progress) + '%';
   }
 
+  function finish() {
+    done = true;
+    clearInterval(interval);
+    fill.style.transition = 'width 0.35s cubic-bezier(.16,1,.3,1)';
+    if (glow) glow.style.transition = 'left 0.35s cubic-bezier(.16,1,.3,1)';
+    setProgress(100);
+    setTimeout(() => loader.classList.add('hidden'), alreadyShown ? 0 : 450);
+    try { sessionStorage.setItem('vanavilLoaderShown', '1'); } catch (e) {}
+  }
+
   // Simulierter Fortschritt — zügig bis 80 %, dann bewusst langsamer
   const interval = setInterval(() => {
     if (done) return;
@@ -27,21 +42,14 @@
     setProgress(progress + remaining * 0.06 + 0.4);
   }, 80);
 
-  // Mindestanzeigedauer: 1.2s — damit es nicht zu schnell wirkt
-  const minDelay = new Promise(res => setTimeout(res, 1200));
+  // Mindestanzeigedauer nur beim ersten Besuch pro Session (Branding-Moment).
+  // Danach kein künstliches Delay mehr — die Seite zeigt Inhalt, sobald sie fertig ist.
+  const minDelay = new Promise(res => setTimeout(res, alreadyShown ? 0 : 600));
 
   Promise.all([
     minDelay,
     new Promise(res => window.addEventListener('load', res))
-  ]).then(() => {
-    done = true;
-    clearInterval(interval);
-    // Balken springt flüssig auf 100 %
-    fill.style.transition = 'width 0.35s cubic-bezier(.16,1,.3,1)';
-    if (glow) glow.style.transition = 'left 0.35s cubic-bezier(.16,1,.3,1)';
-    setProgress(100);
-    setTimeout(() => loader.classList.add('hidden'), 450);
-  });
+  ]).then(finish);
 })();
 
 document.addEventListener('DOMContentLoaded', () => {

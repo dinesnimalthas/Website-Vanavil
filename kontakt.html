@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kontakt | SC Vanavil Luzern</title>
   <meta name="description" content="Kontaktiere SC Vanavil Luzern - Mitglied werden, Training, Sponsoring">
-  <link rel="icon" href="images/Vanavil-Logo.png" type="image/png">
+  <link rel="icon" href="images/favicon-64.png" type="image/png">
   <meta property="og:title" content="Kontakt | SC Vanavil Luzern">
   <meta property="og:description" content="Mitglied werden, Training anfragen oder Sponsoring – meld dich bei SC Vanavil Luzern.">
   <meta property="og:image" content="https://scvanavil.ch/images/Vanavil-Logo.png">
@@ -14,6 +14,8 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.gstatic.com">
+  <link rel="preconnect" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
 </head>
@@ -21,7 +23,7 @@
   <header class="site-header">
     <div class="container nav-container">
       <a href="./" class="logo">
-        <img src="images/Vanavil-Logo.png" alt="SC Vanavil" class="logo-img" width="40" height="40" loading="lazy">
+        <picture><source srcset="images/Vanavil-Logo-40.webp" type="image/webp"><img src="images/Vanavil-Logo-40.png" alt="SC Vanavil" class="logo-img" width="40" height="40" loading="lazy"></picture>
         <div class="logo-text">SC Vanavil <span>Luzern • Since 1993</span></div>
       </a>
       
@@ -172,7 +174,7 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <a href="./" class="logo">
-            <img src="images/Vanavil-Logo.png" alt="SC Vanavil" class="logo-img" width="40" height="40" loading="lazy">
+            <picture><source srcset="images/Vanavil-Logo-40.webp" type="image/webp"><img src="images/Vanavil-Logo-40.png" alt="SC Vanavil" class="logo-img" width="40" height="40" loading="lazy"></picture>
             <div class="logo-text">SC Vanavil <span>Luzern</span></div>
           </a>
           <p>Tamilischer Fussballverein in der Zentralschweiz. Gegründet 1993. Mitglied der Swiss Tamil Football Association.</p>
@@ -214,8 +216,8 @@
     </div>
   </footer>
 
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="js/firebase-config.js"></script>
   <script src="js/main.js"></script>
   <script>
