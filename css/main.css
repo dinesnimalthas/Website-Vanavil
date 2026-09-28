@@ -169,6 +169,7 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem);}
   display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;
   font-size:2.2rem;font-weight:800;color:var(--accent);margin-bottom:2.5rem;
   box-shadow:0 0 40px rgba(196,151,62,0.18),0 0 0 1px rgba(196,151,62,0.08);
+  position:relative;
 }
 .hero-visual-stats{width:100%;}
 .hero-visual-row{
@@ -529,9 +530,6 @@ a.card{display:block;}
 .hero-body{position:relative;z-index:1;}
 
 /* Hero emblem double-border detail */
-.hero-emblem{
-  border:2px solid var(--border-md);position:relative;
-}
 .hero-emblem img{
   width:180px;height:180px;object-fit:contain;
 }

@@ -6,6 +6,8 @@
   <title>Kontakt | SC Vanavil Luzern</title>
   <meta name="description" content="Kontaktiere SC Vanavil Luzern - Mitglied werden, Training, Sponsoring">
   <link rel="icon" href="images/favicon-64.png" type="image/png">
+  <link rel="apple-touch-icon" href="images/Vanavil-Logo-180.png">
+  <meta name="theme-color" content="#0d0d0d">
   <meta property="og:title" content="Kontakt | SC Vanavil Luzern">
   <meta property="og:description" content="Mitglied werden, Training anfragen oder Sponsoring – meld dich bei SC Vanavil Luzern.">
   <meta property="og:image" content="https://scvanavil.ch/images/Vanavil-Logo.png">
@@ -17,7 +19,7 @@
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=2">
+  <link rel="stylesheet" href="css/main.css?v=3">
 </head>
 <body>
   <header class="site-header">
@@ -108,23 +110,23 @@
             <form id="contactForm" method="POST" action="https://formspree.io/f/xqeodaeg">
 
               <div class="form-group">
-                <label class="form-label">Name *</label>
-                <input type="text" name="name" class="form-input" required>
+                <label class="form-label" for="cf-name">Name *</label>
+                <input type="text" id="cf-name" name="name" class="form-input" required autocomplete="name">
               </div>
 
               <div class="form-group">
-                <label class="form-label">Email *</label>
-                <input type="email" name="email" class="form-input" required>
+                <label class="form-label" for="cf-email">Email *</label>
+                <input type="email" id="cf-email" name="email" class="form-input" required autocomplete="email">
               </div>
 
               <div class="form-group">
-                <label class="form-label">Telefon</label>
-                <input type="tel" name="phone" class="form-input">
+                <label class="form-label" for="cf-phone">Telefon</label>
+                <input type="tel" id="cf-phone" name="phone" class="form-input" autocomplete="tel">
               </div>
 
               <div class="form-group">
-                <label class="form-label">Interesse an *</label>
-                <select name="interest" class="form-input" required>
+                <label class="form-label" for="cf-interest">Interesse an *</label>
+                <select id="cf-interest" name="interest" class="form-input" required>
                   <option value="">Bitte wählen...</option>
                   <option value="spieler">Als Spieler mitmachen</option>
                   <option value="junior">Junioren / Academy</option>
@@ -135,8 +137,8 @@
               </div>
 
               <div class="form-group">
-                <label class="form-label">Nachricht</label>
-                <textarea name="message" class="form-textarea" rows="4" placeholder="Erzähl uns mehr über dich..."></textarea>
+                <label class="form-label" for="cf-message">Nachricht</label>
+                <textarea id="cf-message" name="message" class="form-textarea" rows="4" placeholder="Erzähl uns mehr über dich..."></textarea>
               </div>
 
               <button type="submit" class="btn btn-primary" style="width: 100%;">
@@ -218,8 +220,8 @@
 
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="js/firebase-config.js?v=2"></script>
-  <script src="js/main.js?v=2"></script>
+  <script src="js/firebase-config.js?v=3"></script>
+  <script src="js/main.js?v=3"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('contactForm');

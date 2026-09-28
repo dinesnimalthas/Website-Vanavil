@@ -69,7 +69,6 @@ function initFirebase() {
       storage = firebase.storage();
     }
     _initialized = true;
-    console.log('Firebase initialized');
     return true;
   }
   console.warn('Firebase SDK not loaded');

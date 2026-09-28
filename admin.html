@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=2">
+  <link rel="stylesheet" href="css/main.css?v=3">
   
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -223,11 +223,11 @@
           
           <form id="loginForm" style="max-width: 300px; margin: 0 auto;">
             <div class="form-group">
-              <label class="form-label">Email</label>
+              <label class="form-label" for="email">Email</label>
               <input type="email" class="form-input" id="email" required>
             </div>
             <div class="form-group">
-              <label class="form-label">Passwort</label>
+              <label class="form-label" for="password">Passwort</label>
               <input type="password" class="form-input" id="password" required>
             </div>
             <button type="submit" class="btn btn-primary" style="width: 100%;">Einloggen</button>
@@ -267,11 +267,11 @@
             <h2>Neue News erstellen</h2>
             <form id="newsForm">
               <div class="form-group">
-                <label class="form-label">Titel *</label>
+                <label class="form-label" for="newsTitle">Titel *</label>
                 <input type="text" class="form-input" id="newsTitle" required>
               </div>
               <div class="form-group">
-                <label class="form-label">Kategorie</label>
+                <label class="form-label" for="newsCategory">Kategorie</label>
                 <select class="form-input" id="newsCategory">
                   <option value="News">News</option>
                   <option value="Turnier">Turnier</option>
@@ -281,12 +281,12 @@
                 </select>
               </div>
               <div class="form-group">
-                <label class="form-label">Bild-URL</label>
+                <label class="form-label" for="newsImage">Bild-URL</label>
                 <input type="url" class="form-input" id="newsImage" placeholder="https://... oder images/foto.jpg">
                 <small class="text-muted">Link zu Bild (Instagram, Google Drive, oder lokal in /images/)</small>
               </div>
               <div class="form-group">
-                <label class="form-label">Zusammenfassung *</label>
+                <label class="form-label" for="newsSummary">Zusammenfassung *</label>
                 <textarea class="form-textarea" id="newsSummary" rows="3" required></textarea>
               </div>
               <button type="submit" class="btn btn-primary">News veröffentlichen</button>
@@ -308,26 +308,26 @@
             <form id="matchForm">
               <div class="grid grid-2">
                 <div class="form-group">
-                  <label class="form-label">Heimteam *</label>
+                  <label class="form-label" for="homeTeam">Heimteam *</label>
                   <input type="text" class="form-input" id="homeTeam" value="SC Vanavil" required>
                 </div>
                 <div class="form-group">
-                  <label class="form-label">Gegner *</label>
+                  <label class="form-label" for="awayTeam">Gegner *</label>
                   <input type="text" class="form-input" id="awayTeam" required>
                 </div>
               </div>
               <div class="grid grid-2">
                 <div class="form-group">
-                  <label class="form-label">Datum *</label>
+                  <label class="form-label" for="matchDate">Datum *</label>
                   <input type="date" class="form-input" id="matchDate" required>
                 </div>
                 <div class="form-group">
-                  <label class="form-label">Uhrzeit</label>
+                  <label class="form-label" for="matchTime">Uhrzeit</label>
                   <input type="time" class="form-input" id="matchTime">
                 </div>
               </div>
               <div class="form-group">
-                <label class="form-label">Ort</label>
+                <label class="form-label" for="matchLocation">Ort</label>
                 <input type="text" class="form-input" id="matchLocation" placeholder="z.B. Sportanlage Allmend, Luzern">
               </div>
               <button type="submit" class="btn btn-primary">Spiel speichern</button>
@@ -349,11 +349,11 @@
             <form id="playerForm">
               <div class="grid grid-2">
                 <div class="form-group">
-                  <label class="form-label">Name *</label>
+                  <label class="form-label" for="playerName">Name *</label>
                   <input type="text" class="form-input" id="playerName" required>
                 </div>
                 <div class="form-group">
-                  <label class="form-label">Position</label>
+                  <label class="form-label" for="playerPosition">Position</label>
                   <select class="form-input" id="playerPosition">
                     <option value="">– Wählen –</option>
                     <option value="Torwart">Torwart</option>
@@ -365,21 +365,21 @@
               </div>
               <div class="grid grid-2">
                 <div class="form-group">
-                  <label class="form-label">Trikotnummer</label>
+                  <label class="form-label" for="playerNumber">Trikotnummer</label>
                   <input type="number" class="form-input" id="playerNumber" min="1" max="99">
                 </div>
                 <div></div>
               </div>
               <div class="grid grid-2">
                 <div class="form-group">
-                  <label class="form-label">Spielerfoto</label>
+                  <label class="form-label" for="playerPhoto">Spielerfoto</label>
                   <div class="file-input-wrap">
                     <input type="file" id="playerPhoto" accept="image/*">
                   </div>
                   <div id="playerPhotoPreview" class="upload-preview"></div>
                 </div>
                 <div class="form-group">
-                  <label class="form-label">Spielerausweis (PDF / Bild)</label>
+                  <label class="form-label" for="playerAusweis">Spielerausweis (PDF / Bild)</label>
                   <div class="file-input-wrap">
                     <input type="file" id="playerAusweis" accept="image/*,application/pdf">
                   </div>
@@ -403,7 +403,7 @@
           <div class="admin-section">
             <h2>Kader verwalten</h2>
             <div class="form-group">
-              <label class="form-label">Team auswählen</label>
+              <label class="form-label" for="rosterTeamSelect">Team auswählen</label>
               <select class="form-input" id="rosterTeamSelect">
                 <option value="erste-mannschaft">Erste Mannschaft</option>
                 <option value="junioren">Junioren</option>
@@ -430,15 +430,15 @@
             <h2>Bild hochladen</h2>
             <form id="galleryForm">
               <div class="form-group">
-                <label class="form-label">Titel</label>
+                <label class="form-label" for="galleryTitle">Titel</label>
                 <input type="text" class="form-input" id="galleryTitle" placeholder="z.B. Teamfoto 2026">
               </div>
               <div class="form-group">
-                <label class="form-label">Beschreibung</label>
+                <label class="form-label" for="galleryDesc">Beschreibung</label>
                 <input type="text" class="form-input" id="galleryDesc" placeholder="Optionale Beschreibung">
               </div>
               <div class="form-group">
-                <label class="form-label">Bild *</label>
+                <label class="form-label" for="galleryFile">Bild *</label>
                 <div class="file-input-wrap">
                   <input type="file" id="galleryFile" accept="image/*" required>
                 </div>
@@ -461,7 +461,7 @@
             <p class="text-muted mb-2">Dieses Bild erscheint prominent auf der Hauptseite.</p>
             <form id="teamPhotoForm">
               <div class="form-group">
-                <label class="form-label">Teamfoto hochladen</label>
+                <label class="form-label" for="teamPhotoFile">Teamfoto hochladen</label>
                 <div class="file-input-wrap">
                   <input type="file" id="teamPhotoFile" accept="image/*">
                 </div>
@@ -503,7 +503,7 @@
     </section>
   </main>
 
-  <script src="js/firebase-config.js?v=2"></script>
+  <script src="js/firebase-config.js?v=3"></script>
   <script>
     // ===== State =====
     let allPlayers = [];
