@@ -253,7 +253,8 @@
 
         <div class="admin-tabs" role="tablist" aria-label="Admin-Bereiche">
           <button class="admin-tab active" data-tab="news" role="tab">📰 News</button>
-          <button class="admin-tab" data-tab="matches" role="tab">⚽ Spiele</button>
+          <button class="admin-tab" data-tab="tournaments" role="tab">🏆 Turniere</button>
+          <button class="admin-tab" data-tab="training" role="tab">🕒 Training</button>
           <button class="admin-tab" data-tab="players" role="tab">👤 Spieler</button>
           <button class="admin-tab" data-tab="roster" role="tab">📋 Kader</button>
           <button class="admin-tab" data-tab="gallery" role="tab">🖼️ Galerie</button>
@@ -301,42 +302,101 @@
           </div>
         </div>
 
-        <!-- Matches Tab -->
-        <div id="matches" class="tab-content">
+        <!-- Tournaments Tab -->
+        <div id="tournaments" class="tab-content">
           <div class="admin-section">
-            <h2>Neues Spiel/Turnier erfassen</h2>
-            <form id="matchForm">
+            <h2>Turnier erfassen</h2>
+            <form id="tournamentForm">
+              <div class="form-group">
+                <label class="form-label" for="tName">Turnier *</label>
+                <input type="text" class="form-input" id="tName" placeholder="z.B. Maveerar Cup 2027" required>
+              </div>
               <div class="grid grid-2">
                 <div class="form-group">
-                  <label class="form-label" for="homeTeam">Heimteam *</label>
-                  <input type="text" class="form-input" id="homeTeam" value="SC Vanavil" required>
+                  <label class="form-label" for="tDate">Datum *</label>
+                  <input type="date" class="form-input" id="tDate" required>
                 </div>
                 <div class="form-group">
-                  <label class="form-label" for="awayTeam">Gegner *</label>
-                  <input type="text" class="form-input" id="awayTeam" required>
+                  <label class="form-label" for="tEndDate">Bis (bei mehrtägigen Turnieren)</label>
+                  <input type="date" class="form-input" id="tEndDate">
                 </div>
               </div>
               <div class="grid grid-2">
                 <div class="form-group">
-                  <label class="form-label" for="matchDate">Datum *</label>
-                  <input type="date" class="form-input" id="matchDate" required>
+                  <label class="form-label" for="tLocation">Ort</label>
+                  <input type="text" class="form-input" id="tLocation" placeholder="z.B. Affoltern am Albis">
                 </div>
                 <div class="form-group">
-                  <label class="form-label" for="matchTime">Uhrzeit</label>
-                  <input type="time" class="form-input" id="matchTime">
+                  <label class="form-label" for="tTeam">Team</label>
+                  <select class="form-input" id="tTeam">
+                    <option value="Erste Mannschaft">Erste Mannschaft</option>
+                    <option value="Junioren">Junioren</option>
+                    <option value="Academy">Academy</option>
+                    <option value="Mehrere Teams">Mehrere Teams</option>
+                  </select>
                 </div>
               </div>
               <div class="form-group">
-                <label class="form-label" for="matchLocation">Ort</label>
-                <input type="text" class="form-input" id="matchLocation" placeholder="z.B. Sportanlage Allmend, Luzern">
+                <label class="form-label" for="tResult">Resultat (optional, auch später möglich)</label>
+                <input type="text" class="form-input" id="tResult" placeholder="z.B. 2. Platz, Halbfinal">
               </div>
-              <button type="submit" class="btn btn-primary">Spiel speichern</button>
+              <button type="submit" class="btn btn-primary">Turnier speichern</button>
             </form>
           </div>
 
           <div class="admin-section">
-            <h2>Geplante Spiele</h2>
-            <div id="matchesList" class="item-list">
+            <h2>Alle Turniere</h2>
+            <p class="text-muted mb-2">Kommende Turniere erscheinen auf der Startseite und unter «Turniere». Nach dem Turnier kannst du das Resultat nachtragen.</p>
+            <div id="tournamentList" class="item-list">
+              <div class="loading"><div class="spinner"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Training Tab -->
+        <div id="training" class="tab-content">
+          <div class="admin-section">
+            <h2>Trainingszeit hinzufügen</h2>
+            <form id="trainingForm">
+              <div class="grid grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="trTeam">Team *</label>
+                  <select class="form-input" id="trTeam" required>
+                    <option value="Erste Mannschaft">Erste Mannschaft</option>
+                    <option value="Junioren">Junioren</option>
+                    <option value="Academy">Academy</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="trDay">Tag *</label>
+                  <select class="form-input" id="trDay" required>
+                    <option>Montag</option><option>Dienstag</option><option>Mittwoch</option>
+                    <option>Donnerstag</option><option>Freitag</option><option>Samstag</option><option>Sonntag</option>
+                  </select>
+                </div>
+              </div>
+              <div class="grid grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="trStart">Von *</label>
+                  <input type="time" class="form-input" id="trStart" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="trEnd">Bis</label>
+                  <input type="time" class="form-input" id="trEnd">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="trLocation">Ort *</label>
+                <input type="text" class="form-input" id="trLocation" value="Sportanlage Allmend, Luzern" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Trainingszeit speichern</button>
+            </form>
+          </div>
+
+          <div class="admin-section">
+            <h2>Aktuelle Trainingszeiten</h2>
+            <p class="text-muted mb-2">Werden auf der Startseite, unter «Mannschaft» und bei «Kontakt» angezeigt.</p>
+            <div id="trainingList" class="item-list">
               <div class="loading"><div class="spinner"></div></div>
             </div>
           </div>
@@ -470,6 +530,18 @@
               <button type="submit" class="btn btn-primary">Teamfoto speichern</button>
             </form>
           </div>
+
+          <div class="admin-section">
+            <h2>Instagram-Beiträge (Startseite)</h2>
+            <p class="text-muted mb-2">Füge bis zu 3 Links zu Instagram-Beiträgen oder Reels ein, einen pro Zeile. Den Link bekommst du in Instagram über «…» → «Link kopieren».</p>
+            <form id="instagramForm">
+              <div class="form-group">
+                <label class="form-label" for="instagramUrls">Links</label>
+                <textarea class="form-textarea" id="instagramUrls" rows="4" placeholder="https://www.instagram.com/p/..."></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Beiträge speichern</button>
+            </form>
+          </div>
         </div>
 
         <!-- Help Tab -->
@@ -480,8 +552,14 @@
             <h3 class="mt-3">News erstellen</h3>
             <p class="text-muted">Gib Titel, Kategorie und eine kurze Zusammenfassung ein. Die News erscheint sofort auf der Website.</p>
             
-            <h3 class="mt-3">Spiele erfassen</h3>
-            <p class="text-muted">Trage Heimteam, Gegner, Datum und Ort ein. Das Spiel erscheint automatisch auf der Spielplan-Seite.</p>
+            <h3 class="mt-3">Turniere</h3>
+            <p class="text-muted">Trage Name, Datum, Ort und Team ein. Kommende Turniere erscheinen auf der Startseite und unter «Turniere». Nach dem Turnier beim Eintrag auf «Resultat» klicken und z.B. «2. Platz» eintragen.</p>
+
+            <h3 class="mt-3">Trainingszeiten</h3>
+            <p class="text-muted">Unter «Training» Tag, Zeit und Ort pro Team erfassen. Ändern sich die Zeiten, alte Einträge löschen und neue erfassen.</p>
+
+            <h3 class="mt-3">Instagram</h3>
+            <p class="text-muted">Unter «Einstellungen» Links zu bis zu 3 Beiträgen einfügen. Sie werden auf der Startseite eingebettet.</p>
             
             <h3 class="mt-3">Spieler erfassen</h3>
             <p class="text-muted">Unter "Spieler" kannst du einen neuen Spieler mit Foto und Spielerausweis anlegen. Der Ausweis ist nur für Admins sichtbar.</p>
@@ -493,7 +571,7 @@
             <p class="text-muted">Lade Bilder hoch, die auf der öffentlichen Galerie-Seite angezeigt werden.</p>
             
             <h3 class="mt-3">Teamfoto</h3>
-            <p class="text-muted">Unter "Einstellungen" kannst du das Teamfoto setzen, das auf der Startseite groß angezeigt wird.</p>
+            <p class="text-muted">Unter «Einstellungen» kannst du das Teamfoto setzen. Es erscheint gross auf der Startseite. Am besten ein JPG unter 1 MB.</p>
             
             <h3 class="mt-3">Probleme?</h3>
             <p class="text-muted">Bei technischen Fragen wende dich an den Website-Ersteller.</p>
@@ -503,7 +581,7 @@
     </section>
   </main>
 
-  <script src="js/firebase-config.js?v=3"></script>
+  <script src="js/firebase-config.js?v=5"></script>
   <script>
     // ===== State =====
     let allPlayers = [];
@@ -518,7 +596,9 @@
         
         if (user) {
           loadNews();
-          loadMatches();
+          loadTournaments();
+          loadTrainings();
+          loadInstagram();
           loadPlayers();
           loadGallery();
           loadTeamPhotoPreview();
@@ -566,19 +646,51 @@
         else { alert('Fehler beim Speichern'); }
       });
       
-      // ===== Match Form =====
-      document.getElementById('matchForm').addEventListener('submit', async (e) => {
+      // ===== Tournament Form =====
+      document.getElementById('tournamentForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const matchData = {
-          homeTeam: document.getElementById('homeTeam').value,
-          awayTeam: document.getElementById('awayTeam').value,
-          date: document.getElementById('matchDate').value,
-          time: document.getElementById('matchTime').value || 'TBA',
-          location: document.getElementById('matchLocation').value || 'TBA'
-        };
-        const id = await window.VanavilDB.addMatch(matchData);
-        if (id) { alert('Spiel gespeichert!'); e.target.reset(); document.getElementById('homeTeam').value = 'SC Vanavil'; loadMatches(); }
+        const date = document.getElementById('tDate').value;
+        const endDate = document.getElementById('tEndDate').value;
+        if (endDate && endDate < date) { alert('Das Enddatum liegt vor dem Startdatum.'); return; }
+        const id = await window.VanavilDB.addTournament({
+          name: document.getElementById('tName').value.trim(),
+          date,
+          endDate: endDate || '',
+          location: document.getElementById('tLocation').value.trim(),
+          team: document.getElementById('tTeam').value,
+          result: document.getElementById('tResult').value.trim()
+        });
+        if (id) { e.target.reset(); loadTournaments(); }
         else { alert('Fehler beim Speichern'); }
+      });
+
+      // ===== Training Form =====
+      document.getElementById('trainingForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const trainings = await getTrainings();
+        trainings.push({
+          team: document.getElementById('trTeam').value,
+          day: document.getElementById('trDay').value,
+          start: document.getElementById('trStart').value,
+          end: document.getElementById('trEnd').value,
+          location: document.getElementById('trLocation').value.trim()
+        });
+        if (await window.VanavilDB.updateSettings({ trainings })) {
+          document.getElementById('trStart').value = '';
+          document.getElementById('trEnd').value = '';
+          loadTrainings();
+        } else { alert('Fehler beim Speichern'); }
+      });
+
+      // ===== Instagram Form =====
+      document.getElementById('instagramForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const lines = document.getElementById('instagramUrls').value.split('\n').map(l => l.trim()).filter(Boolean);
+        const invalid = lines.filter(l => !parseInstagramUrl(l));
+        if (invalid.length) { alert('Diese Links sind keine Instagram-Beiträge:\n' + invalid.join('\n')); return; }
+        if (lines.length > 3) { alert('Bitte höchstens 3 Links.'); return; }
+        if (await window.VanavilDB.updateSettings({ instagramPosts: lines })) alert('Gespeichert.');
+        else alert('Fehler beim Speichern');
       });
 
       // ===== Player Form =====
@@ -708,21 +820,58 @@
       `).join('');
     }
     
-    async function loadMatches() {
-      const matches = await window.VanavilDB.getAllMatches();
-      const container = document.getElementById('matchesList');
-      if (matches.length === 0) { container.innerHTML = '<p class="text-muted">Noch keine Spiele erfasst.</p>'; return; }
-      container.innerHTML = matches.map(match => `
+    async function loadTournaments() {
+      const tournaments = (await window.VanavilDB.getTournaments()).sort((x, y) => y.date.localeCompare(x.date));
+      const container = document.getElementById('tournamentList');
+      if (tournaments.length === 0) { container.innerHTML = '<p class="text-muted">Noch keine Turniere erfasst.</p>'; return; }
+      const today = new Date().toISOString().slice(0, 10);
+      container.innerHTML = tournaments.map(t => `
         <div class="item-card">
           <div>
-            <strong>${escapeHtml(match.homeTeam)} vs ${escapeHtml(match.awayTeam)}</strong>
-            <small class="text-muted" style="display: block;">${match.date} • ${match.time} • ${match.location}</small>
+            <strong>${escapeHtml(t.name)}</strong>
+            <small class="text-muted" style="display:block;">
+              ${escapeHtml(t.date)}${t.endDate ? ' bis ' + escapeHtml(t.endDate) : ''} • ${escapeHtml(t.location || 'Ort offen')} • ${escapeHtml(t.team || '')}
+              ${(t.endDate || t.date) < today ? ' • <em>vorbei</em>' : ''}
+              ${t.result ? ' • Resultat: <strong>' + escapeHtml(t.result) + '</strong>' : ''}
+            </small>
           </div>
           <div class="item-actions">
-            <button class="btn btn-sm btn-danger" onclick="deleteMatch('${match.id}')">Löschen</button>
+            <button class="btn btn-sm btn-secondary" onclick="editResult('${t.id}')">Resultat</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteTournament('${t.id}')">Löschen</button>
           </div>
         </div>
       `).join('');
+    }
+
+    async function getTrainings() {
+      const settings = await window.VanavilDB.getSettings();
+      return Array.isArray(settings.trainings) ? settings.trainings : [];
+    }
+
+    async function loadTrainings() {
+      const trainings = await getTrainings();
+      const container = document.getElementById('trainingList');
+      if (trainings.length === 0) { container.innerHTML = '<p class="text-muted">Noch keine Trainingszeiten erfasst.</p>'; return; }
+      container.innerHTML = trainings.map((t, i) => `
+        <div class="item-card">
+          <div>
+            <strong>${escapeHtml(t.team)}</strong>
+            <small class="text-muted" style="display:block;">${escapeHtml(t.day)}, ${escapeHtml(t.start)}${t.end ? '–' + escapeHtml(t.end) : ''} Uhr • ${escapeHtml(t.location)}</small>
+          </div>
+          <div class="item-actions">
+            <button class="btn btn-sm btn-danger" onclick="deleteTraining(${i})">Löschen</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function loadInstagram() {
+      const settings = await window.VanavilDB.getSettings();
+      document.getElementById('instagramUrls').value = (settings.instagramPosts || []).join('\n');
+    }
+
+    function parseInstagramUrl(url) {
+      return /instagram\.com\/(?:[A-Za-z0-9_.]+\/)?(p|reel|tv)\/[A-Za-z0-9_-]+/.test(url);
     }
 
     async function loadPlayers() {
@@ -824,8 +973,24 @@
       if (confirm('News wirklich löschen?')) { await window.VanavilDB.deleteDocument('news', id); loadNews(); }
     }
     
-    async function deleteMatch(id) {
-      if (confirm('Spiel wirklich löschen?')) { await window.VanavilDB.deleteDocument('matches', id); loadMatches(); }
+    async function deleteTournament(id) {
+      if (confirm('Turnier wirklich löschen?')) { await window.VanavilDB.deleteDocument('tournaments', id); loadTournaments(); }
+    }
+
+    async function editResult(id) {
+      const t = (await window.VanavilDB.getTournaments()).find(x => x.id === id);
+      const result = prompt('Resultat für «' + (t ? t.name : '') + '» (leer lassen zum Entfernen):', t && t.result ? t.result : '');
+      if (result === null) return;
+      await window.VanavilDB.updateDocument('tournaments', id, { result: result.trim() });
+      loadTournaments();
+    }
+
+    async function deleteTraining(index) {
+      if (!confirm('Trainingszeit löschen?')) return;
+      const trainings = await getTrainings();
+      trainings.splice(index, 1);
+      await window.VanavilDB.updateSettings({ trainings });
+      loadTrainings();
     }
 
     async function deletePlayer(id, photoPath, ausweisPath) {

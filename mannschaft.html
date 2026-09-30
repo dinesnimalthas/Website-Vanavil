@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=4">
+  <link rel="stylesheet" href="css/main.css?v=5">
 
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -41,7 +41,7 @@
       <nav class="nav-menu" id="navMenu" aria-label="Hauptnavigation">
         <a href="./" class="nav-link">Start</a>
         <a href="news.html" class="nav-link">News</a>
-        <a href="spielplan.html" class="nav-link">Spielplan</a>
+        <a href="spielplan.html" class="nav-link">Turniere</a>
         <a href="mannschaft.html" class="nav-link active" aria-current="page">Mannschaft</a>
         <a href="galerie.html" class="nav-link">Galerie</a>
         <a href="kontakt.html" class="nav-link">Kontakt</a>
@@ -72,6 +72,16 @@
           <h3>Academy</h3>
           <div class="player-grid" id="rosterAcademy"><div class="loading"><div class="spinner"></div></div></div>
         </div>
+      </div>
+    </section>
+
+    <section class="section" id="trainingSection" hidden>
+      <div class="container">
+        <div class="section-head">
+          <h2>Training</h2>
+          <a href="kontakt.html#mitglied" class="more-link">Probetraining anfragen →</a>
+        </div>
+        <div id="trainingContainer"></div>
       </div>
     </section>
 
@@ -123,7 +133,7 @@
           <h4 class="footer-heading">Seiten</h4>
           <div class="footer-links">
             <a href="news.html">News</a>
-            <a href="spielplan.html">Spielplan</a>
+            <a href="spielplan.html">Turniere</a>
             <a href="mannschaft.html">Mannschaft</a>
             <a href="galerie.html">Galerie</a>
             <a href="kontakt.html">Kontakt</a>
@@ -151,8 +161,8 @@
     <button class="btn btn-light btn-sm" id="adminLogoutBtn">Logout</button>
   </div>
 
-  <script src="js/firebase-config.js?v=4"></script>
-  <script src="js/main.js?v=4"></script>
+  <script src="js/firebase-config.js?v=5"></script>
+  <script src="js/main.js?v=5"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
       const teams = [
@@ -167,6 +177,13 @@
           window.VanavilDB.getPlayers(),
           ...teams.map(t => window.VanavilDB.getRoster(t.key))
         ]);
+
+        window.VanavilDB.getSettings().then(settings => {
+          const trainings = settings.trainings || [];
+          if (trainings.length === 0) return;
+          window.VanavilUI.renderTrainings(trainings, document.getElementById('trainingContainer'));
+          document.getElementById('trainingSection').hidden = false;
+        });
 
         teams.forEach((team, i) => {
           const players = rosters[i].map(id => allPlayers.find(p => p.id === id)).filter(Boolean);

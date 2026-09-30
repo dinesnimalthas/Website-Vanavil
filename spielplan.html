@@ -3,26 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spielplan – SC Vanavil Luzern</title>
-  <meta name="description" content="Spiele und STFA-Turniere von SC Vanavil Luzern.">
+  <title>Turniere – SC Vanavil Luzern</title>
+  <meta name="description" content="Turniere und Resultate von SC Vanavil Luzern in der Swiss Tamil Football Association (STFA).">
   <link rel="icon" href="images/favicon-64.png" type="image/png">
   <link rel="apple-touch-icon" href="images/Vanavil-Logo-180.png">
   <meta name="theme-color" content="#0b1f44">
-  <meta property="og:title" content="Spielplan – SC Vanavil Luzern">
-  <meta property="og:description" content="Spiele und STFA-Turniere von SC Vanavil Luzern.">
+  <meta property="og:title" content="Turniere – SC Vanavil Luzern">
+  <meta property="og:description" content="Turniere und Resultate von SC Vanavil Luzern in der Swiss Tamil Football Association (STFA).">
   <meta property="og:image" content="https://scvanavil.ch/images/Vanavil-Logo.png">
   <meta property="og:url" content="https://scvanavil.ch/spielplan.html">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Spielplan – SC Vanavil Luzern">
-  <meta name="twitter:description" content="Spiele und STFA-Turniere von SC Vanavil Luzern.">
+  <meta name="twitter:title" content="Turniere – SC Vanavil Luzern">
+  <meta name="twitter:description" content="Turniere und Resultate von SC Vanavil Luzern in der Swiss Tamil Football Association (STFA).">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=4">
+  <link rel="stylesheet" href="css/main.css?v=5">
 
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -41,7 +41,7 @@
       <nav class="nav-menu" id="navMenu" aria-label="Hauptnavigation">
         <a href="./" class="nav-link">Start</a>
         <a href="news.html" class="nav-link">News</a>
-        <a href="spielplan.html" class="nav-link active" aria-current="page">Spielplan</a>
+        <a href="spielplan.html" class="nav-link active" aria-current="page">Turniere</a>
         <a href="mannschaft.html" class="nav-link">Mannschaft</a>
         <a href="galerie.html" class="nav-link">Galerie</a>
         <a href="kontakt.html" class="nav-link">Kontakt</a>
@@ -53,74 +53,24 @@
   <main>
     <section class="page-header">
       <div class="container">
-        <h1>Spielplan</h1>
-        <p>Unsere nächsten Spiele und die Turniere der STFA-Saison.</p>
+        <h1>Turniere</h1>
+        <p>Wir spielen keine Meisterschaft, sondern die Turniere der STFA und befreundeter Vereine.</p>
       </div>
     </section>
 
     <section class="section">
       <div class="container">
-        <div class="section-head"><h2>Nächste Spiele</h2></div>
-        <div id="matchesContainer">
+        <div class="section-head"><h2>Nächste Turniere</h2></div>
+        <div id="upcomingContainer">
           <div class="loading"><div class="spinner"></div></div>
         </div>
       </div>
     </section>
 
-    <section class="section section-alt">
+    <section class="section section-alt" id="pastSection" hidden>
       <div class="container">
-        <div class="section-head">
-          <div>
-            <h2>STFA-Turniere 2025/26</h2>
-            <p>Gemäss Turnierübersicht der STFA. Änderungen sind möglich.</p>
-          </div>
-          <a href="https://stfainfo.ch/images/STFA_Documents/25_26_tournament_Overview.pdf" target="_blank" rel="noopener" class="more-link">Übersicht als PDF →</a>
-        </div>
-        <div class="table-container">
-          <table class="data-table" id="tournamentTable">
-            <thead>
-              <tr><th>Datum</th><th>Turnier</th><th>Ort</th><th>Kategorien</th></tr>
-            </thead>
-            <tbody>
-              <tr data-date="2026-04-26">
-                <td><strong>26. April</strong></td>
-                <td>STFA Summer Cup 2026</td>
-                <td>Affoltern am Albis</td>
-                <td>Senior 9, Senior 7</td>
-              </tr>
-              <tr data-date="2026-05-10">
-                <td><strong>10. Mai</strong></td>
-                <td>Eesan Memoriyal Cup</td>
-                <td>Köniz, Schwarzenburgstrasse 321</td>
-                <td>Senior 11</td>
-              </tr>
-              <tr data-date="2026-05-24">
-                <td><strong>24. Mai</strong></td>
-                <td>Annaipoopathy Cup 2026</td>
-                <td>Lausanne (UNIL/EPFL)</td>
-                <td>Senior, Women</td>
-              </tr>
-              <tr data-date="2026-06-07">
-                <td><strong>7. Juni</strong></td>
-                <td>Shanker Cup 2026</td>
-                <td>Affoltern am Albis</td>
-                <td>Senior</td>
-              </tr>
-              <tr data-date="2026-06-21">
-                <td><strong>21. Juni</strong></td>
-                <td>Bluestar Lausanne Cup 2026</td>
-                <td>Lausanne (UNIL/EPFL)</td>
-                <td>Senior</td>
-              </tr>
-              <tr data-date="2026-07-05">
-                <td><strong>4.–5. Juli</strong></td>
-                <td>Maveerar Cup 2026</td>
-                <td>Ort noch offen</td>
-                <td>Junioren U9–U21, Women</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <div class="section-head"><h2>Resultate</h2></div>
+        <div id="pastContainer"></div>
       </div>
     </section>
 
@@ -128,8 +78,8 @@
       <div class="container">
         <div class="note-box">
           <div>
-            <h3>Resultate und Rangliste</h3>
-            <p>Resultate, Live-Ticker und die aktuelle Rangliste führt die STFA auf ihrer Website.</p>
+            <h3>STFA: Live-Ticker und Rangliste</h3>
+            <p>Spielstände während der Turniere und die Gesamtrangliste gibt es bei der STFA.</p>
           </div>
           <div class="note-box-actions">
             <a href="https://stfainfo.ch/ranking" target="_blank" rel="noopener" class="btn btn-primary">Rangliste</a>
@@ -154,7 +104,7 @@
           <h4 class="footer-heading">Seiten</h4>
           <div class="footer-links">
             <a href="news.html">News</a>
-            <a href="spielplan.html">Spielplan</a>
+            <a href="spielplan.html">Turniere</a>
             <a href="mannschaft.html">Mannschaft</a>
             <a href="galerie.html">Galerie</a>
             <a href="kontakt.html">Kontakt</a>
@@ -182,21 +132,26 @@
     <button class="btn btn-light btn-sm" id="adminLogoutBtn">Logout</button>
   </div>
 
-  <script src="js/firebase-config.js?v=4"></script>
-  <script src="js/main.js?v=4"></script>
+  <script src="js/firebase-config.js?v=5"></script>
+  <script src="js/main.js?v=5"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      // Vergangene Turniere ausgrauen
-      const today = new Date().toISOString().slice(0, 10);
-      document.querySelectorAll('#tournamentTable tr[data-date]').forEach(row => {
-        if (row.dataset.date < today) {
-          row.classList.add('is-past');
-          row.querySelector('td').insertAdjacentHTML('beforeend', '<span class="past-note">vorbei</span>');
-        }
-      });
+      const UI = window.VanavilUI;
+      const { upcoming, past } = UI.splitTournaments(await window.VanavilDB.getTournaments());
 
-      const matches = await window.VanavilDB.getMatches(10);
-      window.VanavilUI.renderMatchCards(matches, document.getElementById('matchesContainer'));
+      const upcomingEl = document.getElementById('upcomingContainer');
+      if (upcoming.length > 0) {
+        UI.renderTournamentList(upcoming, upcomingEl);
+      } else {
+        upcomingEl.innerHTML = '<p class="empty-state">Die nächsten Turniere tragen wir ein, sobald die Daten feststehen.</p>';
+      }
+
+      // Vergangene Turniere nur mit eingetragenem Resultat zeigen
+      const results = past.filter(t => t.result);
+      if (results.length > 0) {
+        UI.renderTournamentList(results, document.getElementById('pastContainer'), { showResult: true });
+        document.getElementById('pastSection').hidden = false;
+      }
     });
   </script>
 </body>

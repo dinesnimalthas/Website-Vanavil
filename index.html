@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SC Vanavil Luzern – Tamilischer Fussballverein seit 1993</title>
-  <meta name="description" content="SC Vanavil Luzern ist ein tamilischer Fussballverein aus Luzern, gegründet 1993 und Mitglied der Swiss Tamil Football Association (STFA). Spielplan, Mannschaft und Kontakt.">
+  <meta name="description" content="SC Vanavil Luzern ist ein tamilischer Fussballverein aus Luzern, gegründet 1993 und Mitglied der Swiss Tamil Football Association (STFA). Turniere, Trainingszeiten, Mannschaft und Kontakt.">
   <link rel="icon" href="images/favicon-64.png" type="image/png">
   <link rel="apple-touch-icon" href="images/Vanavil-Logo-180.png">
   <meta name="theme-color" content="#0b1f44">
@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=4">
+  <link rel="stylesheet" href="css/main.css?v=5">
 
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -51,7 +51,7 @@
       <nav class="nav-menu" id="navMenu" aria-label="Hauptnavigation">
         <a href="./" class="nav-link active">Start</a>
         <a href="news.html" class="nav-link">News</a>
-        <a href="spielplan.html" class="nav-link">Spielplan</a>
+        <a href="spielplan.html" class="nav-link">Turniere</a>
         <a href="mannschaft.html" class="nav-link">Mannschaft</a>
         <a href="galerie.html" class="nav-link">Galerie</a>
         <a href="kontakt.html" class="nav-link">Kontakt</a>
@@ -68,7 +68,7 @@
           <h1>SC Vanavil<br>Luzern</h1>
           <p class="hero-lead">Tamilischer Fussballverein aus Luzern, gegründet 1993. Wir spielen in der Swiss Tamil Football Association (STFA).</p>
           <div class="hero-actions">
-            <a href="spielplan.html" class="btn btn-primary">Spielplan</a>
+            <a href="spielplan.html" class="btn btn-primary">Turniere</a>
             <a href="kontakt.html#mitglied" class="btn btn-light">Probetraining anfragen</a>
           </div>
         </div>
@@ -80,7 +80,7 @@
       <div class="container facts-inner">
         <div class="fact">
           <strong>Training</strong>
-          <span>Sportanlage Allmend, Luzern. Zeiten auf Anfrage.</span>
+          <span id="factTraining">Sportanlage Allmend, Luzern. Zeiten auf Anfrage.</span>
         </div>
         <div class="fact">
           <strong>Liga</strong>
@@ -93,13 +93,13 @@
       </div>
     </div>
 
-    <section class="section" id="matchesSection" hidden>
+    <section class="section" id="tournamentsSection" hidden>
       <div class="container">
         <div class="section-head">
-          <h2>Nächste Spiele</h2>
-          <a href="spielplan.html" class="more-link">Ganzer Spielplan →</a>
+          <h2>Nächste Turniere</h2>
+          <a href="spielplan.html" class="more-link">Alle Turniere und Resultate →</a>
         </div>
-        <div id="matchesContainer"></div>
+        <div id="tournamentsContainer"></div>
       </div>
     </section>
 
@@ -127,6 +127,29 @@
           <li><strong>Resultate & Rangliste</strong><span><a href="https://stfainfo.ch" target="_blank" rel="noopener">stfainfo.ch</a></span></li>
           <li><strong>Instagram</strong><span><a href="https://instagram.com/scvanavil" target="_blank" rel="noopener">@scvanavil</a></span></li>
         </ul>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="trainingSection" hidden>
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Training</h2>
+            <p>Probetraining? Schreib uns vorher kurz, dann wissen wir, dass du kommst.</p>
+          </div>
+          <a href="kontakt.html#mitglied" class="more-link">Probetraining anfragen →</a>
+        </div>
+        <div id="trainingContainer"></div>
+      </div>
+    </section>
+
+    <section class="section" id="instagramSection" hidden>
+      <div class="container">
+        <div class="section-head">
+          <h2>Instagram</h2>
+          <a href="https://instagram.com/scvanavil" target="_blank" rel="noopener" class="more-link">@scvanavil folgen →</a>
+        </div>
+        <div class="insta-grid" id="instagramContainer"></div>
       </div>
     </section>
 
@@ -158,7 +181,7 @@
           <h4 class="footer-heading">Seiten</h4>
           <div class="footer-links">
             <a href="news.html">News</a>
-            <a href="spielplan.html">Spielplan</a>
+            <a href="spielplan.html">Turniere</a>
             <a href="mannschaft.html">Mannschaft</a>
             <a href="galerie.html">Galerie</a>
             <a href="kontakt.html">Kontakt</a>
@@ -186,25 +209,43 @@
     <button class="btn btn-light btn-sm" id="adminLogoutBtn">Logout</button>
   </div>
 
-  <script src="js/firebase-config.js?v=4"></script>
-  <script src="js/main.js?v=4"></script>
+  <script src="js/firebase-config.js?v=5"></script>
+  <script src="js/main.js?v=5"></script>
   <script>
-    // Spiele und News nur anzeigen, wenn es Einträge gibt.
+    // Abschnitte nur anzeigen, wenn im Admin-Panel etwas eingetragen ist.
     document.addEventListener('DOMContentLoaded', async () => {
       if (!window.VanavilDB) return;
+      const UI = window.VanavilUI;
 
-      const [matches, news] = await Promise.all([
-        window.VanavilDB.getMatches(4),
-        window.VanavilDB.getNews(3)
+      const [tournaments, news, settings] = await Promise.all([
+        window.VanavilDB.getTournaments(),
+        window.VanavilDB.getNews(3),
+        window.VanavilDB.getSettings()
       ]);
 
-      if (matches.length > 0) {
-        window.VanavilUI.renderMatchCards(matches, document.getElementById('matchesContainer'));
-        document.getElementById('matchesSection').hidden = false;
+      const { upcoming } = UI.splitTournaments(tournaments);
+      if (upcoming.length > 0) {
+        UI.renderTournamentList(upcoming.slice(0, 4), document.getElementById('tournamentsContainer'));
+        document.getElementById('tournamentsSection').hidden = false;
       }
+
       if (news.length > 0) {
-        window.VanavilUI.renderNewsCards(news, document.getElementById('newsContainer'));
+        UI.renderNewsCards(news, document.getElementById('newsContainer'));
         document.getElementById('newsSection').hidden = false;
+      }
+
+      const trainings = settings.trainings || [];
+      if (trainings.length > 0) {
+        UI.renderTrainings(trainings, document.getElementById('trainingContainer'));
+        document.getElementById('trainingSection').hidden = false;
+        const fact = document.getElementById('factTraining');
+        fact.innerHTML = '<a href="#trainingSection">Trainingszeiten ansehen</a>';
+      }
+
+      const posts = (settings.instagramPosts || []).filter(u => UI.parseInstagramUrl(u));
+      if (posts.length > 0) {
+        UI.renderInstagramPosts(posts.slice(0, 3), document.getElementById('instagramContainer'));
+        document.getElementById('instagramSection').hidden = false;
       }
     });
   </script>

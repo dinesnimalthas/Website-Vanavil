@@ -146,6 +146,38 @@ async function getTournaments() {
   }
 }
 
+/**
+ * Add a tournament
+ * { name, date: 'YYYY-MM-DD', endDate?, location, team, result? }
+ */
+async function addTournament(data) {
+  if (!db || !auth.currentUser) return null;
+  try {
+    const docRef = await db.collection('tournaments').add({
+      ...data,
+      createdAt: new Date().toISOString()
+    });
+    return docRef.id;
+  } catch (error) {
+    console.error('Error adding tournament:', error);
+    return null;
+  }
+}
+
+/**
+ * Update fields of any document (e.g. a tournament result)
+ */
+async function updateDocument(collection, docId, data) {
+  if (!db || !auth.currentUser) return false;
+  try {
+    await db.collection(collection).doc(docId).update(data);
+    return true;
+  } catch (error) {
+    console.error('Error updating document:', error);
+    return false;
+  }
+}
+
 // ========== ADMIN FUNCTIONS ==========
 
 /**
@@ -463,6 +495,8 @@ window.VanavilDB = {
   getMatches,
   getAllMatches,
   getTournaments,
+  addTournament,
+  updateDocument,
   addNews,
   addMatch,
   updateMatch,

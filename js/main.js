@@ -239,44 +239,111 @@ function renderMatchCards(matches, container) {
 }
 
 /**
- * Render tournament table
+ * Heutiges Datum als 'YYYY-MM-DD' (lokale Zeit)
  */
-function renderTournaments(tournaments, container) {
-  if (!container) return;
-  
-  if (tournaments.length === 0) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <p>Keine Turniere geplant</p>
-      </div>
-    `;
-    return;
+function todayISO() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+/**
+ * '2026-07-04' (+ optional '2026-07-05') -> '4.–5. Juli 2026'
+ */
+function formatDateRange(start, end) {
+  const s = new Date(start + 'T12:00:00');
+  if (!end || end === start) {
+    return s.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
   }
-  
+  const e = new Date(end + 'T12:00:00');
+  if (s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear()) {
+    return s.getDate() + '.–' + e.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+  return s.toLocaleDateString('de-CH', { day: 'numeric', month: 'long' }) + ' – ' +
+         e.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+/**
+ * Turniere in kommende und vergangene aufteilen.
+ * Ein Turnier gilt bis zu seinem letzten Tag als kommend.
+ */
+function splitTournaments(tournaments) {
+  const today = todayISO();
+  const upcoming = [], past = [];
+  tournaments.forEach(t => ((t.endDate || t.date) >= today ? upcoming : past).push(t));
+  upcoming.sort((a, b) => a.date.localeCompare(b.date));
+  past.sort((a, b) => b.date.localeCompare(a.date));
+  return { upcoming, past };
+}
+
+function renderTournamentList(tournaments, container, { showResult = false } = {}) {
+  if (!container) return;
+  container.innerHTML = '<div class="match-list">' + tournaments.map(t => {
+    const d = new Date(t.date + 'T12:00:00');
+    const month = d.toLocaleDateString('de-CH', { month: 'short' }).replace('.', '').toUpperCase();
+    const meta = [formatDateRange(t.date, t.endDate), t.location].filter(Boolean).map(escapeHtml).join(' · ');
+    const right = showResult
+      ? (t.result ? `<span class="tournament-result">${escapeHtml(t.result)}</span>` : '')
+      : (t.team ? `<span class="tournament-team">${escapeHtml(t.team)}</span>` : '');
+    return `
+      <article class="card match-card">
+        <div class="match-date">
+          <span class="day">${d.getDate()}</span>
+          <span class="month">${month}</span>
+        </div>
+        <div class="match-info">
+          <h4>${escapeHtml(t.name)}</h4>
+          <p>${meta}</p>
+        </div>
+        ${right}
+      </article>`;
+  }).join('') + '</div>';
+}
+
+const WEEKDAYS = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+
+function renderTrainings(trainings, container) {
+  if (!container) return;
+  const sorted = [...trainings].sort((a, b) =>
+    (a.team || '').localeCompare(b.team || '') ||
+    WEEKDAYS.indexOf(a.day) - WEEKDAYS.indexOf(b.day) ||
+    (a.start || '').localeCompare(b.start || ''));
+
   container.innerHTML = `
     <div class="table-container">
       <table class="data-table">
-        <thead>
-          <tr>
-            <th>Datum</th>
-            <th>Turnier</th>
-            <th>Ort</th>
-            <th>Kategorie</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Team</th><th>Tag</th><th>Zeit</th><th>Ort</th></tr></thead>
         <tbody>
-          ${tournaments.map(t => `
+          ${sorted.map(t => `
             <tr>
-              <td>${formatDate(t.date)}</td>
-              <td><strong>${escapeHtml(t.name)}</strong></td>
-              <td>${escapeHtml(t.location || 'TBA')}</td>
-              <td><span class="card-tag">${escapeHtml(t.category || 'Senior')}</span></td>
-            </tr>
-          `).join('')}
+              <td><strong>${escapeHtml(t.team)}</strong></td>
+              <td>${escapeHtml(t.day)}</td>
+              <td>${escapeHtml(t.start)}${t.end ? '–' + escapeHtml(t.end) : ''} Uhr</td>
+              <td>${escapeHtml(t.location)}</td>
+            </tr>`).join('')}
         </tbody>
       </table>
-    </div>
-  `;
+    </div>`;
+}
+
+/**
+ * Instagram-Link -> Kurzcode ('https://www.instagram.com/p/ABC123/' -> {type:'p', code:'ABC123'})
+ */
+function parseInstagramUrl(url) {
+  const m = String(url).match(/instagram\.com\/(?:[A-Za-z0-9_.]+\/)?(p|reel|tv)\/([A-Za-z0-9_-]+)/);
+  return m ? { type: m[1], code: m[2] } : null;
+}
+
+function renderInstagramPosts(urls, container) {
+  if (!container) return;
+  container.innerHTML = urls
+    .map(parseInstagramUrl)
+    .filter(Boolean)
+    .map(p => `
+      <div class="insta-post">
+        <iframe src="https://www.instagram.com/${p.type}/${encodeURIComponent(p.code)}/embed/"
+                title="Instagram-Beitrag von SC Vanavil" loading="lazy"
+                allowtransparency="true" scrolling="no"></iframe>
+      </div>`).join('');
 }
 
 /**
@@ -364,7 +431,13 @@ window.VanavilUI = {
   formatMatchDate,
   renderNewsCards,
   renderMatchCards,
-  renderTournaments,
+  renderTournamentList,
+  splitTournaments,
+  formatDateRange,
+  renderTrainings,
+  renderInstagramPosts,
+  parseInstagramUrl,
+  WEEKDAYS,
   renderPlayerCards,
   renderGalleryGrid,
   escapeHtml
