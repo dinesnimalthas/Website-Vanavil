@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=7">
+  <link rel="stylesheet" href="css/main.css?v=8">
 
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -80,16 +80,19 @@
     <div class="facts">
       <div class="container facts-inner">
         <div class="fact">
-          <strong>Training</strong>
-          <span id="factTraining">Sportanlage Allmend, Luzern. Zeiten auf Anfrage.</span>
+          <span class="fact-label">Training</span>
+          <strong class="fact-value">Allmend, Luzern</strong>
+          <span class="fact-note" id="factTraining">Zeiten auf Anfrage</span>
         </div>
         <div class="fact">
-          <strong>Liga</strong>
-          <span>STFA – Erste Mannschaft, Junioren und Academy</span>
+          <span class="fact-label">Teams</span>
+          <strong class="fact-value">Aktive &amp; Junioren</strong>
+          <span class="fact-note">Erste Mannschaft, Junioren, Academy</span>
         </div>
         <div class="fact">
-          <strong>Kontakt</strong>
-          <a href="mailto:fcvanavil@gmail.com">fcvanavil@gmail.com</a>
+          <span class="fact-label">Verband</span>
+          <strong class="fact-value">STFA</strong>
+          <span class="fact-note">Swiss Tamil Football Association</span>
         </div>
       </div>
     </div>
@@ -248,7 +251,7 @@
         UI.renderTrainings(trainings, document.getElementById('trainingContainer'));
         document.getElementById('trainingSection').hidden = false;
         const fact = document.getElementById('factTraining');
-        fact.innerHTML = '<a href="#trainingSection">Trainingszeiten ansehen</a>';
+        fact.innerHTML = '<a href="#trainingSection">Trainingszeiten ansehen →</a>';
       }
 
       // Ohne Auswahl im Admin-Panel: Profil mit den neusten Beiträgen zeigen

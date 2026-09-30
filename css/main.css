@@ -184,8 +184,10 @@ h3 { font-size: 1.35rem; }
 }
 .fact { padding: 1.4rem 1.5rem; }
 .fact + .fact { border-left: 1px solid var(--line); }
-.fact strong { display: block; font-family: 'Barlow Condensed', sans-serif; font-size: 1.05rem; text-transform: uppercase; color: var(--navy); letter-spacing: .02em; }
-.fact span, .fact a { color: var(--muted); }
+.fact-label { display: block; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gold-dark); }
+.fact-value { display: block; font-family: 'Barlow Condensed', sans-serif; font-size: 1.7rem; line-height: 1.15; color: var(--navy); margin-top: .15rem; }
+.fact-note { display: block; color: var(--muted); font-size: .95rem; }
+.fact-note a { font-weight: 600; text-decoration: none; }
 @media (max-width: 700px) {
   .facts-inner { grid-template-columns: 1fr; }
   .fact, .fact + .fact { padding: 1rem 1.25rem; border-left: 0; }

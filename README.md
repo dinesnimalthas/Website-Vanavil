@@ -198,7 +198,7 @@ Die Farben stammen aus dem Vereinswappen und stehen in `css/main.css` ganz oben:
 }
 ```
 
-Das Admin-Panel hat ein eigenes Stylesheet (`css/admin.css`).
+Das Admin-Panel nutzt dasselbe Stylesheet, seine Zusatz-Styles stehen direkt in `admin.html`.
 
 ### Logo einbinden
 
