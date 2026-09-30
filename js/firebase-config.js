@@ -63,8 +63,9 @@ function initFirebase() {
   if (_initialized) return true;
   if (typeof firebase !== 'undefined') {
     firebase.initializeApp(firebaseConfig);
-    db = firebase.firestore();
-    auth = firebase.auth();
+    // Each page only loads the SDK parts it needs, so guard every one.
+    if (firebase.firestore) db = firebase.firestore();
+    if (firebase.auth) auth = firebase.auth();
     if (firebase.storage) {
       storage = firebase.storage();
     }

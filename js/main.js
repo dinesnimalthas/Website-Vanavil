@@ -2,22 +2,18 @@
  * SC Vanavil Luzern - Main JavaScript
  */
 // ========== PAGE LOADER ==========
-// Editorial brand reveal (crest → wordmark → gold rule → kicker), driven
-// purely by CSS animation-delay — no simulated progress bar/percentage.
+// Kurzer Wappen-Einstieg auf der Startseite (nur CSS-Animation).
 (function () {
   const loader = document.getElementById('vanavil-loader');
   if (!loader) return;
 
-  // Nur einmal pro Browser-Session in voller Länge zeigen — bei erneutem
-  // Besuch (z.B. Zurück-Navigation) erscheint der Inhalt sofort statt die
-  // Sequenz erneut abzuspielen.
+  // Nur einmal pro Browser-Session abspielen; danach sofort ausblenden.
   let alreadyShown = false;
   try { alreadyShown = sessionStorage.getItem('vanavilLoaderShown') === '1'; } catch (e) {}
   if (alreadyShown) loader.classList.add('no-anim');
 
-  // Mindestanzeigedauer deckt die volle Reveal-Sequenz ab (~1.55s), damit
-  // sie nicht durch schnell geladene Seiten abgeschnitten wird.
-  const minDelay = new Promise(res => setTimeout(res, alreadyShown ? 0 : 1650));
+  // Deckt die Animation (~1s) ab, damit sie nicht abgeschnitten wird.
+  const minDelay = new Promise(res => setTimeout(res, alreadyShown ? 0 : 1000));
 
   Promise.all([
     minDelay,
@@ -32,8 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
   initCurrentYear();
   initAdminBar();
-  initRevealObserver();
-  
+
   // Initialize Firebase if available
   if (window.VanavilDB) {
     window.VanavilDB.init();
@@ -51,29 +46,24 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// Teamfoto aus dem Admin-Panel als Hintergrund der Startseite.
+// Ohne Foto bleibt der Hero navy mit Wappen.
 async function loadHeroTeamPhoto() {
-  const section = document.getElementById('teamPhotoSection');
-  const img = document.getElementById('teamPhotoImg');
-  const heroBg = document.getElementById('heroBgPhoto');
-  const heroSection = document.getElementById('heroSection');
-  if (!section || !img) return;
+  const hero = document.getElementById('heroSection');
+  const photo = document.getElementById('heroPhoto');
+  if (!hero || !photo) return;
   try {
     const settings = await window.VanavilDB.getSettings();
-    if (settings && settings.teamPhotoURL) {
-      img.src = settings.teamPhotoURL;
-      section.style.display = '';
-      // Show team photo as hero background
-      if (heroBg && heroSection) {
-        heroBg.style.backgroundImage = 'url(' + settings.teamPhotoURL + ')';
-        heroSection.classList.add('has-team-photo');
-      }
-      // Re-observe reveal elements inside the newly shown section
-      section.querySelectorAll('.reveal').forEach(el => {
-        if (window._revealObserver) window._revealObserver.observe(el);
-      });
-    }
+    const url = settings && settings.teamPhotoURL;
+    if (!url) return;
+    const img = new Image();
+    img.onload = () => {
+      photo.style.backgroundImage = 'url("' + url.replace(/"/g, '%22') + '")';
+      hero.classList.add('has-photo');
+    };
+    img.src = url;
   } catch (e) {
-    // no team photo set yet
+    // kein Teamfoto gesetzt
   }
 }
 
@@ -178,95 +168,58 @@ function initAdminBar() {
   }
 }
 
-// ========== SCROLL REVEAL ==========
-function initRevealObserver() {
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-  // expose so loadHeroTeamPhoto can re-observe dynamic elements
-  window._revealObserver = observer;
-}
-
 // ========== RENDER HELPERS ==========
 
-/**
- * Format date to German locale
- */
 function formatDate(dateString) {
   const date = new Date(dateString);
-  return date.toLocaleDateString('de-CH', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric'
-  });
+  return date.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
-/**
- * Format date for match display
- */
 function formatMatchDate(dateString) {
   const date = new Date(dateString);
   return {
     day: date.getDate(),
-    month: date.toLocaleDateString('de-CH', { month: 'short' }).toUpperCase()
+    month: date.toLocaleDateString('de-CH', { month: 'short' }).replace('.', '').toUpperCase()
   };
 }
 
-/**
- * Render news cards
- */
-function renderNewsCards(news, container, featured = false) {
+function renderNewsCards(news, container) {
   if (!container) return;
-  
+
   if (news.length === 0) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <p>Keine News vorhanden</p>
-      </div>
-    `;
+    container.innerHTML = '<p class="empty-state">Noch keine Beiträge.</p>';
     return;
   }
-  
-  container.innerHTML = news.map((item, index) => `
-    <article class="card ${featured && index === 0 ? 'news-featured' : ''}">
-      <div class="card-image" style="${item.image
-        ? `background-image:url('${escapeHtml(item.image)}');background-size:cover;background-position:center;`
-        : 'background:linear-gradient(135deg,var(--bg-card),var(--primary-light));'}"></div>
-      <div class="card-meta">
-        <span class="card-tag">${item.category || 'News'}</span>
-        <span>${formatDate(item.date)}</span>
+
+  container.innerHTML = news.map(item => `
+    <article class="card news-card">
+      <div class="card-image"${item.image ? ` style="background-image:url('${escapeHtml(item.image)}')"` : ''}></div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-tag">${escapeHtml(item.category || 'News')}</span>
+          <span>${formatDate(item.date)}</span>
+        </div>
+        <h3>${escapeHtml(item.title)}</h3>
+        <p>${escapeHtml(item.summary || '')}</p>
       </div>
-      <h3>${escapeHtml(item.title)}</h3>
-      <p>${escapeHtml(item.summary || '')}</p>
     </article>
   `).join('');
 }
 
-/**
- * Render match cards
- */
 function renderMatchCards(matches, container) {
   if (!container) return;
-  
+
   if (matches.length === 0) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <p>Keine Spiele geplant</p>
-      </div>
-    `;
+    container.innerHTML = '<p class="empty-state">Zurzeit sind keine Spiele eingetragen.</p>';
     return;
   }
-  
-  container.innerHTML = matches.map(match => {
+
+  const orFallback = (value, fallback) => (!value || value === 'TBA') ? fallback : value;
+
+  container.innerHTML = '<div class="match-list">' + matches.map(match => {
     const { day, month } = formatMatchDate(match.date);
     const isLive = match.status === 'live';
-    
+
     return `
       <article class="card match-card">
         <div class="match-date">
@@ -274,15 +227,15 @@ function renderMatchCards(matches, container) {
           <span class="month">${month}</span>
         </div>
         <div class="match-info">
-          <h4>${escapeHtml(match.homeTeam)} vs ${escapeHtml(match.awayTeam)}</h4>
-          <p>${escapeHtml(match.location || 'TBA')}</p>
+          <h4>${escapeHtml(match.homeTeam)} – ${escapeHtml(match.awayTeam)}</h4>
+          <p>${escapeHtml(orFallback(match.location, 'Ort folgt'))}</p>
         </div>
         <span class="match-time ${isLive ? 'match-live' : ''}">
-          ${isLive ? 'LIVE' : match.time || ''}
+          ${isLive ? 'Live' : escapeHtml(orFallback(match.time, 'Zeit folgt'))}
         </span>
       </article>
     `;
-  }).join('');
+  }).join('') + '</div>';
 }
 
 /**
@@ -327,13 +280,16 @@ function renderTournaments(tournaments, container) {
 }
 
 /**
- * Escape HTML to prevent XSS
+ * Escape HTML (inkl. Anführungszeichen, da auch in Attributen verwendet)
  */
 function escapeHtml(text) {
-  if (!text) return '';
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
+  if (text === null || text === undefined) return '';
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 /**

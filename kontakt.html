@@ -3,44 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kontakt | SC Vanavil Luzern</title>
-  <meta name="description" content="Kontaktiere SC Vanavil Luzern - Mitglied werden, Training, Sponsoring">
+  <title>Kontakt – SC Vanavil Luzern</title>
+  <meta name="description" content="Kontakt zu SC Vanavil Luzern: Probetraining, Mitgliedschaft und Sponsoring.">
   <link rel="icon" href="images/favicon-64.png" type="image/png">
   <link rel="apple-touch-icon" href="images/Vanavil-Logo-180.png">
-  <meta name="theme-color" content="#0d0d0d">
-  <meta property="og:title" content="Kontakt | SC Vanavil Luzern">
-  <meta property="og:description" content="Mitglied werden, Training anfragen oder Sponsoring – meld dich bei SC Vanavil Luzern.">
+  <meta name="theme-color" content="#0b1f44">
+  <meta property="og:title" content="Kontakt – SC Vanavil Luzern">
+  <meta property="og:description" content="Kontakt zu SC Vanavil Luzern: Probetraining, Mitgliedschaft und Sponsoring.">
   <meta property="og:image" content="https://scvanavil.ch/images/Vanavil-Logo.png">
   <meta property="og:url" content="https://scvanavil.ch/kontakt.html">
   <meta property="og:type" content="website">
-  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Kontakt – SC Vanavil Luzern">
+  <meta name="twitter:description" content="Kontakt zu SC Vanavil Luzern: Probetraining, Mitgliedschaft und Sponsoring.">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=3">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css?v=4">
+
+  <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 </head>
 <body>
   <header class="site-header">
     <div class="container nav-container">
       <a href="./" class="logo">
-        <picture><source srcset="images/Vanavil-Logo-40.webp" type="image/webp"><img src="images/Vanavil-Logo-40.png" alt="SC Vanavil" class="logo-img" width="40" height="40" loading="lazy"></picture>
-        <div class="logo-text">SC Vanavil <span>Luzern • Since 1993</span></div>
+        <picture><source srcset="images/Vanavil-Logo-40.webp" type="image/webp"><img src="images/Vanavil-Logo-40.png" alt="" class="logo-img" width="44" height="44"></picture>
+        <span class="logo-text">SC Vanavil <span>Luzern · seit 1993</span></span>
       </a>
-      
-      <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+      <button class="menu-toggle" id="menuToggle" aria-label="Menü öffnen" aria-controls="navMenu">
         <span></span><span></span><span></span>
       </button>
-      
-      <nav class="nav-menu" id="navMenu">
-        <a href="./" class="nav-link">Home</a>
+      <nav class="nav-menu" id="navMenu" aria-label="Hauptnavigation">
+        <a href="./" class="nav-link">Start</a>
         <a href="news.html" class="nav-link">News</a>
         <a href="spielplan.html" class="nav-link">Spielplan</a>
         <a href="mannschaft.html" class="nav-link">Mannschaft</a>
         <a href="galerie.html" class="nav-link">Galerie</a>
-        <a href="kontakt.html" class="nav-link active">Kontakt</a>
-        <a href="kontakt.html#mitglied" class="nav-cta">Mitglied werden</a>
+        <a href="kontakt.html" class="nav-link active" aria-current="page">Kontakt</a>
+        <a href="kontakt.html#mitglied" class="btn btn-primary btn-sm nav-cta">Mitspielen</a>
       </nav>
     </div>
   </header>
@@ -49,123 +54,57 @@
     <section class="page-header">
       <div class="container">
         <h1>Kontakt</h1>
-        <p>Frage? Willst du mitmachen? Meld dich.</p>
+        <p>Probetraining, Mitgliedschaft oder Sponsoring: schreib uns.</p>
       </div>
     </section>
 
     <section class="section">
-      <div class="container">
-        <div class="grid grid-2">
-          <!-- Contact Info -->
-          <div>
-            <div class="card mb-3">
-              <h3 class="mb-2">So erreichst du uns</h3>
-              
-              <div style="padding: 1rem 0; border-bottom: 1px solid var(--border);">
-                <strong>Email</strong>
-                <p class="text-muted" style="margin: 0.25rem 0 0;">
-                  <a href="mailto:fcvanavil@gmail.com" style="color: var(--primary-light);">fcvanavil@gmail.com</a>
-                </p>
-              </div>
-              
-              <div style="padding: 1rem 0; border-bottom: 1px solid var(--border);">
-                <strong>Instagram</strong>
-                <p class="text-muted" style="margin: 0.25rem 0 0;">
-                  <a href="https://instagram.com/scvanavil" target="_blank" style="color: var(--primary-light);">@scvanavil</a>
-                </p>
-              </div>
-              
-              <div style="padding: 1rem 0;">
-                <strong>Trainingsort</strong>
-                <p class="text-muted" style="margin: 0.25rem 0 0;">
-                  Sportanlage Allmend, Luzern<br>
-                  <small>(genaue Zeiten auf Anfrage)</small>
-                </p>
-              </div>
+      <div class="container grid grid-2">
+        <div class="card" id="mitglied">
+          <h3>Anfrage</h3>
+          <p class="text-muted mb-3">Wir melden uns per E-Mail oder Telefon bei dir.</p>
+
+          <form id="contactForm" method="POST" action="https://formspree.io/f/xqeodaeg">
+            <div class="form-group">
+              <label class="form-label" for="cf-name">Name *</label>
+              <input type="text" id="cf-name" name="name" class="form-input" required autocomplete="name">
             </div>
-            
-            <div class="card">
-              <h3 class="mb-2">Wichtige Links</h3>
-              <div class="footer-links">
-                <a href="https://stfainfo.ch" target="_blank" style="padding: 0.75rem 0; display: block; border-bottom: 1px solid var(--border);">
-                  STFA – Swiss Tamil Football Association →
-                </a>
-                <a href="https://stfainfo.ch/live-ticker" target="_blank" style="padding: 0.75rem 0; display: block; border-bottom: 1px solid var(--border);">
-                  STFA Live Ticker →
-                </a>
-                <a href="https://instagram.com/scvanavil" target="_blank" style="padding: 0.75rem 0; display: block;">
-                  Instagram @scvanavil →
-                </a>
-              </div>
+            <div class="form-group">
+              <label class="form-label" for="cf-email">E-Mail *</label>
+              <input type="email" id="cf-email" name="email" class="form-input" required autocomplete="email">
             </div>
-          </div>
-
-          <!-- Membership Form -->
-          <div class="card" id="mitglied">
-            <h3 class="mb-2">Mitglied werden</h3>
-            <p class="text-muted mb-3">
-              Du möchtest mitspielen oder den Verein unterstützen? Füll das Formular aus und wir melden uns.
-            </p>
-            
-            <form id="contactForm" method="POST" action="https://formspree.io/f/xqeodaeg">
-
-              <div class="form-group">
-                <label class="form-label" for="cf-name">Name *</label>
-                <input type="text" id="cf-name" name="name" class="form-input" required autocomplete="name">
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="cf-email">Email *</label>
-                <input type="email" id="cf-email" name="email" class="form-input" required autocomplete="email">
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="cf-phone">Telefon</label>
-                <input type="tel" id="cf-phone" name="phone" class="form-input" autocomplete="tel">
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="cf-interest">Interesse an *</label>
-                <select id="cf-interest" name="interest" class="form-input" required>
-                  <option value="">Bitte wählen...</option>
-                  <option value="spieler">Als Spieler mitmachen</option>
-                  <option value="junior">Junioren / Academy</option>
-                  <option value="sponsor">Sponsoring</option>
-                  <option value="supporter">Supporter / Fan</option>
-                  <option value="andere">Andere Anfrage</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="cf-message">Nachricht</label>
-                <textarea id="cf-message" name="message" class="form-textarea" rows="4" placeholder="Erzähl uns mehr über dich..."></textarea>
-              </div>
-
-              <button type="submit" class="btn btn-primary" style="width: 100%;">
-                Anfrage senden
-              </button>
-
-            </form>
-            
-            <p class="text-muted text-center mt-3" style="font-size: 0.8rem;">
-              * Pflichtfelder. Deine Daten werden nur für die Kontaktaufnahme verwendet.
-            </p>
-          </div>
+            <div class="form-group">
+              <label class="form-label" for="cf-phone">Telefon</label>
+              <input type="tel" id="cf-phone" name="phone" class="form-input" autocomplete="tel">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cf-interest">Worum geht es? *</label>
+              <select id="cf-interest" name="interest" class="form-input" required>
+                <option value="">Bitte wählen</option>
+                <option value="spieler">Ich möchte mitspielen</option>
+                <option value="junior">Junioren / Academy</option>
+                <option value="sponsor">Sponsoring</option>
+                <option value="supporter">Verein unterstützen</option>
+                <option value="andere">Etwas anderes</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cf-message">Nachricht</label>
+              <textarea id="cf-message" name="message" class="form-textarea" rows="4" placeholder="z. B. Alter, bisheriger Verein, Position"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Anfrage senden</button>
+            <p class="form-hint">* Pflichtfelder. Deine Angaben verwenden wir nur, um dir zu antworten.</p>
+          </form>
         </div>
-      </div>
-    </section>
 
-    <!-- Sponsoring -->
-    <section class="section">
-      <div class="container">
-        <div class="stfa-banner" style="background: var(--brand-gradient);">
-          <div>
-            <h3>Sponsoring & Partnerschaften</h3>
-            <p>Unterstütze unseren Verein und werde sichtbar in der Community.</p>
-          </div>
-          <a href="mailto:fcvanavil@gmail.com?subject=Sponsoring-Anfrage" class="btn btn-primary">
-            Sponsoring anfragen
-          </a>
+        <div class="card">
+          <h3>Direkt erreichen</h3>
+          <ul class="contact-list">
+            <li><strong>E-Mail</strong><a href="mailto:fcvanavil@gmail.com">fcvanavil@gmail.com</a></li>
+            <li><strong>Instagram</strong><a href="https://instagram.com/scvanavil" target="_blank" rel="noopener">@scvanavil</a></li>
+            <li><strong>Training</strong><span class="text-muted">Sportanlage Allmend, Luzern. Die Zeiten sagen wir dir gerne per Nachricht.</span></li>
+            <li><strong>Verband</strong><a href="https://stfainfo.ch" target="_blank" rel="noopener">Swiss Tamil Football Association (STFA)</a></li>
+          </ul>
         </div>
       </div>
     </section>
@@ -175,92 +114,69 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a href="./" class="logo">
-            <picture><source srcset="images/Vanavil-Logo-40.webp" type="image/webp"><img src="images/Vanavil-Logo-40.png" alt="SC Vanavil" class="logo-img" width="40" height="40" loading="lazy"></picture>
-            <div class="logo-text">SC Vanavil <span>Luzern</span></div>
-          </a>
-          <p>Tamilischer Fussballverein in der Zentralschweiz. Gegründet 1993. Mitglied der Swiss Tamil Football Association.</p>
+          <picture><source srcset="images/Vanavil-Logo-72.webp" type="image/webp"><img src="images/Vanavil-Logo-72.png" alt="" width="64" height="64" loading="lazy"></picture>
+          <div>
+            <strong>SC Vanavil Luzern</strong>
+            <p>Tamilischer Fussballverein, gegründet 1993. Mitglied der Swiss Tamil Football Association.</p>
+          </div>
         </div>
         <div>
-          <h4 class="footer-heading">Navigation</h4>
+          <h4 class="footer-heading">Seiten</h4>
           <div class="footer-links">
-            <a href="./">Home</a>
             <a href="news.html">News</a>
             <a href="spielplan.html">Spielplan</a>
             <a href="mannschaft.html">Mannschaft</a>
             <a href="galerie.html">Galerie</a>
-          </div>
-        </div>
-        <div>
-          <h4 class="footer-heading">Verein</h4>
-          <div class="footer-links">
             <a href="kontakt.html">Kontakt</a>
-            <a href="kontakt.html#mitglied">Mitglied werden</a>
-            <a href="https://stfainfo.ch" target="_blank">STFA</a>
           </div>
         </div>
         <div>
-          <h4 class="footer-heading">Social Media</h4>
-          <div class="footer-social">
-            <a href="https://instagram.com/scvanavil" target="_blank" rel="noopener" aria-label="Instagram">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-            </a>
-            <a href="mailto:fcvanavil@gmail.com" aria-label="Email">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-            </a>
+          <h4 class="footer-heading">Kontakt</h4>
+          <div class="footer-links">
+            <a href="mailto:fcvanavil@gmail.com">fcvanavil@gmail.com</a>
+            <a href="https://instagram.com/scvanavil" target="_blank" rel="noopener">Instagram @scvanavil</a>
+            <a href="https://stfainfo.ch" target="_blank" rel="noopener">STFA</a>
           </div>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; <span id="currentYear"></span> SC Vanavil Luzern. Alle Rechte vorbehalten.</p>
-        <p><a href="admin.html" style="opacity: 0.5;">Admin</a></p>
+        <p>&copy; <span id="currentYear"></span> SC Vanavil Luzern</p>
+        <a href="admin.html">Admin</a>
       </div>
     </div>
   </footer>
 
-  <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="js/firebase-config.js?v=3"></script>
-  <script src="js/main.js?v=3"></script>
+  <div class="admin-bar" id="adminBar">
+    <span>Eingeloggt</span>
+    <a href="admin.html" class="btn btn-primary btn-sm">Admin-Panel</a>
+    <button class="btn btn-light btn-sm" id="adminLogoutBtn">Logout</button>
+  </div>
+
+  <script src="js/firebase-config.js?v=4"></script>
+  <script src="js/main.js?v=4"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('contactForm');
       if (!form) return;
 
-      form.addEventListener('submit', async function(e) {
+      form.addEventListener('submit', async e => {
         e.preventDefault();
-
         const btn = form.querySelector('[type=submit]');
         btn.disabled = true;
-        btn.textContent = 'Wird gesendet…';
-
-        const data = Object.fromEntries(new FormData(form));
+        btn.textContent = 'Wird gesendet …';
 
         try {
           const res = await fetch(form.action, {
             method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            }
+            body: JSON.stringify(Object.fromEntries(new FormData(form))),
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
           });
-
-          if (res.ok) {
-            form.innerHTML = `
-              <div style="text-align:center; padding: 3rem 1rem;">
-                <div style="font-size: 2.5rem; margin-bottom: 1rem;">✓</div>
-                <h3 style="margin-bottom: .75rem; color: var(--accent);">Nachricht gesendet!</h3>
-                <p style="color: var(--text-muted);">Wir melden uns so bald wie möglich bei dir.</p>
-              </div>
-            `;
-          } else {
-            throw new Error();
-          }
+          if (!res.ok) throw new Error();
+          form.innerHTML = '<h3>Danke!</h3><p class="text-muted">Deine Anfrage ist angekommen. Wir melden uns bald bei dir.</p>';
         } catch {
           btn.disabled = false;
           btn.textContent = 'Anfrage senden';
-          alert('Fehler beim Senden. Bitte versuch es nochmal oder schreib uns direkt an fcvanavil@gmail.com');
+          alert('Das hat leider nicht geklappt. Versuch es nochmal oder schreib direkt an fcvanavil@gmail.com.');
         }
       });
     });

@@ -3,390 +3,217 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mannschaft | SC Vanavil Luzern</title>
-  <meta name="description" content="Unsere Mannschaften und der Vorstand von SC Vanavil Luzern">
+  <title>Mannschaft – SC Vanavil Luzern</title>
+  <meta name="description" content="Kader und Vorstand von SC Vanavil Luzern: Erste Mannschaft, Junioren und Academy.">
   <link rel="icon" href="images/favicon-64.png" type="image/png">
   <link rel="apple-touch-icon" href="images/Vanavil-Logo-180.png">
-  <meta name="theme-color" content="#0d0d0d">
-  <meta property="og:title" content="Mannschaft | SC Vanavil Luzern">
-  <meta property="og:description" content="Unsere Mannschaften und der Vorstand von SC Vanavil Luzern">
+  <meta name="theme-color" content="#0b1f44">
+  <meta property="og:title" content="Mannschaft – SC Vanavil Luzern">
+  <meta property="og:description" content="Kader und Vorstand von SC Vanavil Luzern: Erste Mannschaft, Junioren und Academy.">
   <meta property="og:image" content="https://scvanavil.ch/images/Vanavil-Logo.png">
   <meta property="og:url" content="https://scvanavil.ch/mannschaft.html">
   <meta property="og:type" content="website">
-  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Mannschaft – SC Vanavil Luzern">
+  <meta name="twitter:description" content="Kader und Vorstand von SC Vanavil Luzern: Erste Mannschaft, Junioren und Academy.">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=3">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css?v=4">
 
-  <!-- Firebase -->
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 </head>
 <body>
   <header class="site-header">
     <div class="container nav-container">
       <a href="./" class="logo">
-        <picture><source srcset="images/Vanavil-Logo-40.webp" type="image/webp"><img src="images/Vanavil-Logo-40.png" alt="SC Vanavil" class="logo-img" width="40" height="40" loading="lazy"></picture>
-        <div class="logo-text">SC Vanavil <span>Luzern • Since 1993</span></div>
+        <picture><source srcset="images/Vanavil-Logo-40.webp" type="image/webp"><img src="images/Vanavil-Logo-40.png" alt="" class="logo-img" width="44" height="44"></picture>
+        <span class="logo-text">SC Vanavil <span>Luzern · seit 1993</span></span>
       </a>
-      
-      <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+      <button class="menu-toggle" id="menuToggle" aria-label="Menü öffnen" aria-controls="navMenu">
         <span></span><span></span><span></span>
       </button>
-      
-      <nav class="nav-menu" id="navMenu">
-        <a href="./" class="nav-link">Home</a>
+      <nav class="nav-menu" id="navMenu" aria-label="Hauptnavigation">
+        <a href="./" class="nav-link">Start</a>
         <a href="news.html" class="nav-link">News</a>
         <a href="spielplan.html" class="nav-link">Spielplan</a>
-        <a href="mannschaft.html" class="nav-link">Mannschaft</a>
+        <a href="mannschaft.html" class="nav-link active" aria-current="page">Mannschaft</a>
         <a href="galerie.html" class="nav-link">Galerie</a>
         <a href="kontakt.html" class="nav-link">Kontakt</a>
-        <a href="kontakt.html#mitglied" class="nav-cta">Mitglied werden</a>
+        <a href="kontakt.html#mitglied" class="btn btn-primary btn-sm nav-cta">Mitspielen</a>
       </nav>
     </div>
   </header>
 
   <main>
-    <!-- Cinematic Page Hero -->
-    <section class="team-page-hero">
-      <span class="team-hero-bg-word" aria-hidden="true">TEAM</span>
+    <section class="page-header">
       <div class="container">
-        <div class="team-hero-inner">
-          <div class="team-hero-text">
-            <div class="hero-eyebrow">
-              <div class="hero-eyebrow-line"></div>
-              <span class="label">SC Vanavil Luzern &middot; Seit 1993</span>
-            </div>
-            <h1 class="team-hero-title">Das<br><em>Team</em></h1>
-            <p class="team-hero-desc">Tamilischer Fussball aus Luzern. Drei Mannschaften, ein Verein &ndash; Teamgeist auf und neben dem Platz.</p>
-          </div>
-          <div class="team-hero-stats">
-            <div class="team-stat-block">
-              <span class="team-stat-num">1993</span>
-              <span class="team-stat-label">Gegr&uuml;ndet</span>
-            </div>
-            <div class="team-stat-block">
-              <span class="team-stat-num">3</span>
-              <span class="team-stat-label">Mannschaften</span>
-            </div>
-            <div class="team-stat-block">
-              <span class="team-stat-num">#3</span>
-              <span class="team-stat-label">STFA Junioren</span>
-            </div>
-          </div>
+        <h1>Mannschaft</h1>
+        <p>Erste Mannschaft, Junioren und Academy.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="team-block">
+          <h3>Erste Mannschaft</h3>
+          <div class="player-grid" id="rosterErste"><div class="loading"><div class="spinner"></div></div></div>
+        </div>
+        <div class="team-block">
+          <h3>Junioren</h3>
+          <div class="player-grid" id="rosterJunioren"><div class="loading"><div class="spinner"></div></div></div>
+        </div>
+        <div class="team-block">
+          <h3>Academy</h3>
+          <div class="player-grid" id="rosterAcademy"><div class="loading"><div class="spinner"></div></div></div>
         </div>
       </div>
     </section>
 
-    <!-- Club Identity Bar -->
-    <div class="team-identity-bar">
-      <div class="container team-identity-inner">
-        <div class="team-identity-item"><strong>Heimstadt</strong><span>Luzern</span></div>
-        <div class="team-identity-divider"></div>
-        <div class="team-identity-item"><strong>Liga</strong><span>STFA</span></div>
-        <div class="team-identity-divider"></div>
-        <div class="team-identity-item"><strong>Trainingsort</strong><span>Allmend Luzern</span></div>
-        <div class="team-identity-divider"></div>
-        <div class="team-identity-item"><strong>Vereinsfarben</strong><span>Gold &amp; Schwarz</span></div>
+    <section class="section section-alt">
+      <div class="container about">
+        <div>
+          <h2 class="mb-2">Der Verein</h2>
+          <p><span class="about-name">Vanavil</span> (வானவில்) heisst auf Tamil «Regenbogen». Der Verein wurde 1993 in Luzern gegründet und ist Mitglied der Swiss Tamil Football Association.</p>
+          <p>Neben der ersten Mannschaft haben wir Junioren und eine Academy für die Jüngsten. Trainiert wird auf der Sportanlage Allmend, gespielt wird an den STFA-Turnieren in der ganzen Schweiz.</p>
+          <p class="mt-3"><a href="kontakt.html#mitglied" class="more-link">Probetraining anfragen →</a></p>
+        </div>
+        <div>
+          <h2 class="mb-2">Vorstand</h2>
+          <ul class="board-list">
+          <li><strong>Nanthan Kandasamy</strong><span>Präsident</span></li>
+          <li><strong>Regan Fernando</strong><span>Vizepräsident</span></li>
+          <li><strong>Anoyan Kandasamy</strong><span>Kassier</span></li>
+          <li><strong>Theepan Sundaralingam</strong><span>Trainer</span></li>
+          <li><strong>Yatheesan Somasundaram</strong><span>Trainer</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  <div class="player-modal-overlay" id="playerModalOverlay" role="dialog" aria-modal="true" aria-labelledby="playerModalName">
+    <div class="player-modal">
+      <button class="player-modal-close" id="playerModalClose" aria-label="Schliessen">&times;</button>
+      <div class="player-modal-photo" id="playerModalPhoto"></div>
+      <div class="player-modal-photo-overlay">
+        <div class="player-modal-number" id="playerModalNumber"></div>
+        <h2 class="player-modal-name" id="playerModalName"></h2>
+        <div class="player-modal-position" id="playerModalPosition"></div>
       </div>
     </div>
-
-    <!-- About -->
-    <section class="section">
-      <div class="container">
-        <div class="team-about-grid">
-          <div class="team-about-text">
-            <div class="hero-eyebrow" style="margin-bottom:1.5rem;">
-              <div class="hero-eyebrow-line"></div>
-              <span class="label">Unser Verein</span>
-            </div>
-            <h2 style="font-size:clamp(2rem,4vw,3rem);margin-bottom:1.5rem;">Vanavil bedeutet<br><em style="color:var(--accent);font-style:normal;">Regenbogen</em></h2>
-            <p class="text-muted" style="font-size:1.05rem;line-height:1.8;margin-bottom:1rem;">
-              1993 gegr&uuml;ndet &ndash; &ldquo;Vanavil&rdquo; (வானவில்) auf Tamil. Ein tamilischer Club aus Luzern, STFA-Mitglied von Anfang an.
-            </p>
-            <p class="text-muted" style="font-size:1.05rem;line-height:1.8;">
-              Jedes Jahr an den Turnieren &ndash; Summer Cup, Maveerar Cup und mehr. Unsere Junioren stehen auf Platz 3 der STFA-Rangliste.
-            </p>
-          </div>
-          
-          <div class="team-values-list">
-            <div class="team-value-row">
-              <div class="team-value-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="2" x2="12" y2="22"/><path d="M2 12h20"/></svg>
-              </div>
-              <div><strong>Training</strong><p>Regelm&auml;ssig &ndash; auch wenn es regnet</p></div>
-            </div>
-            <div class="team-value-row">
-              <div class="team-value-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              </div>
-              <div><strong>Zusammenhalt</strong><p>Zusammen auf dem Platz, zusammen nach dem Match</p></div>
-            </div>
-            <div class="team-value-row">
-              <div class="team-value-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg>
-              </div>
-              <div><strong>Turniere</strong><p>STFA-Cups, Gr&uuml;mpeliturniere, alles was geht</p></div>
-            </div>
-            <div class="team-value-row">
-              <div class="team-value-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-              </div>
-              <div><strong>Offen f&uuml;r alle</strong><p>Jeder kann kommen, der kicken will</p></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Teams -->
-    <section class="section" style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
-      <div class="container">
-        <div class="section-header reveal">
-          <span class="section-num">01 &mdash; Kader</span>
-          <h2>Unsere Teams</h2>
-          <p>Von Junioren bis zur ersten Mannschaft</p>
-        </div>
-
-        <!-- Erste Mannschaft -->
-        <div class="team-section-block reveal">
-          <div class="team-section-header">
-            <h3>Erste Mannschaft</h3>
-          </div>
-          <div class="player-grid" id="rosterErste">
-            <div class="loading"><div class="spinner"></div></div>
-          </div>
-        </div>
-
-        <!-- Junioren -->
-        <div class="team-section-block reveal">
-          <div class="team-section-header">
-            <h3>Junioren</h3>
-            <span class="team-section-badge">#3 STFA Ranking</span>
-          </div>
-          <div class="player-grid" id="rosterJunioren">
-            <div class="loading"><div class="spinner"></div></div>
-          </div>
-        </div>
-
-        <!-- Academy -->
-        <div class="team-section-block reveal">
-          <div class="team-section-header">
-            <h3>Academy</h3>
-          </div>
-          <div class="player-grid" id="rosterAcademy">
-            <div class="loading"><div class="spinner"></div></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Vorstand -->
-    <section class="section">
-      <div class="container">
-        <div class="section-header reveal">
-          <span class="section-num">02 &mdash; Vorstand</span>
-          <h2>Die Menschen hinter dem Verein</h2>
-        </div>
-        <div class="grid grid-4">
-          <div class="board-card reveal">
-            <div class="board-avatar">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
-            <div class="board-name">Nanthan Kandasamy</div>
-            <div class="board-role">Pr&auml;sident</div>
-          </div>
-          <div class="board-card reveal">
-            <div class="board-avatar">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
-            <div class="board-name">Regan Fernando</div>
-            <div class="board-role">Vizepr&auml;sident</div>
-          </div>
-          <div class="board-card reveal">
-            <div class="board-avatar">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
-            <div class="board-name">Theepan Sundaralingam</div>
-            <div class="board-role">Trainer</div>
-          </div>
-          <div class="board-card reveal">
-            <div class="board-avatar">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
-            <div class="board-name">Yatheesan Somasundaram</div>
-            <div class="board-role">Trainer</div>
-          </div>
-          <div class="board-card reveal">
-            <div class="board-avatar">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
-            <div class="board-name">Anoyan Kandasamy</div>
-            <div class="board-role">Kassier</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="section-cta-amber">
-      <div class="container">
-        <span class="section-num">03 &mdash; Mitmachen</span>
-        <h2>Werde Teil des Teams</h2>
-        <p class="cta-sub">Du m&ouml;chtest mitspielen? Wir suchen immer motivierte Spieler f&uuml;r alle Altersklassen.</p>
-        <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
-          <a href="kontakt.html#mitglied" class="btn btn-black">Jetzt Mitglied werden</a>
-          <a href="kontakt.html" class="btn btn-outline-black">Kontakt</a>
-        </div>
-      </div>
-    </section>
+  </div>
   </main>
 
   <footer class="site-footer">
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a href="./" class="logo">
-            <picture><source srcset="images/Vanavil-Logo-40.webp" type="image/webp"><img src="images/Vanavil-Logo-40.png" alt="SC Vanavil" class="logo-img" width="40" height="40" loading="lazy"></picture>
-            <div class="logo-text">SC Vanavil <span>Luzern</span></div>
-          </a>
-          <p>Tamilischer Fussballverein in der Zentralschweiz. Gegründet 1993. Mitglied der Swiss Tamil Football Association.</p>
+          <picture><source srcset="images/Vanavil-Logo-72.webp" type="image/webp"><img src="images/Vanavil-Logo-72.png" alt="" width="64" height="64" loading="lazy"></picture>
+          <div>
+            <strong>SC Vanavil Luzern</strong>
+            <p>Tamilischer Fussballverein, gegründet 1993. Mitglied der Swiss Tamil Football Association.</p>
+          </div>
         </div>
         <div>
-          <h4 class="footer-heading">Navigation</h4>
+          <h4 class="footer-heading">Seiten</h4>
           <div class="footer-links">
-            <a href="./">Home</a>
             <a href="news.html">News</a>
             <a href="spielplan.html">Spielplan</a>
             <a href="mannschaft.html">Mannschaft</a>
             <a href="galerie.html">Galerie</a>
-          </div>
-        </div>
-        <div>
-          <h4 class="footer-heading">Verein</h4>
-          <div class="footer-links">
             <a href="kontakt.html">Kontakt</a>
-            <a href="kontakt.html#mitglied">Mitglied werden</a>
-            <a href="https://stfainfo.ch" target="_blank">STFA</a>
           </div>
         </div>
         <div>
-          <h4 class="footer-heading">Social Media</h4>
-          <div class="footer-social">
-            <a href="https://instagram.com/scvanavil" target="_blank" rel="noopener" aria-label="Instagram">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-            </a>
-            <a href="mailto:fcvanavil@gmail.com" aria-label="Email">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-            </a>
+          <h4 class="footer-heading">Kontakt</h4>
+          <div class="footer-links">
+            <a href="mailto:fcvanavil@gmail.com">fcvanavil@gmail.com</a>
+            <a href="https://instagram.com/scvanavil" target="_blank" rel="noopener">Instagram @scvanavil</a>
+            <a href="https://stfainfo.ch" target="_blank" rel="noopener">STFA</a>
           </div>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; <span id="currentYear"></span> SC Vanavil Luzern. Alle Rechte vorbehalten.</p>
-        <p><a href="admin.html" style="opacity: 0.5;">Admin</a></p>
+        <p>&copy; <span id="currentYear"></span> SC Vanavil Luzern</p>
+        <a href="admin.html">Admin</a>
       </div>
     </div>
   </footer>
 
-  <script src="js/firebase-config.js?v=3"></script>
-  <script src="js/main.js?v=3"></script>
+  <div class="admin-bar" id="adminBar">
+    <span>Eingeloggt</span>
+    <a href="admin.html" class="btn btn-primary btn-sm">Admin-Panel</a>
+    <button class="btn btn-light btn-sm" id="adminLogoutBtn">Logout</button>
+  </div>
+
+  <script src="js/firebase-config.js?v=4"></script>
+  <script src="js/main.js?v=4"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      if (!window.VanavilDB) return;
-
       const teams = [
         { key: 'erste-mannschaft', containerId: 'rosterErste' },
         { key: 'junioren',         containerId: 'rosterJunioren' },
         { key: 'academy',          containerId: 'rosterAcademy' }
       ];
+      const emptyText = '<p class="empty-state">Der Kader wird noch erfasst.</p>';
 
       try {
-        const allPlayers = await window.VanavilDB.getPlayers();
+        const [allPlayers, ...rosters] = await Promise.all([
+          window.VanavilDB.getPlayers(),
+          ...teams.map(t => window.VanavilDB.getRoster(t.key))
+        ]);
 
-        for (const team of teams) {
-          const ids = await window.VanavilDB.getRoster(team.key);
-          const players = ids.map(id => allPlayers.find(p => p.id === id)).filter(Boolean);
+        teams.forEach((team, i) => {
+          const players = rosters[i].map(id => allPlayers.find(p => p.id === id)).filter(Boolean);
           const container = document.getElementById(team.containerId);
-
           if (players.length > 0) {
             window.VanavilUI.renderPlayerCards(players, container, openPlayerModal);
           } else {
-            container.innerHTML = '<p class="text-muted">Kader wird bald erg\u00e4nzt.</p>';
+            container.innerHTML = emptyText;
           }
-        }
+        });
       } catch (e) {
         teams.forEach(team => {
-          const container = document.getElementById(team.containerId);
-          if (container) container.innerHTML = '<p class="text-muted">Kader konnte nicht geladen werden.</p>';
+          document.getElementById(team.containerId).innerHTML =
+            '<p class="empty-state">Der Kader konnte nicht geladen werden.</p>';
         });
       }
     });
-  </script>
 
-  <!-- Player Detail Modal -->
-  <div class="player-modal-overlay" id="playerModalOverlay" role="dialog" aria-modal="true" aria-labelledby="playerModalName">
-    <div class="player-modal">
-      <button class="player-modal-close" id="playerModalClose" aria-label="Schliessen">&times;</button>
-      <div class="player-modal-photo-wrap">
-        <div class="player-modal-photo" id="playerModalPhoto"></div>
-        <div class="player-modal-photo-overlay">
-          <div class="player-modal-number" id="playerModalNumber"></div>
-          <h2 class="player-modal-name" id="playerModalName"></h2>
-          <div class="player-modal-position" id="playerModalPosition"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Player modal logic
     function openPlayerModal(player) {
-      const overlay = document.getElementById('playerModalOverlay');
-      if (!overlay) return;
-
+      const esc = window.VanavilUI.escapeHtml;
       const photo = document.getElementById('playerModalPhoto');
-      const name  = document.getElementById('playerModalName');
-      const pos   = document.getElementById('playerModalPosition');
-      const num   = document.getElementById('playerModalNumber');
-
-      // Photo or initials
       if (player.photoURL) {
-        photo.innerHTML = '<img src="' + window.VanavilUI.escapeHtml(player.photoURL) + '" alt="' + window.VanavilUI.escapeHtml(player.name) + '">';
+        photo.innerHTML = '<img src="' + esc(player.photoURL) + '" alt="' + esc(player.name) + '">';
         photo.classList.remove('player-modal-photo--initials');
       } else {
         const initials = player.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-        photo.innerHTML = '<span>' + window.VanavilUI.escapeHtml(initials) + '</span>';
+        photo.innerHTML = '<span>' + esc(initials) + '</span>';
         photo.classList.add('player-modal-photo--initials');
       }
-
-      // Name / number / position (in photo overlay)
-      name.textContent = player.name || '';
-      pos.textContent  = player.position || '';
-      num.textContent  = player.number ? '#' + player.number : '';
-
-      overlay.classList.add('open');
+      document.getElementById('playerModalName').textContent = player.name || '';
+      document.getElementById('playerModalPosition').textContent = player.position || '';
+      document.getElementById('playerModalNumber').textContent = player.number ? '#' + player.number : '';
+      document.getElementById('playerModalOverlay').classList.add('open');
       document.body.style.overflow = 'hidden';
+      document.getElementById('playerModalClose').focus();
     }
 
     function closePlayerModal() {
-      const overlay = document.getElementById('playerModalOverlay');
-      if (overlay) overlay.classList.remove('open');
+      document.getElementById('playerModalOverlay').classList.remove('open');
       document.body.style.overflow = '';
     }
 
     document.getElementById('playerModalClose').addEventListener('click', closePlayerModal);
-    document.getElementById('playerModalOverlay').addEventListener('click', function(e) {
+    document.getElementById('playerModalOverlay').addEventListener('click', function (e) {
       if (e.target === this) closePlayerModal();
     });
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') closePlayerModal();
-    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closePlayerModal(); });
   </script>
 </body>
 </html>

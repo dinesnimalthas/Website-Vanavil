@@ -187,16 +187,18 @@ Direkt in den HTML-Dateien bearbeiten:
 
 ### Farben ändern
 
-In `css/main.css` die CSS-Variablen anpassen:
+Die Farben stammen aus dem Vereinswappen und stehen in `css/main.css` ganz oben:
 
 ```css
 :root {
-  --primary: #1a237e;        /* Hauptfarbe */
-  --accent: #ffb703;         /* Akzentfarbe (Gold) */
-  --accent-2: #00d4ff;       /* Sekundär (Cyan) */
-  --bg-dark: #0a1628;        /* Hintergrund */
+  --navy: #0b1f44;   /* Hauptfarbe (Wappen) */
+  --gold: #c9962c;   /* Akzent (Löwen) */
+  --blue: #3a6fb3;   /* Luzerner Blau (Schild) */
+  --bg:   #f4f5f7;   /* Seitenhintergrund */
 }
 ```
+
+Das Admin-Panel hat ein eigenes Stylesheet (`css/admin.css`).
 
 ### Logo einbinden
 
