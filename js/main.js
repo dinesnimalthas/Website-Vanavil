@@ -46,20 +46,24 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Teamfoto aus dem Admin-Panel als Hintergrund der Startseite.
-// Ohne Foto bleibt der Hero navy mit Wappen.
+// Teamfoto aus dem Admin-Panel: Hintergrund der Startseite sowie
+// (über --team-photo) der Seitenköpfe und des Mitmachen-Blocks.
+// Ohne Foto bleibt alles navy, auf der Startseite mit Wappen.
 async function loadHeroTeamPhoto() {
-  const hero = document.getElementById('heroSection');
-  const photo = document.getElementById('heroPhoto');
-  if (!hero || !photo) return;
   try {
     const settings = await window.VanavilDB.getSettings();
     const url = settings && settings.teamPhotoURL;
     if (!url) return;
     const img = new Image();
     img.onload = () => {
-      photo.style.backgroundImage = 'url("' + url.replace(/"/g, '%22') + '")';
-      hero.classList.add('has-photo');
+      const cssUrl = 'url("' + url.replace(/"/g, '%22') + '")';
+      document.documentElement.style.setProperty('--team-photo', cssUrl);
+      const hero = document.getElementById('heroSection');
+      const photo = document.getElementById('heroPhoto');
+      if (hero && photo) {
+        photo.style.backgroundImage = cssUrl;
+        hero.classList.add('has-photo');
+      }
     };
     img.src = url;
   } catch (e) {
@@ -187,7 +191,7 @@ function renderNewsCards(news, container) {
   if (!container) return;
 
   if (news.length === 0) {
-    container.innerHTML = '<p class="empty-state">Noch keine Beiträge.</p>';
+    container.innerHTML = '<p class="empty-state" style="grid-column:1/-1">Noch keine Beiträge. Aktuelles vom Verein gibt es auch auf <a href="https://instagram.com/scvanavil" target="_blank" rel="noopener">Instagram</a>.</p>';
     return;
   }
 
