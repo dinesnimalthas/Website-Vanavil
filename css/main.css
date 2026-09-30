@@ -245,6 +245,14 @@ h3 { font-size: 1.35rem; }
 .insta-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; align-items: start; }
 .insta-post { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
 .insta-post iframe { display: block; width: 100%; height: 560px; border: 0; }
+.insta-profile iframe { height: 500px; }
+@media (max-width: 600px) { .insta-profile iframe { height: calc(130px + 72vw); } }
+
+/* Instagram-Abschnitt: Text links, Embed rechts */
+.insta-layout { display: grid; grid-template-columns: 1fr minmax(0, 540px); gap: 3rem; align-items: center; }
+.insta-layout p { color: var(--muted); margin: .75rem 0 1.5rem; max-width: 30rem; }
+.insta-grid.insta-single { grid-template-columns: 1fr; }
+@media (max-width: 900px) { .insta-layout { grid-template-columns: 1fr; gap: 1.5rem; } }
 
 /* Tabellen */
 .table-container { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }

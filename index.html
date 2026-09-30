@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=6">
+  <link rel="stylesheet" href="css/main.css?v=7">
 
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -145,11 +145,12 @@
       </div>
     </section>
 
-    <section class="section" id="instagramSection" hidden>
-      <div class="container">
-        <div class="section-head">
+    <section class="section" id="instagramSection">
+      <div class="container insta-layout">
+        <div>
           <h2>Instagram</h2>
-          <a href="https://instagram.com/scvanavil" target="_blank" rel="noopener" class="more-link">@scvanavil folgen →</a>
+          <p>Bilder von Turnieren, Trainings und Anlässen. Die neusten Beiträge gibt es auf unserem Instagram-Kanal.</p>
+          <a href="https://instagram.com/scvanavil" target="_blank" rel="noopener" class="btn btn-outline">@scvanavil folgen</a>
         </div>
         <div class="insta-grid" id="instagramContainer"></div>
       </div>
@@ -218,7 +219,7 @@
   </div>
 
   <script src="js/firebase-config.js?v=6"></script>
-  <script src="js/main.js?v=6"></script>
+  <script src="js/main.js?v=7"></script>
   <script>
     // Abschnitte nur anzeigen, wenn im Admin-Panel etwas eingetragen ist.
     document.addEventListener('DOMContentLoaded', async () => {
@@ -250,11 +251,12 @@
         fact.innerHTML = '<a href="#trainingSection">Trainingszeiten ansehen</a>';
       }
 
+      // Ohne Auswahl im Admin-Panel: Profil mit den neusten Beiträgen zeigen
       const posts = (settings.instagramPosts || []).filter(u => UI.parseInstagramUrl(u));
-      if (posts.length > 0) {
-        UI.renderInstagramPosts(posts.slice(0, 3), document.getElementById('instagramContainer'));
-        document.getElementById('instagramSection').hidden = false;
-      }
+      UI.renderInstagramPosts(
+        posts.length > 0 ? posts.slice(0, 3) : ['https://www.instagram.com/scvanavil/'],
+        document.getElementById('instagramContainer')
+      );
     });
   </script>
 </body>

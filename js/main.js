@@ -330,24 +330,33 @@ function renderTrainings(trainings, container) {
 }
 
 /**
- * Instagram-Link -> Kurzcode ('https://www.instagram.com/p/ABC123/' -> {type:'p', code:'ABC123'})
+ * Instagram-Link erkennen:
+ *   Beitrag/Reel: 'https://www.instagram.com/p/ABC123/' -> { type: 'p', code: 'ABC123' }
+ *   Profil:       'https://www.instagram.com/scvanavil/' -> { type: 'profile', code: 'scvanavil' }
  */
 function parseInstagramUrl(url) {
-  const m = String(url).match(/instagram\.com\/(?:[A-Za-z0-9_.]+\/)?(p|reel|tv)\/([A-Za-z0-9_-]+)/);
-  return m ? { type: m[1], code: m[2] } : null;
+  const post = String(url).match(/instagram\.com\/(?:[A-Za-z0-9_.]+\/)?(p|reel|tv)\/([A-Za-z0-9_-]+)/);
+  if (post) return { type: post[1], code: post[2] };
+  const profile = String(url).match(/instagram\.com\/([A-Za-z0-9_.]+)\/?(?:[?#].*)?$/);
+  const reserved = ['p', 'reel', 'reels', 'tv', 'explore', 'stories', 'accounts'];
+  if (profile && !reserved.includes(profile[1])) return { type: 'profile', code: profile[1] };
+  return null;
 }
 
 function renderInstagramPosts(urls, container) {
   if (!container) return;
-  container.innerHTML = urls
-    .map(parseInstagramUrl)
-    .filter(Boolean)
-    .map(p => `
-      <div class="insta-post">
-        <iframe src="https://www.instagram.com/${p.type}/${encodeURIComponent(p.code)}/embed/"
-                title="Instagram-Beitrag von SC Vanavil" loading="lazy"
+  const items = urls.map(parseInstagramUrl).filter(Boolean);
+  container.classList.toggle('insta-single', items.length === 1);
+  container.innerHTML = items.map(p => {
+    const src = p.type === 'profile'
+      ? `https://www.instagram.com/${encodeURIComponent(p.code)}/embed/`
+      : `https://www.instagram.com/${p.type}/${encodeURIComponent(p.code)}/embed/`;
+    return `
+      <div class="insta-post${p.type === 'profile' ? ' insta-profile' : ''}">
+        <iframe src="${src}" title="Instagram von SC Vanavil" loading="lazy"
                 allowtransparency="true" scrolling="no"></iframe>
-      </div>`).join('');
+      </div>`;
+  }).join('');
 }
 
 /**
