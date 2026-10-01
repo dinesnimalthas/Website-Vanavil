@@ -424,6 +424,17 @@ h3 { font-size: 1.35rem; }
 .footer-links span { color: rgba(255,255,255,.6); }
 .footer-bottom { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2.75rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,.12); font-size: .9rem; }
 .footer-bottom a { opacity: .6; }
+.footer-legal { display: flex; gap: 1.25rem; }
+
+/* ---------- Rechtstexte ---------- */
+.legal { max-width: 46rem; }
+.legal h2 { font-size: 1.5rem; margin: 2.25rem 0 .75rem; }
+.legal h2:first-child { margin-top: 0; }
+.legal h3 { font-size: 1.15rem; margin: 1.25rem 0 .4rem; }
+.legal p, .legal ul { margin-bottom: .9rem; }
+.legal ul { padding-left: 1.25rem; }
+.legal li + li { margin-top: .3rem; }
+.legal .legal-meta { color: var(--muted); font-size: .95rem; }
 @media (max-width: 800px) {
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .footer-brand { grid-column: 1 / -1; }
