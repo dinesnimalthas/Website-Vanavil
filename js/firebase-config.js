@@ -287,16 +287,84 @@ function onAuthStateChange(callback) {
 /**
  * Upload a file to Firebase Storage — returns download URL or null
  */
-async function uploadFile(storagePath, file) {
+async function uploadFile(storagePath, file, onProgress) {
   if (!storage || !auth.currentUser) return null;
   try {
     const ref = storage.ref(storagePath);
-    await ref.put(file);
+    // Hochgeladene Dateien ändern sich nie (neuer Name bei jedem Upload),
+    // daher dürfen Browser sie ein Jahr lang zwischenspeichern.
+    const task = ref.put(file, {
+      contentType: file.type || undefined,
+      cacheControl: 'public, max-age=31536000, immutable'
+    });
+    if (onProgress) {
+      task.on('state_changed', snap => onProgress(snap.bytesTransferred / snap.totalBytes));
+    }
+    await task;
     return await ref.getDownloadURL();
   } catch (error) {
     console.error('Error uploading file:', error);
     return null;
   }
+}
+
+// ========== BILDER VERKLEINERN ==========
+
+/**
+ * Bild im Browser dekodieren (berücksichtigt die Ausrichtung von Handyfotos).
+ */
+async function decodeImage(file) {
+  if (window.createImageBitmap) {
+    try { return await createImageBitmap(file, { imageOrientation: 'from-image' }); } catch (e) { /* Fallback unten */ }
+  }
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Bild konnte nicht gelesen werden')); };
+    img.src = url;
+  });
+}
+
+function drawScaled(source, maxSide, quality) {
+  const srcW = source.naturalWidth || source.width;
+  const srcH = source.naturalHeight || source.height;
+  const scale = Math.min(1, maxSide / Math.max(srcW, srcH));
+  const w = Math.max(1, Math.round(srcW * scale));
+  const h = Math.max(1, Math.round(srcH * scale));
+  const canvas = document.createElement('canvas');
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#ffffff';            // transparente PNGs auf Weiss statt Schwarz
+  ctx.fillRect(0, 0, w, h);
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(source, 0, 0, w, h);
+  return new Promise((resolve, reject) =>
+    canvas.toBlob(b => b ? resolve(b) : reject(new Error('Bild konnte nicht umgewandelt werden')), 'image/jpeg', quality));
+}
+
+/**
+ * Bild einmal dekodieren und in mehreren Grössen als JPEG zurückgeben.
+ * sizes: [{ maxSide: 2000, quality: 0.82 }, ...]  ->  [Blob, ...]
+ */
+async function resizeImage(file, sizes) {
+  const source = await decodeImage(file);
+  try {
+    const blobs = [];
+    for (const s of sizes) blobs.push(await drawScaled(source, s.maxSide, s.quality));
+    return blobs;
+  } finally {
+    if (source.close) source.close();
+  }
+}
+
+/**
+ * Dateiname für Storage: ohne Endung, nur sichere Zeichen.
+ */
+function safeBaseName(file) {
+  return (file.name || 'bild').replace(/\.[^.]+$/, '').normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z0-9_-]+/g, '-').slice(0, 40) || 'bild';
 }
 
 /**
@@ -446,11 +514,12 @@ async function addGalleryImage(data) {
 /**
  * Delete a gallery image (Firestore doc + Storage file)
  */
-async function deleteGalleryImage(id, storagePath) {
+async function deleteGalleryImage(id, storagePath, thumbPath) {
   if (!db || !auth.currentUser) return false;
   try {
     await db.collection('gallery').doc(id).delete();
     if (storagePath) await deleteFile(storagePath);
+    if (thumbPath) await deleteFile(thumbPath);
     return true;
   } catch (error) {
     console.error('Error deleting gallery image:', error);
@@ -514,6 +583,8 @@ window.VanavilDB = {
   deleteGalleryImage,
   // Storage
   uploadFile,
+  resizeImage,
+  safeBaseName,
   deleteFile,
   getFileURL,
   // Settings

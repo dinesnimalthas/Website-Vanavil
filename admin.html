@@ -117,6 +117,7 @@
     .gallery-admin-item { position: relative; aspect-ratio: 1; overflow: hidden; border-radius: var(--radius); border: 1px solid var(--line); background: #e6e9ef; }
     .gallery-admin-item img { width: 100%; height: 100%; object-fit: cover; }
     .gallery-admin-label { position: absolute; left: 0; right: 0; bottom: 0; padding: .35rem .5rem; font-size: .8rem; color: #fff; background: linear-gradient(transparent, rgba(7,21,48,.85)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .gallery-admin-badge { position: absolute; top: .4rem; left: .4rem; right: 2.6rem; background: #b3261e; color: #fff; font-size: .72rem; font-weight: 700; padding: .2rem .45rem; border-radius: 4px; }
     .gallery-delete-btn { position: absolute; top: .4rem; right: .4rem; width: 28px; height: 28px; border-radius: 50%; border: 0; background: #fff; color: #b3261e; font-size: 1.1rem; line-height: 1; display: grid; place-items: center; box-shadow: 0 2px 6px rgba(0,0,0,.2); }
 
     @media (max-width: 700px) {
@@ -495,6 +496,9 @@
             <h3 class="mt-3">Kader verwalten</h3>
             <p class="text-muted">Unter "Kader" kannst du Spieler einem Team zuordnen (Erste Mannschaft, Junioren, Academy). Nutze die Pfeile, um Spieler hinzuzufügen oder zu entfernen.</p>
             
+            <h3 class="mt-3">Bilder</h3>
+            <p class="text-muted">Fotos werden beim Hochladen automatisch verkleinert (Galerie max. 2000 px, Teamfoto max. 2400 px). Du kannst sie also direkt von der Kamera oder vom Handy hochladen.</p>
+
             <h3 class="mt-3">Galerie</h3>
             <p class="text-muted">Lade Bilder hoch, die auf der öffentlichen Galerie-Seite angezeigt werden.</p>
             
@@ -509,7 +513,7 @@
     </section>
   </main>
 
-  <script src="js/firebase-config.js?v=8"></script>
+  <script src="js/firebase-config.js?v=13"></script>
   <script>
     // ===== State =====
     let allPlayers = [];
@@ -640,13 +644,29 @@
         let ausweisStoragePath = '';
         const ts = Date.now();
 
-        if (photoFile) {
-          photoStoragePath = 'players/photos/' + ts + '_' + photoFile.name;
-          photoURL = await window.VanavilDB.uploadFile(photoStoragePath, photoFile);
-        }
-        if (ausweisFile) {
-          ausweisStoragePath = 'players/ausweise/' + ts + '_' + ausweisFile.name;
-          spielerausweisURL = await window.VanavilDB.uploadFile(ausweisStoragePath, ausweisFile);
+        const DB = window.VanavilDB;
+        try {
+          if (photoFile) {
+            btn.textContent = 'Foto wird verkleinert …';
+            const [photo] = await DB.resizeImage(photoFile, [{ maxSide: 900, quality: 0.85 }]);
+            photoStoragePath = 'players/photos/' + ts + '_' + DB.safeBaseName(photoFile) + '.jpg';
+            photoURL = await DB.uploadFile(photoStoragePath, photo, p => { btn.textContent = 'Foto hochladen … ' + Math.round(p * 100) + ' %'; });
+          }
+          if (ausweisFile) {
+            // PDFs unverändert, Bilder verkleinern (bleiben gut lesbar)
+            let upload = ausweisFile, ext = (ausweisFile.name.split('.').pop() || 'pdf').toLowerCase();
+            if (ausweisFile.type.startsWith('image/')) {
+              btn.textContent = 'Ausweis wird verkleinert …';
+              [upload] = await DB.resizeImage(ausweisFile, [{ maxSide: 1800, quality: 0.85 }]);
+              ext = 'jpg';
+            }
+            ausweisStoragePath = 'players/ausweise/' + ts + '_' + DB.safeBaseName(ausweisFile) + '.' + ext;
+            spielerausweisURL = await DB.uploadFile(ausweisStoragePath, upload, p => { btn.textContent = 'Ausweis hochladen … ' + Math.round(p * 100) + ' %'; });
+          }
+        } catch (err) {
+          alert('Das Bild konnte nicht verarbeitet werden: ' + err.message);
+          btn.disabled = false; btn.textContent = 'Spieler speichern';
+          return;
         }
 
         const id = await window.VanavilDB.addPlayer({
@@ -684,13 +704,27 @@
         const file = document.getElementById('galleryFile').files[0];
         if (!file) { alert('Bitte ein Bild auswählen'); btn.disabled = false; btn.textContent = 'Bild hochladen'; return; }
 
+        const DB = window.VanavilDB;
+        const reset = () => { btn.disabled = false; btn.textContent = 'Bild hochladen'; };
         const ts = Date.now();
-        const storagePath = 'gallery/' + ts + '_' + file.name;
-        const imageURL = await window.VanavilDB.uploadFile(storagePath, file);
+        const base = 'gallery/' + ts + '_' + DB.safeBaseName(file);
+        const storagePath = base + '.jpg';
+        const thumbPath = base + '_thumb.jpg';
 
-        if (!imageURL) { alert('Upload fehlgeschlagen'); btn.disabled = false; btn.textContent = 'Bild hochladen'; return; }
+        let full, thumb;
+        try {
+          btn.textContent = 'Bild wird verkleinert …';
+          [full, thumb] = await DB.resizeImage(file, [
+            { maxSide: 2000, quality: 0.82 },   // Ansicht beim Anklicken
+            { maxSide: 640,  quality: 0.78 }    // Vorschau im Raster
+          ]);
+        } catch (err) { alert('Das Bild konnte nicht verarbeitet werden: ' + err.message); reset(); return; }
 
-        const id = await window.VanavilDB.addGalleryImage({ title, description, imageURL, storagePath });
+        const imageURL = await DB.uploadFile(storagePath, full, p => { btn.textContent = 'Hochladen … ' + Math.round(p * 100) + ' %'; });
+        const thumbURL = imageURL && await DB.uploadFile(thumbPath, thumb);
+        if (!imageURL || !thumbURL) { alert('Upload fehlgeschlagen'); reset(); return; }
+
+        const id = await DB.addGalleryImage({ title, description, imageURL, thumbURL, storagePath, thumbPath });
         btn.disabled = false; btn.textContent = 'Bild hochladen';
         if (id) { alert('Bild hochgeladen!'); e.target.reset(); document.getElementById('galleryPreview').innerHTML = ''; loadGallery(); }
         else { alert('Fehler beim Speichern'); }
@@ -712,12 +746,22 @@
         const file = document.getElementById('teamPhotoFile').files[0];
         if (!file) { alert('Bitte ein Bild auswählen'); btn.disabled = false; btn.textContent = 'Teamfoto speichern'; return; }
 
-        const storagePath = 'team/teamfoto_' + Date.now() + '_' + file.name;
-        const teamPhotoURL = await window.VanavilDB.uploadFile(storagePath, file);
+        const DB = window.VanavilDB;
+        let photo;
+        try {
+          btn.textContent = 'Bild wird verkleinert …';
+          [photo] = await DB.resizeImage(file, [{ maxSide: 2400, quality: 0.82 }]);
+        } catch (err) { alert('Das Bild konnte nicht verarbeitet werden: ' + err.message); btn.disabled = false; btn.textContent = 'Teamfoto speichern'; return; }
+
+        const storagePath = 'team/teamfoto_' + Date.now() + '_' + DB.safeBaseName(file) + '.jpg';
+        const teamPhotoURL = await DB.uploadFile(storagePath, photo, p => { btn.textContent = 'Hochladen … ' + Math.round(p * 100) + ' %'; });
 
         if (!teamPhotoURL) { alert('Upload fehlgeschlagen'); btn.disabled = false; btn.textContent = 'Teamfoto speichern'; return; }
 
-        await window.VanavilDB.updateSettings({ teamPhotoURL, teamPhotoStoragePath: storagePath });
+        // Altes Teamfoto aus dem Speicher entfernen
+        const previous = (await DB.getSettings()).teamPhotoStoragePath;
+        await DB.updateSettings({ teamPhotoURL, teamPhotoStoragePath: storagePath });
+        if (previous && previous !== storagePath) await DB.deleteFile(previous);
         btn.disabled = false; btn.textContent = 'Teamfoto speichern';
         alert('Teamfoto gespeichert!');
         loadTeamPhotoPreview();
@@ -880,9 +924,10 @@
       if (images.length === 0) { container.innerHTML = '<p class="text-muted">Noch keine Bilder vorhanden.</p>'; return; }
       container.innerHTML = images.map(img => `
         <div class="gallery-admin-item">
-          <img src="${escapeHtml(img.imageURL)}" alt="${escapeHtml(img.title || '')}">
+          <img src="${escapeHtml(img.thumbURL || img.imageURL)}" alt="${escapeHtml(img.title || '')}" loading="lazy">
+          ${img.thumbURL ? '' : '<div class="gallery-admin-badge" title="Dieses Bild wurde vor der automatischen Verkleinerung hochgeladen und ist sehr gross. Bitte löschen und neu hochladen.">Zu gross – neu hochladen</div>'}
           ${img.title ? '<div class="gallery-admin-label">' + escapeHtml(img.title) + '</div>' : ''}
-          <button class="gallery-delete-btn" onclick="deleteGalleryImg('${img.id}','${img.storagePath || ''}')" title="Löschen">&times;</button>
+          <button class="gallery-delete-btn" onclick="deleteGalleryImg('${img.id}','${img.storagePath || ''}','${img.thumbPath || ''}')" title="Löschen">&times;</button>
         </div>
       `).join('');
     }
@@ -947,9 +992,9 @@
       loadRoster();
     }
 
-    async function deleteGalleryImg(id, storagePath) {
+    async function deleteGalleryImg(id, storagePath, thumbPath) {
       if (!confirm('Bild wirklich löschen?')) return;
-      await window.VanavilDB.deleteGalleryImage(id, storagePath);
+      await window.VanavilDB.deleteGalleryImage(id, storagePath, thumbPath);
       loadGallery();
     }
     

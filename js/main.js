@@ -422,7 +422,7 @@ function renderGalleryGrid(images, container, onImageClick) {
 
   container.innerHTML = images.map((img, i) => `
     <div class="gallery-item" data-index="${i}" style="cursor:pointer" role="button" tabindex="0" aria-label="${escapeHtml(img.title || 'Bild')}">
-      <img src="${escapeHtml(img.imageURL)}" alt="${escapeHtml(img.title || '')}" loading="lazy">
+      <img src="${escapeHtml(img.thumbURL || img.imageURL)}" alt="${escapeHtml(img.title || '')}" loading="lazy" decoding="async">
       ${img.title ? `<div class="gallery-caption">${escapeHtml(img.title)}</div>` : ''}
     </div>
   `).join('');
