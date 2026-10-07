@@ -36,6 +36,7 @@ body {
 }
 img { max-width: 100%; height: auto; display: block; }
 picture { flex-shrink: 0; }
+[hidden] { display: none !important; }
 .tamil { font-family: 'Noto Sans Tamil', 'Barlow', sans-serif; }
 a { color: var(--navy-light); }
 a:hover { color: var(--navy); }

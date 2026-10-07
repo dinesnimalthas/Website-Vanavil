@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=15">
+  <link rel="stylesheet" href="css/main.css?v=16">
   
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -99,6 +99,10 @@
     }
     .upload-preview { margin-top: .75rem; }
     .upload-preview img { max-width: 100%; max-height: 200px; border-radius: var(--radius); border: 1px solid var(--line); object-fit: cover; }
+
+    .form-actions { display: flex; gap: .6rem; flex-wrap: wrap; }
+    .checkbox-row { display: flex; align-items: center; gap: .45rem; margin-top: .6rem; font-size: .95rem; }
+    .admin-section.is-editing { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,150,44,.25); }
 
     /* Kader */
     .roster-manager { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
@@ -334,7 +338,7 @@
         <!-- Players Tab -->
         <div id="players" class="tab-content">
           <div class="admin-section">
-            <h2>Neuen Spieler erfassen</h2>
+            <h2 id="playerFormTitle">Neuen Spieler erfassen</h2>
             <form id="playerForm">
               <div class="grid grid-2">
                 <div class="form-group">
@@ -366,6 +370,9 @@
                     <input type="file" id="playerPhoto" accept="image/*">
                   </div>
                   <div id="playerPhotoPreview" class="upload-preview"></div>
+                  <label id="playerPhotoRemoveWrap" class="checkbox-row" hidden>
+                    <input type="checkbox" id="playerPhotoRemove"> Aktuelles Foto entfernen
+                  </label>
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="playerStfaId">STFA-Spieler-ID</label>
@@ -373,7 +380,10 @@
                   <small class="text-muted">Steht im Spielerprofil auf stfainfo.ch. Die Website verlinkt damit auf die offiziellen Statistiken.</small>
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary">Spieler speichern</button>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="playerSubmit">Spieler speichern</button>
+                <button type="button" class="btn btn-secondary" id="playerCancel" hidden>Abbrechen</button>
+              </div>
             </form>
           </div>
 
@@ -489,7 +499,7 @@
             <p class="text-muted">Standardmässig zeigt die Startseite das Profil @scvanavil mit den neusten Beiträgen, dafür muss man nichts tun. Unter «Einstellungen» kann man stattdessen bis zu 3 bestimmte Beiträge einfügen.</p>
             
             <h3 class="mt-3">Spieler erfassen</h3>
-            <p class="text-muted">Unter «Spieler» einen Spieler mit Foto und STFA-Spieler-ID anlegen. Die ID findest du im Spielerprofil auf stfainfo.ch (z.B. STFA2053). Bei bestehenden Spielern lässt sie sich über den Knopf «STFA-ID» nachtragen. Auf der Website hat jeder Spieler eine eigene Seite mit Link zu seinen STFA-Statistiken.</p>
+            <p class="text-muted">Unter «Spieler» einen Spieler mit Foto und STFA-Spieler-ID anlegen. Die ID findest du im Spielerprofil auf stfainfo.ch (z.B. STFA2053). Bei bestehenden Spielern auf «Bearbeiten» klicken: Dort lassen sich Foto, STFA-ID, Nummer, Position und Name jederzeit ändern. Auf der Website hat jeder Spieler eine eigene Seite mit Link zu seinen STFA-Statistiken.</p>
             
             <h3 class="mt-3">Kader verwalten</h3>
             <p class="text-muted">Unter "Kader" kannst du Spieler einem Team zuordnen (Erste Mannschaft, Junioren, Academy). Nutze die Pfeile, um Spieler hinzuzufügen oder zu entfernen.</p>
@@ -624,50 +634,69 @@
         else alert('Fehler beim Speichern');
       });
 
-      // ===== Player Form =====
+      // ===== Player Form (neu oder bearbeiten) =====
       document.getElementById('playerForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const btn = e.target.querySelector('button[type=submit]');
-        btn.disabled = true; btn.textContent = 'Speichern…';
+        const DB = window.VanavilDB;
+        const btn = document.getElementById('playerSubmit');
+        const idleLabel = editingPlayerId ? 'Änderungen speichern' : 'Spieler speichern';
+        const done = () => { btn.disabled = false; btn.textContent = idleLabel; };
+        btn.disabled = true; btn.textContent = 'Speichern …';
 
         const name = document.getElementById('playerName').value.trim();
         const position = document.getElementById('playerPosition').value;
         const number = document.getElementById('playerNumber').value;
         const photoFile = document.getElementById('playerPhoto').files[0];
+        const removePhoto = document.getElementById('playerPhotoRemove').checked;
         const stfaId = normalizeStfaId(document.getElementById('playerStfaId').value);
         if (stfaId === null) {
           alert('Die STFA-ID sieht nicht richtig aus. Sie beginnt mit «STFA» und hat danach nur Ziffern, z.B. STFA2053.');
-          btn.disabled = false; btn.textContent = 'Spieler speichern';
-          return;
+          return done();
         }
 
-        let photoURL = '';
-        let photoStoragePath = '';
-        const ts = Date.now();
+        const existing = editingPlayerId ? allPlayers.find(x => x.id === editingPlayerId) : null;
+        const data = { name, position, number: number ? Number(number) : null, stfaId };
+        let oldPhotoPath = null;
 
-        const DB = window.VanavilDB;
         try {
           if (photoFile) {
             btn.textContent = 'Foto wird verkleinert …';
             const [photo] = await DB.resizeImage(photoFile, [{ maxSide: 900, quality: 0.85 }]);
-            photoStoragePath = 'players/photos/' + ts + '_' + DB.safeBaseName(photoFile) + '.jpg';
-            photoURL = await DB.uploadFile(photoStoragePath, photo, p => { btn.textContent = 'Foto hochladen … ' + Math.round(p * 100) + ' %'; });
+            const path = 'players/photos/' + Date.now() + '_' + DB.safeBaseName(photoFile) + '.jpg';
+            const url = await DB.uploadFile(path, photo, p => { btn.textContent = 'Foto hochladen … ' + Math.round(p * 100) + ' %'; });
+            if (!url) { alert('Das Foto konnte nicht hochgeladen werden.'); return done(); }
+            data.photoURL = url;
+            data.photoStoragePath = path;
+            if (existing && existing.photoStoragePath) oldPhotoPath = existing.photoStoragePath;
+          } else if (existing && removePhoto) {
+            data.photoURL = '';
+            data.photoStoragePath = '';
+            oldPhotoPath = existing.photoStoragePath || null;
           }
         } catch (err) {
           alert('Das Bild konnte nicht verarbeitet werden: ' + err.message);
-          btn.disabled = false; btn.textContent = 'Spieler speichern';
-          return;
+          return done();
         }
 
-        const id = await window.VanavilDB.addPlayer({
-          name, position, number: number ? Number(number) : null,
-          photoURL: photoURL || '', photoStoragePath, stfaId
-        });
+        let ok;
+        if (existing) {
+          ok = await DB.updatePlayer(existing.id, data);
+        } else {
+          ok = await DB.addPlayer({ photoURL: '', photoStoragePath: '', ...data });
+        }
+        if (ok && oldPhotoPath) await DB.deleteFile(oldPhotoPath);
 
-        btn.disabled = false; btn.textContent = 'Spieler speichern';
-        if (id) { alert('Spieler gespeichert!'); e.target.reset(); document.getElementById('playerPhotoPreview').innerHTML = ''; loadPlayers(); }
-        else { alert('Fehler beim Speichern'); }
+        done();
+        if (ok) {
+          alert(existing ? 'Änderungen gespeichert.' : 'Spieler gespeichert.');
+          resetPlayerForm();
+          loadPlayers();
+        } else {
+          alert('Fehler beim Speichern');
+        }
       });
+
+      document.getElementById('playerCancel').addEventListener('click', resetPlayerForm);
 
       // Photo preview
       document.getElementById('playerPhoto').addEventListener('change', (e) => {
@@ -868,7 +897,7 @@
               : '<span style="color:#b3261e">keine STFA-ID</span>'}</small>
           </div>
           <div class="item-actions">
-            <button class="btn btn-sm btn-secondary" onclick="editStfaId('${p.id}')">STFA-ID</button>
+            <button class="btn btn-sm btn-secondary" onclick="startEditPlayer('${p.id}')">Bearbeiten</button>
             <button class="btn btn-sm btn-danger" onclick="deletePlayer('${p.id}','${p.photoStoragePath || ''}','${p.ausweisStoragePath || ''}')">Löschen</button>
           </div>
         </div>
@@ -962,14 +991,38 @@
       return /^STFA\d+$/.test(v) ? v : null;
     }
 
-    async function editStfaId(id) {
+    let editingPlayerId = null;
+
+    function startEditPlayer(id) {
       const p = allPlayers.find(x => x.id === id);
-      const input = prompt('STFA-Spieler-ID für ' + (p ? p.name : '') + ' (z.B. STFA2053, leer lassen zum Entfernen):', p && p.stfaId ? p.stfaId : '');
-      if (input === null) return;
-      const stfaId = normalizeStfaId(input);
-      if (stfaId === null) { alert('Die STFA-ID beginnt mit «STFA» und hat danach nur Ziffern, z.B. STFA2053.'); return; }
-      await window.VanavilDB.updatePlayer(id, { stfaId });
-      loadPlayers();
+      if (!p) return;
+      editingPlayerId = id;
+      document.getElementById('playerName').value = p.name || '';
+      document.getElementById('playerPosition').value = p.position || '';
+      document.getElementById('playerNumber').value = p.number || '';
+      document.getElementById('playerStfaId').value = p.stfaId || '';
+      document.getElementById('playerPhoto').value = '';
+      document.getElementById('playerPhotoRemove').checked = false;
+      document.getElementById('playerPhotoRemoveWrap').hidden = !p.photoURL;
+      document.getElementById('playerPhotoPreview').innerHTML = p.photoURL
+        ? '<img src="' + escapeHtml(p.photoURL) + '" alt="Aktuelles Foto">' : '';
+      document.getElementById('playerFormTitle').textContent = 'Spieler bearbeiten: ' + p.name;
+      document.getElementById('playerSubmit').textContent = 'Änderungen speichern';
+      document.getElementById('playerCancel').hidden = false;
+      const section = document.getElementById('playerForm').closest('.admin-section');
+      section.classList.add('is-editing');
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function resetPlayerForm() {
+      editingPlayerId = null;
+      document.getElementById('playerForm').reset();
+      document.getElementById('playerPhotoPreview').innerHTML = '';
+      document.getElementById('playerPhotoRemoveWrap').hidden = true;
+      document.getElementById('playerFormTitle').textContent = 'Neuen Spieler erfassen';
+      document.getElementById('playerSubmit').textContent = 'Spieler speichern';
+      document.getElementById('playerCancel').hidden = true;
+      document.getElementById('playerForm').closest('.admin-section').classList.remove('is-editing');
     }
 
     async function deletePlayer(id, photoPath, ausweisPath) {
