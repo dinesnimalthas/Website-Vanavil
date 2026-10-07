@@ -28,7 +28,7 @@
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=14">
+  <link rel="stylesheet" href="css/main.css?v=15">
 
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -157,17 +157,6 @@
       </div>
     </section>
 
-  <div class="player-modal-overlay" id="playerModalOverlay" role="dialog" aria-modal="true" aria-labelledby="playerModalName">
-    <div class="player-modal">
-      <button class="player-modal-close" id="playerModalClose" aria-label="Schliessen">&times;</button>
-      <div class="player-modal-photo" id="playerModalPhoto"></div>
-      <div class="player-modal-photo-overlay">
-        <div class="player-modal-number" id="playerModalNumber"></div>
-        <h2 class="player-modal-name" id="playerModalName"></h2>
-        <div class="player-modal-position" id="playerModalPosition"></div>
-      </div>
-    </div>
-  </div>
   </main>
 
   <footer class="site-footer">
@@ -222,8 +211,8 @@
     <button class="btn btn-light btn-sm" id="adminLogoutBtn">Logout</button>
   </div>
 
-  <script src="js/firebase-config.js?v=13"></script>
-  <script src="js/main.js?v=13"></script>
+  <script src="js/firebase-config.js?v=15"></script>
+  <script src="js/main.js?v=15"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
       const teams = [
@@ -254,7 +243,7 @@
           const players = rosters[i].map(id => allPlayers.find(p => p.id === id)).filter(Boolean);
           const container = document.getElementById(team.containerId);
           if (players.length > 0) {
-            window.VanavilUI.renderPlayerCards(players, container, openPlayerModal);
+            window.VanavilUI.renderPlayerCards(players, container);
           } else {
             container.innerHTML = emptyText;
           }
@@ -267,35 +256,6 @@
       }
     });
 
-    function openPlayerModal(player) {
-      const esc = window.VanavilUI.escapeHtml;
-      const photo = document.getElementById('playerModalPhoto');
-      if (player.photoURL) {
-        photo.innerHTML = '<img src="' + esc(player.photoURL) + '" alt="' + esc(player.name) + '">';
-        photo.classList.remove('player-modal-photo--initials');
-      } else {
-        const initials = player.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-        photo.innerHTML = '<span>' + esc(initials) + '</span>';
-        photo.classList.add('player-modal-photo--initials');
-      }
-      document.getElementById('playerModalName').textContent = player.name || '';
-      document.getElementById('playerModalPosition').textContent = player.position || '';
-      document.getElementById('playerModalNumber').textContent = player.number ? '#' + player.number : '';
-      document.getElementById('playerModalOverlay').classList.add('open');
-      document.body.style.overflow = 'hidden';
-      document.getElementById('playerModalClose').focus();
-    }
-
-    function closePlayerModal() {
-      document.getElementById('playerModalOverlay').classList.remove('open');
-      document.body.style.overflow = '';
-    }
-
-    document.getElementById('playerModalClose').addEventListener('click', closePlayerModal);
-    document.getElementById('playerModalOverlay').addEventListener('click', function (e) {
-      if (e.target === this) closePlayerModal();
-    });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closePlayerModal(); });
   </script>
 </body>
 </html>

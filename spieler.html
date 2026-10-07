@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>News – SC Vanavil Luzern</title>
-  <meta name="description" content="Neuigkeiten von SC Vanavil Luzern: Turniere, Resultate und Vereinsinfos.">
+  <title>Spieler – SC Vanavil Luzern</title>
+  <meta name="description" content="Spielerprofil von SC Vanavil Luzern.">
   <link rel="icon" href="images/favicon-64.png" type="image/png">
   <link rel="apple-touch-icon" href="images/Vanavil-Logo-180.png">
   <meta name="theme-color" content="#0b1f44">
-  <meta property="og:title" content="News – SC Vanavil Luzern">
-  <meta property="og:description" content="Neuigkeiten von SC Vanavil Luzern: Turniere, Resultate und Vereinsinfos.">
+  <meta property="og:title" content="Spieler – SC Vanavil Luzern">
+  <meta property="og:description" content="Spielerprofil von SC Vanavil Luzern.">
   <meta property="og:image" content="https://scvanavil.ch/images/og-vanavil-2.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="SC Vanavil Luzern – Teamfoto mit Vereinswappen">
   <meta property="og:site_name" content="SC Vanavil Luzern">
   <meta property="og:locale" content="de_CH">
-  <meta property="og:url" content="https://scvanavil.ch/news.html">
+  <meta property="og:url" content="https://scvanavil.ch/spieler.html">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://scvanavil.ch/images/og-vanavil-2.jpg">
-  <meta name="twitter:title" content="News – SC Vanavil Luzern">
-  <meta name="twitter:description" content="Neuigkeiten von SC Vanavil Luzern: Turniere, Resultate und Vereinsinfos.">
+  <meta name="twitter:title" content="Spieler – SC Vanavil Luzern">
+  <meta name="twitter:description" content="Spielerprofil von SC Vanavil Luzern.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,7 +46,7 @@
       </button>
       <nav class="nav-menu" id="navMenu" aria-label="Hauptnavigation">
         <a href="./" class="nav-link">Start</a>
-        <a href="news.html" class="nav-link active" aria-current="page">News</a>
+        <a href="news.html" class="nav-link">News</a>
         <a href="spielplan.html" class="nav-link">Turniere</a>
         <a href="mannschaft.html" class="nav-link">Mannschaft</a>
         <a href="galerie.html" class="nav-link">Galerie</a>
@@ -59,14 +59,15 @@
   <main>
     <section class="page-header">
       <div class="container">
-        <h1>News</h1>
-        <p>Neuigkeiten aus dem Verein.</p>
+        <h1><span id="playerTitle">Spieler</span></h1>
+        <p><span id="playerLead">&nbsp;</span></p>
       </div>
     </section>
 
     <section class="section">
       <div class="container">
-        <div class="grid grid-3" id="newsContainer">
+        <a href="mannschaft.html" class="back-link">← Zur Mannschaft</a>
+        <div id="playerProfile">
           <div class="loading"><div class="spinner"></div></div>
         </div>
       </div>
@@ -129,8 +130,59 @@
   <script src="js/main.js?v=15"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      const news = await window.VanavilDB.getNews(20);
-      window.VanavilUI.renderNewsCards(news, document.getElementById('newsContainer'));
+      const UI = window.VanavilUI, esc = UI.escapeHtml;
+      const el = document.getElementById('playerProfile');
+      const id = new URLSearchParams(location.search).get('id');
+
+      const notFound = () => {
+        document.getElementById('playerTitle').textContent = 'Spieler nicht gefunden';
+        el.innerHTML = '<p class="empty-state">Diesen Spieler gibt es nicht (mehr). <a href="mannschaft.html">Zur Mannschaft</a></p>';
+      };
+      if (!id) return notFound();
+
+      const TEAMS = { 'erste-mannschaft': 'Erste Mannschaft', 'junioren': 'Junioren', 'academy': 'Academy' };
+      const [player, ...rosters] = await Promise.all([
+        window.VanavilDB.getPlayer(id),
+        ...Object.keys(TEAMS).map(k => window.VanavilDB.getRoster(k))
+      ]);
+      if (!player) return notFound();
+
+      const teams = Object.values(TEAMS).filter((name, i) => rosters[i].includes(player.id));
+
+      document.title = player.name + ' – SC Vanavil Luzern';
+      document.getElementById('playerTitle').textContent = player.name;
+      document.getElementById('playerLead').textContent =
+        [player.number ? '#' + player.number : '', player.position, teams.join(', ')].filter(Boolean).join(' · ');
+
+      const facts = [
+        ['Position', player.position || '–'],
+        ['Rückennummer', player.number ? '#' + player.number : '–'],
+        ['Team', teams.join(', ') || '–'],
+        ['STFA-ID', player.stfaId ? '<span class="stfa-id">' + esc(player.stfaId) + '</span>' : '–']
+      ];
+
+      el.innerHTML = `
+        <div class="player-profile">
+          <div class="player-profile-photo"${player.photoURL ? ` style="background-image:url('${esc(player.photoURL)}')"` : ''}>
+            ${player.photoURL ? '' : `<span class="player-initials">${esc(UI.playerInitials(player.name))}</span>`}
+            ${player.number ? `<span class="player-number">#${esc(String(player.number))}</span>` : ''}
+          </div>
+          <div>
+            <ul class="club-facts">
+              ${facts.map(([k, v]) => `<li><strong>${k}</strong><span>${k === 'STFA-ID' ? v : esc(v)}</span></li>`).join('')}
+            </ul>
+            ${player.stfaId ? `
+            <div class="note-box">
+              <div>
+                <h3>Statistiken bei der STFA</h3>
+                <p>Spiele, Tore, Karten und Punkte aller Turniere führt die Swiss Tamil Football Association.</p>
+              </div>
+              <div class="note-box-actions">
+                <a href="${esc(UI.stfaPlayerUrl(player.stfaId))}" target="_blank" rel="noopener" class="btn btn-primary">Profil auf stfainfo.ch</a>
+              </div>
+            </div>` : ''}
+          </div>
+        </div>`;
     });
   </script>
 </body>

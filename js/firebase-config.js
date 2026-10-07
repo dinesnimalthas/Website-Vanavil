@@ -411,6 +411,20 @@ async function getPlayers() {
 }
 
 /**
+ * Fetch a single player by id
+ */
+async function getPlayer(id) {
+  if (!db || !id) return null;
+  try {
+    const doc = await db.collection('players').doc(id).get();
+    return doc.exists ? { id: doc.id, ...doc.data() } : null;
+  } catch (error) {
+    console.error('Error fetching player:', error);
+    return null;
+  }
+}
+
+/**
  * Add a new player
  */
 async function addPlayer(playerData) {
@@ -572,6 +586,7 @@ window.VanavilDB = {
   deleteDocument,
   // Players
   getPlayers,
+  getPlayer,
   addPlayer,
   updatePlayer,
   // Roster

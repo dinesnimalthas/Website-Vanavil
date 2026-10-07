@@ -373,40 +373,42 @@ function escapeHtml(text) {
 }
 
 /**
- * Render player cards for a given list of player objects
+ * Link zum offiziellen STFA-Spielerprofil
  */
-function renderPlayerCards(players, container, onCardClick) {
+function stfaPlayerUrl(stfaId) {
+  return 'https://stfainfo.ch/player-details?playerId=' + encodeURIComponent(stfaId);
+}
+
+function playerInitials(name) {
+  const parts = String(name || '').trim().split(/\s+/);
+  return ((parts[0] || '')[0] + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase();
+}
+
+/**
+ * Spielerkarten; jede Karte führt auf die Spielerseite (spieler.html?id=…)
+ */
+function renderPlayerCards(players, container) {
   if (!container) return;
 
   if (players.length === 0) {
-    container.innerHTML = `<div class="empty-state"><p>Keine Spieler im Kader</p></div>`;
+    container.innerHTML = '<p class="empty-state">Der Kader wird noch erfasst.</p>';
     return;
   }
 
-  container.innerHTML = players.map((p, i) => `
-    <div class="player-card${onCardClick ? ' player-card--clickable' : ''}" data-player-index="${i}" ${onCardClick ? 'role="button" tabindex="0" aria-label="' + escapeHtml(p.name) + ' - Details anzeigen"' : ''}>
+  container.innerHTML = players.map(p => `
+    <a class="player-card player-card--clickable" href="spieler.html?id=${encodeURIComponent(p.id)}">
       <div class="player-card-media">
-        <div class="player-photo" ${p.photoURL ? `style="background-image:url('${escapeHtml(p.photoURL)}')"` : ''}></div>
-        ${!p.photoURL ? `<span class="player-initials">${escapeHtml(p.name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase())}</span>` : ''}
-        <div class="player-card-overlay"></div>
+        ${p.photoURL
+          ? `<div class="player-photo" style="background-image:url('${escapeHtml(p.photoURL)}')"></div>`
+          : `<span class="player-initials">${escapeHtml(playerInitials(p.name))}</span>`}
         ${p.number ? `<span class="player-number">#${escapeHtml(String(p.number))}</span>` : ''}
       </div>
       <div class="player-info">
         <strong class="player-name">${escapeHtml(p.name)}</strong>
         ${p.position ? `<span class="player-position">${escapeHtml(p.position)}</span>` : ''}
       </div>
-    </div>
+    </a>
   `).join('');
-
-  if (onCardClick) {
-    container.querySelectorAll('.player-card').forEach((card, i) => {
-      const open = () => onCardClick(players[i]);
-      card.addEventListener('click', open);
-      card.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
-      });
-    });
-  }
 }
 
 /**
@@ -452,6 +454,8 @@ window.VanavilUI = {
   parseInstagramUrl,
   WEEKDAYS,
   renderPlayerCards,
+  stfaPlayerUrl,
+  playerInitials,
   renderGalleryGrid,
   escapeHtml
 };

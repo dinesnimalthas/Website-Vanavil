@@ -345,7 +345,7 @@ h3 { font-size: 1.35rem; }
 .team-block h3 { font-size: 1.6rem; text-transform: uppercase; margin-bottom: 1rem; padding-bottom: .5rem; border-bottom: 2px solid var(--line); }
 .player-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
 .player-grid .empty-state, .player-grid .loading { grid-column: 1 / -1; }
-.player-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.player-card { display: block; text-decoration: none; color: inherit; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
 .player-card--clickable { cursor: pointer; transition: border-color .15s, transform .15s; }
 .player-card--clickable:hover { border-color: var(--navy-light); transform: translateY(-2px); }
 .player-card-media { position: relative; aspect-ratio: 4 / 5; background: #e6e9ef; }
@@ -361,6 +361,26 @@ h3 { font-size: 1.35rem; }
 .board-list li { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--navy); border-radius: var(--radius); padding: .85rem 1rem; }
 .board-list strong { display: block; }
 .board-list span { color: var(--muted); font-size: .95rem; }
+
+/* Spielerseite */
+.back-link { display: inline-block; margin-bottom: 1.5rem; font-weight: 600; text-decoration: none; }
+.back-link:hover { text-decoration: underline; }
+.player-profile { display: grid; grid-template-columns: 340px 1fr; gap: 3rem; align-items: start; }
+.player-profile-photo {
+  position: relative; aspect-ratio: 4 / 5; border-radius: var(--radius); overflow: hidden;
+  background: #e6e9ef center 20% / cover no-repeat; box-shadow: 0 12px 32px rgba(11,31,68,.16);
+  border-bottom: 4px solid var(--gold);
+  display: grid; place-items: center;
+}
+.player-profile-photo .player-initials { position: static; font-size: 5rem; }
+.player-profile-photo .player-number { top: .75rem; left: .75rem; font-size: 1.1rem; padding: .2rem .6rem; }
+.player-profile .club-facts { margin-top: 0; }
+.player-profile .note-box { margin-top: 2rem; }
+.stfa-id { font-family: 'Barlow Condensed', sans-serif; font-size: 1.15rem; letter-spacing: .03em; color: var(--navy); }
+@media (max-width: 800px) {
+  .player-profile { grid-template-columns: 1fr; gap: 2rem; }
+  .player-profile-photo { max-width: 340px; }
+}
 
 /* Spieler-Popup */
 .player-modal-overlay { position: fixed; inset: 0; z-index: 1000; background: rgba(7,21,48,.75); display: none; align-items: center; justify-content: center; padding: 1rem; }
