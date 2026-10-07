@@ -383,6 +383,24 @@ h3 { font-size: 1.35rem; }
   .player-profile-photo { max-width: 340px; }
 }
 
+/* Statistik */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.stats-table th:not(:nth-child(2)), .stats-table td:not(:nth-child(2)) { text-align: center; width: 4.5rem; }
+.stats-table td.rank { color: var(--muted); font-weight: 600; }
+.stats-table a { font-weight: 600; text-decoration: none; color: var(--navy); }
+.stats-table a:hover { text-decoration: underline; }
+.stats-table tr.is-leader td { background: #fbf3e0; }
+.card-dot { display: inline-block; width: 12px; height: 16px; border-radius: 2px; vertical-align: middle; }
+.card-dot.yellow { background: #f2c230; }
+.card-dot.red { background: #d32f2f; }
+
+.stat-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; margin-top: 2rem; }
+.stat-tile { background: var(--navy); color: #fff; border-radius: var(--radius); padding: 1.1rem .75rem; text-align: center; border-bottom: 3px solid var(--gold); }
+.stat-tile strong { display: block; font-family: 'Barlow Condensed', sans-serif; font-size: 2.6rem; line-height: 1; color: var(--gold); }
+.stat-tile span { display: block; margin-top: .35rem; font-size: .85rem; color: rgba(255,255,255,.8); }
+.stat-season { margin-top: .6rem; font-size: .9rem; color: var(--muted); }
+@media (max-width: 560px) { .stat-tiles { grid-template-columns: repeat(2, 1fr); } }
+
 /* Spieler-Popup */
 .player-modal-overlay { position: fixed; inset: 0; z-index: 1000; background: rgba(7,21,48,.75); display: none; align-items: center; justify-content: center; padding: 1rem; }
 .player-modal-overlay.open { display: flex; }

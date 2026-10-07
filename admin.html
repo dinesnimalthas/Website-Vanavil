@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=16">
+  <link rel="stylesheet" href="css/main.css?v=17">
   
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -104,6 +104,11 @@
     .checkbox-row { display: flex; align-items: center; gap: .45rem; margin-top: .6rem; font-size: .95rem; }
     .admin-section.is-editing { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,150,44,.25); }
 
+    .admin-stats-table td, .admin-stats-table th { padding: .5rem .6rem; }
+    .admin-stats-table th:not(:first-child), .admin-stats-table td:not(:first-child) { width: 5.5rem; text-align: center; }
+    .admin-stats-table input { width: 4.5rem; padding: .4rem .45rem; text-align: center; font: inherit; border: 1px solid #c9cfd9; border-radius: 4px; }
+    .admin-stats-table input:focus { outline: none; border-color: var(--navy-light); box-shadow: 0 0 0 3px rgba(58,111,179,.2); }
+
     /* Kader */
     .roster-manager { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
     .roster-col { border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; background: #fafbfc; }
@@ -187,6 +192,7 @@
             <button class="admin-tab" data-tab="training" role="tab">Training</button>
             <button class="admin-tab" data-tab="players" role="tab">Spieler</button>
             <button class="admin-tab" data-tab="roster" role="tab">Kader</button>
+            <button class="admin-tab" data-tab="stats" role="tab">Statistik</button>
             <button class="admin-tab" data-tab="gallery" role="tab">Galerie</button>
             <button class="admin-tab" data-tab="settings" role="tab">Einstellungen</button>
             <button class="admin-tab" data-tab="help" role="tab">Hilfe</button>
@@ -421,6 +427,32 @@
           </div>
         </div>
 
+        <!-- Statistik Tab -->
+        <div id="stats" class="tab-content">
+          <div class="admin-section">
+            <h2>Statistik</h2>
+            <p class="text-muted mb-2">Nach jedem Turnier die Zahlen anpassen und speichern. Die Statistik erscheint auf der Website unter «Mannschaft» und auf den Spielerseiten. Spieler mit lauter Nullen werden dort nicht aufgeführt.</p>
+            <div class="form-group" style="max-width: 260px;">
+              <label class="form-label" for="statsSeason">Saison</label>
+              <input type="text" class="form-input" id="statsSeason" placeholder="z.B. 2025/26">
+            </div>
+            <div class="table-container">
+              <table class="data-table admin-stats-table">
+                <thead>
+                  <tr><th>Spieler</th><th>Spiele</th><th>Tore</th><th>Gelb</th><th>Rot</th></tr>
+                </thead>
+                <tbody id="statsBody">
+                  <tr><td colspan="5"><div class="loading"><div class="spinner"></div></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="form-actions" style="margin-top: 1rem;">
+              <button type="button" class="btn btn-primary" id="statsSave">Statistik speichern</button>
+              <button type="button" class="btn btn-secondary" id="statsReset">Neue Saison: alles auf 0</button>
+            </div>
+          </div>
+        </div>
+
         <!-- Gallery Tab -->
         <div id="gallery" class="tab-content">
           <div class="admin-section">
@@ -501,6 +533,9 @@
             <h3 class="mt-3">Spieler erfassen</h3>
             <p class="text-muted">Unter «Spieler» einen Spieler mit Foto und STFA-Spieler-ID anlegen. Die ID findest du im Spielerprofil auf stfainfo.ch (z.B. STFA2053). Bei bestehenden Spielern auf «Bearbeiten» klicken: Dort lassen sich Foto, STFA-ID, Nummer, Position und Name jederzeit ändern. Auf der Website hat jeder Spieler eine eigene Seite mit Link zu seinen STFA-Statistiken.</p>
             
+            <h3 class="mt-3">Statistik</h3>
+            <p class="text-muted">Unter «Statistik» stehen alle Spieler in einer Tabelle. Nach einem Turnier Spiele, Tore und Karten anpassen und einmal auf «Statistik speichern» klicken. Zu Saisonbeginn «Neue Saison: alles auf 0», Saison eintragen und speichern.</p>
+
             <h3 class="mt-3">Kader verwalten</h3>
             <p class="text-muted">Unter "Kader" kannst du Spieler einem Team zuordnen (Erste Mannschaft, Junioren, Academy). Nutze die Pfeile, um Spieler hinzuzufügen oder zu entfernen.</p>
             
@@ -708,6 +743,13 @@
         } else { preview.innerHTML = ''; }
       });
 
+      // ===== Statistik =====
+      document.getElementById('statsSave').addEventListener('click', saveStats);
+      document.getElementById('statsReset').addEventListener('click', () => {
+        if (!confirm('Alle Zahlen auf 0 setzen? Gespeichert wird erst mit «Statistik speichern».')) return;
+        document.querySelectorAll('#statsBody input').forEach(i => { i.value = 0; });
+      });
+
       // ===== Roster =====
       document.getElementById('rosterTeamSelect').addEventListener('change', loadRoster);
 
@@ -902,8 +944,9 @@
           </div>
         </div>
       `).join('');
-      // Also refresh roster if visible
+      // Also refresh roster and stats table
       loadRoster();
+      renderStatsAdmin();
     }
 
     async function loadRoster() {
@@ -989,6 +1032,41 @@
       const v = String(value || '').trim().toUpperCase().replace(/\s+/g, '');
       if (!v) return '';
       return /^STFA\d+$/.test(v) ? v : null;
+    }
+
+    const STAT_FIELDS = ['games', 'goals', 'yellow', 'red'];
+
+    async function renderStatsAdmin() {
+      const body = document.getElementById('statsBody');
+      const settings = await window.VanavilDB.getSettings();
+      document.getElementById('statsSeason').value = settings.statsSeason || '';
+      if (allPlayers.length === 0) { body.innerHTML = '<tr><td colspan="5" class="text-muted">Noch keine Spieler erfasst.</td></tr>'; return; }
+      body.innerHTML = allPlayers.map(p => {
+        const s = p.stats || {};
+        return `<tr data-id="${p.id}">
+          <td><strong>${escapeHtml(p.name)}</strong>${p.number ? ' <span class="text-muted">#' + p.number + '</span>' : ''}</td>
+          ${STAT_FIELDS.map(k => `<td><input type="number" min="0" step="1" inputmode="numeric" data-k="${k}" value="${parseInt(s[k], 10) || 0}" aria-label="${k} ${escapeHtml(p.name)}"></td>`).join('')}
+        </tr>`;
+      }).join('');
+    }
+
+    async function saveStats() {
+      const btn = document.getElementById('statsSave');
+      btn.disabled = true; btn.textContent = 'Speichern …';
+      let changed = 0, failed = 0;
+      for (const row of document.querySelectorAll('#statsBody tr[data-id]')) {
+        const p = allPlayers.find(x => x.id === row.dataset.id);
+        if (!p) continue;
+        const stats = {};
+        row.querySelectorAll('input[data-k]').forEach(i => { stats[i.dataset.k] = Math.max(0, parseInt(i.value, 10) || 0); });
+        const old = p.stats || {};
+        if (STAT_FIELDS.every(k => (parseInt(old[k], 10) || 0) === stats[k])) continue;
+        if (await window.VanavilDB.updatePlayer(p.id, { stats })) { p.stats = stats; changed++; } else { failed++; }
+      }
+      await window.VanavilDB.updateSettings({ statsSeason: document.getElementById('statsSeason').value.trim() });
+      btn.disabled = false; btn.textContent = 'Statistik speichern';
+      alert(failed ? 'Fehler bei ' + failed + ' Spieler(n). Bitte nochmals versuchen.'
+                   : (changed ? 'Statistik gespeichert (' + changed + ' Spieler geändert).' : 'Gespeichert. Keine Zahlen geändert.'));
     }
 
     let editingPlayerId = null;

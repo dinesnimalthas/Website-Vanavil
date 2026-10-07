@@ -411,6 +411,58 @@ function renderPlayerCards(players, container) {
   `).join('');
 }
 
+// ========== STATISTIK ==========
+const STAT_KEYS = [
+  ['games', 'Spiele'],
+  ['goals', 'Tore'],
+  ['yellow', 'Gelbe Karten'],
+  ['red', 'Rote Karten']
+];
+
+function playerStats(p) {
+  const s = (p && p.stats) || {};
+  const out = {};
+  STAT_KEYS.forEach(([k]) => { out[k] = Math.max(0, parseInt(s[k], 10) || 0); });
+  return out;
+}
+
+function hasStats(p) {
+  const s = playerStats(p);
+  return STAT_KEYS.some(([k]) => s[k] > 0);
+}
+
+/**
+ * Öffentliches Statistik-Board (sortiert nach Toren, dann Spielen).
+ * Gibt die Anzahl angezeigter Spieler zurück.
+ */
+function renderStatsBoard(players, container) {
+  if (!container) return 0;
+  const rows = players.filter(hasStats).map(p => ({ p, s: playerStats(p) }))
+    .sort((a, b) => b.s.goals - a.s.goals || b.s.games - a.s.games || a.p.name.localeCompare(b.p.name));
+  if (rows.length === 0) return 0;
+
+  container.innerHTML = `
+    <div class="table-container">
+      <table class="data-table stats-table">
+        <thead>
+          <tr><th>#</th><th>Spieler</th><th>Spiele</th><th>Tore</th><th><span class="card-dot yellow" title="Gelbe Karten"></span><span class="sr-only">Gelbe Karten</span></th><th><span class="card-dot red" title="Rote Karten"></span><span class="sr-only">Rote Karten</span></th></tr>
+        </thead>
+        <tbody>
+          ${rows.map(({ p, s }, i) => `
+            <tr${i === 0 && s.goals > 0 ? ' class="is-leader"' : ''}>
+              <td class="rank">${i + 1}</td>
+              <td><a href="spieler.html?id=${encodeURIComponent(p.id)}">${escapeHtml(p.name)}</a>${p.number ? ` <span class="text-muted">#${escapeHtml(String(p.number))}</span>` : ''}</td>
+              <td>${s.games}</td>
+              <td><strong>${s.goals}</strong></td>
+              <td>${s.yellow}</td>
+              <td>${s.red}</td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  return rows.length;
+}
+
 /**
  * Render gallery grid (public page)
  */
@@ -454,6 +506,10 @@ window.VanavilUI = {
   parseInstagramUrl,
   WEEKDAYS,
   renderPlayerCards,
+  renderStatsBoard,
+  playerStats,
+  hasStats,
+  STAT_KEYS,
   stfaPlayerUrl,
   playerInitials,
   renderGalleryGrid,

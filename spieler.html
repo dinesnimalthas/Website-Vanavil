@@ -28,7 +28,7 @@
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=16">
+  <link rel="stylesheet" href="css/main.css?v=17">
 
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -127,7 +127,7 @@
   </div>
 
   <script src="js/firebase-config.js?v=15"></script>
-  <script src="js/main.js?v=15"></script>
+  <script src="js/main.js?v=17"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
       const UI = window.VanavilUI, esc = UI.escapeHtml;
@@ -141,8 +141,9 @@
       if (!id) return notFound();
 
       const TEAMS = { 'erste-mannschaft': 'Erste Mannschaft', 'junioren': 'Junioren', 'academy': 'Academy' };
-      const [player, ...rosters] = await Promise.all([
+      const [player, settings, ...rosters] = await Promise.all([
         window.VanavilDB.getPlayer(id),
+        window.VanavilDB.getSettings(),
         ...Object.keys(TEAMS).map(k => window.VanavilDB.getRoster(k))
       ]);
       if (!player) return notFound();
@@ -171,16 +172,11 @@
             <ul class="club-facts">
               ${facts.map(([k, v]) => `<li><strong>${k}</strong><span>${k === 'STFA-ID' ? v : esc(v)}</span></li>`).join('')}
             </ul>
-            ${player.stfaId ? `
-            <div class="note-box">
-              <div>
-                <h3>Statistiken bei der STFA</h3>
-                <p>Spiele, Tore, Karten und Punkte aller Turniere führt die Swiss Tamil Football Association.</p>
-              </div>
-              <div class="note-box-actions">
-                <a href="${esc(UI.stfaPlayerUrl(player.stfaId))}" target="_blank" rel="noopener" class="btn btn-primary">Profil auf stfainfo.ch</a>
-              </div>
-            </div>` : ''}
+            ${UI.hasStats(player) ? `
+            <div class="stat-tiles">
+              ${UI.STAT_KEYS.map(([k, label]) => `<div class="stat-tile"><strong>${UI.playerStats(player)[k]}</strong><span>${label}</span></div>`).join('')}
+            </div>
+            ${settings.statsSeason ? `<p class="stat-season">Saison ${esc(settings.statsSeason)}</p>` : ''}` : ''}
           </div>
         </div>`;
     });
