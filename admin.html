@@ -109,6 +109,13 @@
     .admin-stats-table input { width: 4.5rem; padding: .4rem .45rem; text-align: center; font: inherit; border: 1px solid #c9cfd9; border-radius: 4px; }
     .admin-stats-table input:focus { outline: none; border-color: var(--navy-light); box-shadow: 0 0 0 3px rgba(58,111,179,.2); }
 
+    .register-import { margin-top: 1.25rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+    .register-import summary { cursor: pointer; font-weight: 600; color: var(--navy); }
+    .register-import p { margin: .75rem 0; }
+    .register-hit { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .6rem .9rem; border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: .4rem; background: #fafbfc; }
+    .register-hit code { font-family: 'Barlow Condensed', sans-serif; font-size: 1.05rem; color: var(--navy); margin-right: .6rem; }
+    .register-badge { font-size: .8rem; font-weight: 700; color: var(--success, #2e7d4f); white-space: nowrap; }
+
     /* Kader */
     .roster-manager { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
     .roster-col { border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; background: #fafbfc; }
@@ -344,6 +351,24 @@
         <!-- Players Tab -->
         <div id="players" class="tab-content">
           <div class="admin-section">
+            <h2>STFA-Spielerliste</h2>
+            <p class="text-muted mb-2" id="registerStatus">Wird geladen …</p>
+            <div class="form-group">
+              <label class="form-label" for="registerSearch">Spieler suchen</label>
+              <input type="search" class="form-input" id="registerSearch" placeholder="Name oder STFA-ID, z.B. «Aadil» oder «2053»" autocomplete="off">
+            </div>
+            <div id="registerResults" class="item-list"></div>
+            <details class="register-import">
+              <summary>Liste importieren oder aktualisieren</summary>
+              <p class="text-muted">Im STFA-Portal die Spielerliste des Vereins markieren, kopieren und hier einfügen. Es reicht der Text so, wie er aus der Tabelle kopiert wird. Bestehende Einträge werden aktualisiert, neue hinzugefügt. Die Liste ist nur hier im Admin-Bereich sichtbar.</p>
+              <textarea class="form-textarea" id="registerInput" rows="8" placeholder="STFA2053&#10;Aadil&#10;Ait Malek&#10;Player&#10;SC Vanavil Luzern&#10;View&#10;…"></textarea>
+              <div class="form-actions" style="margin-top: .75rem;">
+                <button type="button" class="btn btn-primary" id="registerImport">Liste importieren</button>
+              </div>
+            </details>
+          </div>
+
+          <div class="admin-section">
             <h2 id="playerFormTitle">Neuen Spieler erfassen</h2>
             <form id="playerForm">
               <div class="grid grid-2">
@@ -382,7 +407,8 @@
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="playerStfaId">STFA-Spieler-ID</label>
-                  <input type="text" class="form-input" id="playerStfaId" placeholder="z.B. STFA2053" autocomplete="off">
+                  <input type="text" class="form-input" id="playerStfaId" placeholder="z.B. STFA2053" autocomplete="off" list="stfaOptions">
+                  <datalist id="stfaOptions"></datalist>
                   <small class="text-muted">Steht im Spielerprofil auf stfainfo.ch. Die Website verlinkt damit auf die offiziellen Statistiken.</small>
                 </div>
               </div>
@@ -533,6 +559,9 @@
             <h3 class="mt-3">Spieler erfassen</h3>
             <p class="text-muted">Unter «Spieler» einen Spieler mit Foto und STFA-Spieler-ID anlegen. Die ID findest du im Spielerprofil auf stfainfo.ch (z.B. STFA2053). Bei bestehenden Spielern auf «Bearbeiten» klicken: Dort lassen sich Foto, STFA-ID, Nummer, Position und Name jederzeit ändern. Auf der Website hat jeder Spieler eine eigene Seite mit Link zu seinen STFA-Statistiken.</p>
             
+            <h3 class="mt-3">STFA-Spielerliste</h3>
+            <p class="text-muted">Oben im Tab «Spieler»: Liste aus dem STFA-Portal einmal importieren (kopieren und einfügen), danach Spieler per Suche übernehmen. Die Liste ist nur im Admin-Bereich sichtbar. Damit das klappt, müssen in der Firebase Console unter Firestore → Regeln die Regeln aus der Datei <code>firestore.rules</code> veröffentlicht sein.</p>
+
             <h3 class="mt-3">Statistik</h3>
             <p class="text-muted">Unter «Statistik» stehen alle Spieler in einer Tabelle. Nach einem Turnier Spiele, Tore und Karten anpassen und einmal auf «Statistik speichern» klicken. Zu Saisonbeginn «Neue Saison: alles auf 0», Saison eintragen und speichern.</p>
 
@@ -556,7 +585,7 @@
     </section>
   </main>
 
-  <script src="js/firebase-config.js?v=15"></script>
+  <script src="js/firebase-config.js?v=18"></script>
   <script>
     // ===== State =====
     let allPlayers = [];
@@ -741,6 +770,20 @@
           const url = URL.createObjectURL(file);
           preview.innerHTML = '<img src="' + url + '" alt="Vorschau">';
         } else { preview.innerHTML = ''; }
+      });
+
+      // ===== STFA-Spielerliste =====
+      document.getElementById('registerSearch').addEventListener('input', renderRegisterResults);
+      document.getElementById('registerImport').addEventListener('click', importRegister);
+      document.getElementById('playerStfaId').addEventListener('change', e => {
+        // Auswahl aus der Vorschlagsliste: Name übernehmen, falls leer
+        const id = normalizeStfaId(e.target.value);
+        const entry = id && stfaRegister.find(r => r.stfaId === id);
+        if (entry) {
+          e.target.value = entry.stfaId;
+          const nameEl = document.getElementById('playerName');
+          if (!nameEl.value.trim()) nameEl.value = registerName(entry);
+        }
       });
 
       // ===== Statistik =====
@@ -947,6 +990,7 @@
       // Also refresh roster and stats table
       loadRoster();
       renderStatsAdmin();
+      loadRegister();
     }
 
     async function loadRoster() {
@@ -1032,6 +1076,118 @@
       const v = String(value || '').trim().toUpperCase().replace(/\s+/g, '');
       if (!v) return '';
       return /^STFA\d+$/.test(v) ? v : null;
+    }
+
+    // ===== STFA-Spielerliste =====
+    let stfaRegister = [];
+
+    // Kyrillische Buchstaben, die wie lateinische aussehen (z.B. «Аагоn»)
+    const HOMOGLYPHS = { 'А':'A','а':'a','В':'B','Е':'E','е':'e','К':'K','М':'M','Н':'H','О':'O','о':'o','Р':'P','р':'p','С':'C','с':'c','Т':'T','у':'y','Х':'X','х':'x','г':'r','і':'i','І':'I' };
+
+    function cleanNamePart(raw) {
+      let v = String(raw || '').replace(/[\u0400-\u04FF]/g, ch => HOMOGLYPHS[ch] || ch)
+        .replace(/\*/g, '').replace(/\s+/g, ' ').trim();
+      // NUR GROSS oder nur klein -> «Erster Buchstabe gross»
+      if (v && (v === v.toUpperCase() || v === v.toLowerCase())) {
+        v = v.toLowerCase().replace(/(^|[\s-])(\p{L})/gu, (m, sep, ch) => sep + ch.toUpperCase());
+      }
+      return v;
+    }
+
+    function registerName(e) {
+      return [e.firstName, e.lastName].filter(Boolean).join(' ');
+    }
+
+    /**
+     * Text aus dem STFA-Portal einlesen. Versteht
+     *  - eine Angabe pro Zeile (ID, Vorname, Nachname, Typ, Club, «View»)
+     *  - eine Zeile pro Spieler, getrennt mit Tab, Semikolon oder Komma
+     */
+    function parseStfaList(text) {
+      const lines = String(text).split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      const found = new Map();
+      const add = (id, first, last, type, club) => {
+        id = id.toUpperCase();
+        if (!/^STFA\d+$/.test(id) || !first) return;
+        found.set(id, { stfaId: id, firstName: cleanNamePart(first), lastName: cleanNamePart(last), type: (type || '').trim(), club: (club || '').trim() });
+      };
+      for (let i = 0; i < lines.length; i++) {
+        const cells = lines[i].split(/\t|;|,/).map(c => c.trim()).filter(Boolean);
+        if (cells.length >= 3 && /^STFA\d+$/i.test(cells[0])) {         // Zeilenformat
+          add(cells[0], cells[1], cells[2], cells[3], cells[4]);
+          continue;
+        }
+        if (/^STFA\d+$/i.test(lines[i])) {                                 // Blockformat
+          const next = lines.slice(i + 1, i + 5);
+          if (next.length >= 2 && !/^STFA\d+$/i.test(next[0]) && !/^STFA\d+$/i.test(next[1])) {
+            add(lines[i], next[0], next[1], next[2], next[3]);
+            i += 4;
+          }
+        }
+      }
+      return [...found.values()];
+    }
+
+    async function loadRegister() {
+      const status = document.getElementById('registerStatus');
+      const list = await window.VanavilDB.getStfaRegister();
+      if (list === null) {
+        stfaRegister = [];
+        status.innerHTML = 'Die Liste kann noch nicht gelesen werden. Bitte zuerst die neuen <strong>Firestore-Regeln</strong> in der Firebase Console veröffentlichen (siehe Hilfe).';
+        return;
+      }
+      stfaRegister = list.sort((a, b) => registerName(a).localeCompare(registerName(b)));
+      const latest = stfaRegister.map(e => e.updatedAt || '').sort().pop();
+      status.textContent = stfaRegister.length
+        ? stfaRegister.length + ' Spieler aus dem STFA-Portal' + (latest ? ' · Stand ' + new Date(latest).toLocaleDateString('de-CH') : '') + '. Suche nach Name oder ID und übernimm den Spieler ins Formular.'
+        : 'Noch keine Liste importiert. Unten «Liste importieren» öffnen.';
+      document.getElementById('stfaOptions').innerHTML = stfaRegister
+        .map(e => `<option value="${escapeHtml(e.stfaId)}">${escapeHtml(registerName(e))}</option>`).join('');
+      renderRegisterResults();
+    }
+
+    function renderRegisterResults() {
+      const q = document.getElementById('registerSearch').value.trim().toLowerCase();
+      const box = document.getElementById('registerResults');
+      if (q.length < 2) { box.innerHTML = ''; return; }
+      const hits = stfaRegister.filter(e =>
+        registerName(e).toLowerCase().includes(q) || e.stfaId.toLowerCase().includes(q)).slice(0, 15);
+      if (hits.length === 0) { box.innerHTML = '<p class="text-muted">Kein Treffer.</p>'; return; }
+      const onSite = new Set(allPlayers.map(p => p.stfaId).filter(Boolean));
+      box.innerHTML = hits.map(e => `
+        <div class="register-hit">
+          <div><code>${escapeHtml(e.stfaId)}</code>${escapeHtml(registerName(e))}</div>
+          ${onSite.has(e.stfaId)
+            ? '<span class="register-badge">✓ auf der Website</span>'
+            : `<button class="btn btn-sm btn-secondary" onclick="useRegisterEntry('${escapeHtml(e.stfaId)}')">Übernehmen</button>`}
+        </div>`).join('');
+    }
+
+    function useRegisterEntry(id) {
+      const e = stfaRegister.find(r => r.stfaId === id);
+      if (!e) return;
+      resetPlayerForm();
+      document.getElementById('playerName').value = registerName(e);
+      document.getElementById('playerStfaId').value = e.stfaId;
+      document.getElementById('playerForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('playerNumber').focus({ preventScroll: true });
+    }
+
+    async function importRegister() {
+      const entries = parseStfaList(document.getElementById('registerInput').value);
+      if (entries.length === 0) { alert('Im Text wurden keine STFA-Spieler gefunden.'); return; }
+      if (!confirm(entries.length + ' Spieler gefunden. Jetzt importieren?')) return;
+      const btn = document.getElementById('registerImport');
+      btn.disabled = true; btn.textContent = 'Importieren …';
+      const ok = await window.VanavilDB.importStfaRegister(entries, p => { btn.textContent = 'Importieren … ' + Math.round(p * 100) + ' %'; });
+      btn.disabled = false; btn.textContent = 'Liste importieren';
+      if (ok) {
+        document.getElementById('registerInput').value = '';
+        alert(entries.length + ' Spieler importiert.');
+        loadRegister();
+      } else {
+        alert('Import fehlgeschlagen. Sind die neuen Firestore-Regeln schon veröffentlicht? (siehe Hilfe)');
+      }
     }
 
     const STAT_FIELDS = ['games', 'goals', 'yellow', 'red'];

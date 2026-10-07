@@ -455,6 +455,45 @@ async function updatePlayer(playerId, data) {
   }
 }
 
+// ========== STFA-SPIELERLISTE (nur Admin) ==========
+
+/**
+ * Alle Einträge der STFA-Spielerliste. null = keine Leseberechtigung
+ * (z.B. Firestore-Regeln noch nicht aktualisiert).
+ */
+async function getStfaRegister() {
+  if (!db || !auth.currentUser) return null;
+  try {
+    const snapshot = await db.collection('stfaRegister').get();
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    console.error('Error fetching STFA register:', error);
+    return null;
+  }
+}
+
+/**
+ * Einträge speichern (Dokument-ID = STFA-ID, bestehende werden aktualisiert).
+ */
+async function importStfaRegister(entries, onProgress) {
+  if (!db || !auth.currentUser) return false;
+  try {
+    const now = new Date().toISOString();
+    for (let i = 0; i < entries.length; i += 400) {
+      const batch = db.batch();
+      entries.slice(i, i + 400).forEach(e => {
+        batch.set(db.collection('stfaRegister').doc(e.stfaId), { ...e, updatedAt: now }, { merge: true });
+      });
+      await batch.commit();
+      if (onProgress) onProgress(Math.min(1, (i + 400) / entries.length));
+    }
+    return true;
+  } catch (error) {
+    console.error('Error importing STFA register:', error);
+    return false;
+  }
+}
+
 // ========== ROSTER ==========
 
 /**
@@ -589,6 +628,9 @@ window.VanavilDB = {
   getPlayer,
   addPlayer,
   updatePlayer,
+  // STFA-Spielerliste
+  getStfaRegister,
+  importStfaRegister,
   // Roster
   getRoster,
   setRoster,
