@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anmeldung – SC Vanavil Luzern</title>
+  <meta name="description" content="Anmeldeformular für Spieler von SC Vanavil Luzern: Personalien, Kontakt und Position online erfassen.">
+  <link rel="icon" href="images/favicon-wappen-64.png" type="image/png">
+  <link rel="apple-touch-icon" href="images/Vanavil-Wappen-180.png">
+  <meta name="theme-color" content="#0b1f44">
+  <meta property="og:title" content="Anmeldung – SC Vanavil Luzern">
+  <meta property="og:description" content="Anmeldeformular für Spieler von SC Vanavil Luzern.">
+  <meta property="og:image" content="https://scvanavil.ch/images/og-vanavil-3.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="SC Vanavil Luzern – Teamfoto mit Vereinswappen">
+  <meta property="og:site_name" content="SC Vanavil Luzern">
+  <meta property="og:locale" content="de_CH">
+  <meta property="og:url" content="https://scvanavil.ch/anmeldung.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://scvanavil.ch/images/og-vanavil-3.jpg">
+  <meta name="twitter:title" content="Anmeldung – SC Vanavil Luzern">
+  <meta name="twitter:description" content="Anmeldeformular für Spieler von SC Vanavil Luzern.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.gstatic.com">
+  <link rel="preconnect" href="https://firestore.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css?v=18">
+
+  <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="./" class="logo">
+        <picture><source srcset="images/Vanavil-Wappen-180.webp" type="image/webp"><img src="images/Vanavil-Wappen-180.png" alt="" class="logo-img" width="72" height="72"></picture>
+        <span class="logo-text">SC Vanavil <span>Luzern · seit 1993</span></span>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Menü öffnen" aria-controls="navMenu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav-menu" id="navMenu" aria-label="Hauptnavigation">
+        <a href="./" class="nav-link">Start</a>
+        <a href="news.html" class="nav-link">News</a>
+        <a href="spielplan.html" class="nav-link">Turniere</a>
+        <a href="mannschaft.html" class="nav-link">Mannschaft</a>
+        <a href="galerie.html" class="nav-link">Galerie</a>
+        <a href="kontakt.html" class="nav-link">Kontakt</a>
+        <a href="anmeldung.html" class="btn btn-primary btn-sm nav-cta" aria-current="page">Mitspielen</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <h1>Anmeldung</h1>
+        <p>Du möchtest bei SC Vanavil spielen? Füll das Formular aus. Der Vorstand meldet sich danach bei dir.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container reg-layout">
+        <div class="card reg-card">
+          <form id="registrationForm" novalidate>
+            <fieldset class="reg-fieldset">
+              <legend>Personalien</legend>
+              <div class="reg-row">
+                <div class="form-group">
+                  <label class="form-label" for="rf-first">Vorname *</label>
+                  <input type="text" id="rf-first" class="form-input" required maxlength="60" autocomplete="given-name">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="rf-last">Nachname *</label>
+                  <input type="text" id="rf-last" class="form-input" required maxlength="60" autocomplete="family-name">
+                </div>
+              </div>
+              <div class="reg-row">
+                <div class="form-group">
+                  <label class="form-label" for="rf-birth">Geburtsdatum *</label>
+                  <input type="date" id="rf-birth" class="form-input" required min="1940-01-01">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="rf-nation">Nationalität *</label>
+                  <input type="text" id="rf-nation" class="form-input" required maxlength="80" placeholder="z. B. Schweiz / Sri Lanka">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="rf-profession">Beruf / Schule</label>
+                <input type="text" id="rf-profession" class="form-input" maxlength="80" autocomplete="organization-title">
+              </div>
+            </fieldset>
+
+            <fieldset class="reg-fieldset">
+              <legend>Adresse und Kontakt</legend>
+              <div class="form-group">
+                <label class="form-label" for="rf-street">Strasse und Nr. *</label>
+                <input type="text" id="rf-street" class="form-input" required maxlength="120" autocomplete="street-address">
+              </div>
+              <div class="reg-row reg-row--zip">
+                <div class="form-group">
+                  <label class="form-label" for="rf-zip">PLZ *</label>
+                  <input type="text" id="rf-zip" class="form-input" required inputmode="numeric" minlength="4" maxlength="10" autocomplete="postal-code">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="rf-city">Ort *</label>
+                  <input type="text" id="rf-city" class="form-input" required maxlength="80" autocomplete="address-level2">
+                </div>
+              </div>
+              <div class="reg-row">
+                <div class="form-group">
+                  <label class="form-label" for="rf-phone">Telefon *</label>
+                  <input type="tel" id="rf-phone" class="form-input" required minlength="6" maxlength="30" autocomplete="tel" placeholder="079 123 45 67">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="rf-email">E-Mail *</label>
+                  <input type="email" id="rf-email" class="form-input" required maxlength="120" autocomplete="email">
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="reg-fieldset" id="rf-guardian" hidden>
+              <legend>Erziehungsberechtigte Person</legend>
+              <p class="form-hint reg-note">Du bist unter 18. Bitte gib eine erziehungsberechtigte Person an, die mit der Anmeldung einverstanden ist.</p>
+              <div class="reg-row">
+                <div class="form-group">
+                  <label class="form-label" for="rf-guardian-name">Vor- und Nachname *</label>
+                  <input type="text" id="rf-guardian-name" class="form-input" maxlength="120">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="rf-guardian-phone">Telefon *</label>
+                  <input type="tel" id="rf-guardian-phone" class="form-input" minlength="6" maxlength="30">
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="reg-fieldset">
+              <legend>Fussball</legend>
+              <div class="reg-row">
+                <div class="form-group">
+                  <label class="form-label" for="rf-position">Bevorzugte Position</label>
+                  <select id="rf-position" class="form-input">
+                    <option value="">Noch offen</option>
+                    <option value="Torwart">Torwart</option>
+                    <option value="Verteidiger">Verteidiger</option>
+                    <option value="Mittelfeld">Mittelfeld</option>
+                    <option value="Stürmer">Stürmer</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="rf-club">Aktueller Fussballverein</label>
+                  <input type="text" id="rf-club" class="form-input" maxlength="80" placeholder="leer lassen, falls keiner">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="rf-stfa">STFA-Spieler-ID <span class="text-muted">(falls vorhanden)</span></label>
+                <input type="text" id="rf-stfa" class="form-input" maxlength="20" placeholder="z. B. STFA2053" autocomplete="off">
+                <p class="form-hint">Hast du schon bei einem STFA-Verein gespielt? Die ID steht in deinem Profil auf stfainfo.ch. Sonst einfach leer lassen.</p>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="rf-notes">Bemerkungen</label>
+                <textarea id="rf-notes" class="form-textarea" rows="3" maxlength="1000" placeholder="z. B. zweite Position, Erfahrung, Fragen"></textarea>
+              </div>
+            </fieldset>
+
+            <!-- Honeypot gegen Spam-Bots: bleibt für Menschen unsichtbar -->
+            <div class="reg-hp" aria-hidden="true">
+              <label for="rf-website">Website</label>
+              <input type="text" id="rf-website" tabindex="-1" autocomplete="off">
+            </div>
+
+            <label class="reg-consent">
+              <input type="checkbox" id="rf-consent" required>
+              <span>Ich bestätige, dass die Angaben stimmen, und bin einverstanden, dass SC Vanavil sie für die Vereinsmitgliedschaft und die Spielerlizenz bei der STFA verwendet. Mehr dazu in der <a href="datenschutz.html#anmeldung">Datenschutzerklärung</a>. *</span>
+            </label>
+
+            <p class="reg-error" id="rf-error" role="alert" hidden></p>
+            <button type="submit" class="btn btn-primary" id="rf-submit">Anmeldung absenden</button>
+            <p class="form-hint">* Pflichtfelder. Deine Angaben sieht nur der Vorstand.</p>
+          </form>
+        </div>
+
+        <aside class="reg-aside">
+          <div class="card">
+            <h3>So geht es weiter</h3>
+            <ol class="reg-steps">
+              <li>Du schickst das Formular ab.</li>
+              <li>Der Vorstand prüft die Anmeldung und meldet sich per Telefon oder E-Mail.</li>
+              <li>Wir registrieren dich bei der STFA, damit du an Turnieren spielen kannst.</li>
+            </ol>
+          </div>
+          <div class="card">
+            <h3>Erst mal reinschnuppern?</h3>
+            <p class="text-muted">Du kannst auch zuerst ein Probetraining machen.</p>
+            <a href="kontakt.html#mitglied" class="more-link">Probetraining anfragen →</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <picture><source srcset="images/Vanavil-Wappen-180.webp" type="image/webp"><img src="images/Vanavil-Wappen-180.png" alt="" width="96" height="96" loading="lazy"></picture>
+          <div>
+            <strong>SC Vanavil Luzern</strong>
+            <span class="tamil" lang="ta">வானவில் விளையாட்டுக் கழகம்</span>
+            <p>Tamilischer Fussballverein aus Luzern, gegründet 1993.</p>
+            <div class="footer-social">
+              <a href="https://instagram.com/scvanavil" target="_blank" rel="noopener" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+              <a href="mailto:fcvanavil@gmail.com" aria-label="E-Mail"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h4 class="footer-heading">Seiten</h4>
+          <div class="footer-links">
+            <a href="news.html">News</a>
+            <a href="spielplan.html">Turniere</a>
+            <a href="mannschaft.html">Mannschaft</a>
+            <a href="galerie.html">Galerie</a>
+            <a href="kontakt.html">Kontakt</a>
+            <a href="anmeldung.html">Anmeldung</a>
+          </div>
+        </div>
+        <div>
+          <h4 class="footer-heading">Kontakt</h4>
+          <div class="footer-links">
+            <a href="mailto:fcvanavil@gmail.com">fcvanavil@gmail.com</a>
+            <span>Training: Allmend, Luzern</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>
+          <p>&copy; <span id="currentYear"></span> SC Vanavil Luzern. Mitglied der Swiss Tamil Football Association (STFA).</p>
+          <p class="credit-line">Designed &amp; developed by <a class="credit" href="https://sitearchitects.ch" target="_blank" rel="noopener">Site Architects</a></p>
+        </div>
+        <div class="footer-legal">
+          <a href="datenschutz.html">Datenschutz</a>
+          <a href="admin.html">Admin</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="admin-bar" id="adminBar">
+    <span>Eingeloggt</span>
+    <a href="admin.html" class="btn btn-primary btn-sm">Admin-Panel</a>
+    <button class="btn btn-light btn-sm" id="adminLogoutBtn">Logout</button>
+  </div>
+
+  <script src="js/firebase-config.js?v=19"></script>
+  <script src="js/main.js?v=17"></script>
+  <script>
+    // Benachrichtigung an den Vorstand (gleiches Formspree-Formular wie die Kontaktseite).
+    // Enthält bewusst nur Name, Jahrgang und Position, alles andere steht im Admin-Bereich.
+    const NOTIFY_URL = 'https://formspree.io/f/xqeodaeg';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('registrationForm');
+      const birth = document.getElementById('rf-birth');
+      const guardian = document.getElementById('rf-guardian');
+      const guardianInputs = guardian.querySelectorAll('input');
+      const errorBox = document.getElementById('rf-error');
+      const val = id => document.getElementById(id).value.trim();
+
+      const today = new Date();
+      const iso = d => d.toISOString().slice(0, 10);
+      birth.max = iso(new Date(today.getFullYear() - 4, today.getMonth(), today.getDate()));
+
+      function ageOn(dateStr) {
+        const b = new Date(dateStr + 'T00:00:00');
+        let age = today.getFullYear() - b.getFullYear();
+        const m = today.getMonth() - b.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < b.getDate())) age--;
+        return age;
+      }
+
+      // Unter 18: Angaben einer erziehungsberechtigten Person verlangen
+      birth.addEventListener('change', () => {
+        const minor = birth.value && ageOn(birth.value) < 18;
+        guardian.hidden = !minor;
+        guardianInputs.forEach(i => { i.required = !!minor; });
+      });
+
+      function showError(msg, field) {
+        errorBox.textContent = msg;
+        errorBox.hidden = false;
+        if (field) field.focus();
+      }
+
+      form.addEventListener('submit', async e => {
+        e.preventDefault();
+        errorBox.hidden = true;
+
+        // Bots füllen das versteckte Feld aus: still «erfolgreich» tun
+        if (val('rf-website')) { form.innerHTML = '<h3>Danke!</h3>'; return; }
+
+        const firstInvalid = form.querySelector('input:invalid, select:invalid, textarea:invalid');
+        if (firstInvalid) {
+          const label = form.querySelector('label[for="' + firstInvalid.id + '"]');
+          const name = label ? label.textContent.replace('*', '').trim() : 'Ein Feld';
+          showError(firstInvalid.type === 'checkbox'
+            ? 'Bitte bestätige die Angaben und die Datenschutzerklärung.'
+            : '«' + name + '» fehlt oder stimmt nicht. Bitte prüfen.', firstInvalid);
+          return;
+        }
+
+        const stfaRaw = val('rf-stfa').toUpperCase().replace(/\s+/g, '');
+        const stfaId = stfaRaw && /^\d+$/.test(stfaRaw) ? 'STFA' + stfaRaw : stfaRaw;
+        if (stfaId && !/^STFA\d+$/.test(stfaId)) {
+          showError('Die STFA-ID beginnt mit «STFA» und hat danach nur Ziffern, z. B. STFA2053. Lass das Feld sonst leer.', document.getElementById('rf-stfa'));
+          return;
+        }
+
+        const minor = ageOn(birth.value) < 18;
+        const data = {
+          firstName: val('rf-first'),
+          lastName: val('rf-last'),
+          birthDate: birth.value,
+          nationality: val('rf-nation'),
+          profession: val('rf-profession'),
+          street: val('rf-street'),
+          zip: val('rf-zip'),
+          city: val('rf-city'),
+          phone: val('rf-phone'),
+          email: val('rf-email'),
+          guardianName: minor ? val('rf-guardian-name') : '',
+          guardianPhone: minor ? val('rf-guardian-phone') : '',
+          position: val('rf-position'),
+          currentClub: val('rf-club'),
+          stfaId,
+          notes: val('rf-notes'),
+          consent: true
+        };
+
+        const btn = document.getElementById('rf-submit');
+        btn.disabled = true;
+        btn.textContent = 'Wird gesendet …';
+
+        const id = await window.VanavilDB.submitRegistration(data);
+        if (!id) {
+          btn.disabled = false;
+          btn.textContent = 'Anmeldung absenden';
+          showError('Das hat leider nicht geklappt. Versuch es nochmal oder schreib an fcvanavil@gmail.com.');
+          return;
+        }
+
+        // E-Mail an den Vorstand. Schlägt sie fehl, ist die Anmeldung trotzdem gespeichert.
+        try {
+          await fetch(NOTIFY_URL, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              _subject: 'Neue Spieleranmeldung: ' + data.firstName + ' ' + data.lastName,
+              name: data.firstName + ' ' + data.lastName,
+              jahrgang: data.birthDate.slice(0, 4),
+              position: data.position || 'noch offen',
+              stfa: data.stfaId || 'keine ID angegeben',
+              message: 'Neue Anmeldung über die Website. Alle Angaben stehen im Admin-Bereich unter «Anmeldungen»: https://scvanavil.ch/admin.html'
+            })
+          });
+        } catch (err) { /* nicht kritisch */ }
+
+        form.innerHTML = '<h3>Danke, ' + window.VanavilUI.escapeHtml(data.firstName) + '!</h3>'
+          + '<p class="text-muted">Deine Anmeldung ist angekommen. Der Vorstand meldet sich bald bei dir.</p>';
+        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
+</body>
+</html>

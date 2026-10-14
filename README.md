@@ -14,6 +14,7 @@ Moderne, responsive Multi-Page Website für SC Vanavil Luzern mit dynamischem Co
 - **Instagram**: Einbindung via Embed oder API
 - **Responsive Design**: Optimiert für Mobile, Tablet und Desktop
 - **Kontaktformular**: Mit Formspree (kostenlos)
+- **Anmeldeformular**: Spieler melden sich online an, Daten landen in Firestore (`registrations`, nur Admins lesen), E-Mail-Hinweis via Formspree, automatischer Abgleich mit der STFA-Spielerliste im Admin-Tab «Anmeldungen»
 
 ## 📁 Projektstruktur
 
@@ -24,6 +25,7 @@ Website-Vanavil/
 ├── spielplan.html      # Spielplan & Turniere
 ├── mannschaft.html     # Team & Vorstand
 ├── kontakt.html        # Kontakt & Mitgliedschaft
+├── anmeldung.html      # Anmeldeformular für Spieler (Daten nur im Admin sichtbar)
 ├── admin.html          # Admin Dashboard
 ├── css/
 │   └── main.css        # Alle Styles

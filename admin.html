@@ -6,14 +6,14 @@
   <title>Admin – SC Vanavil Luzern</title>
   <meta name="robots" content="noindex">
   <meta name="theme-color" content="#0b1f44">
-  <link rel="icon" href="images/favicon-64.png" type="image/png">
+  <link rel="icon" href="images/favicon-wappen-64.png" type="image/png">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=17">
+  <link rel="stylesheet" href="css/main.css?v=18">
   
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -114,6 +114,33 @@
     .register-import p { margin: .75rem 0; }
     .register-hit { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .6rem .9rem; border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: .4rem; background: #fafbfc; }
     .register-hit code { font-family: 'Barlow Condensed', sans-serif; font-size: 1.05rem; color: var(--navy); margin-right: .6rem; }
+    /* Anmeldungen */
+    .tab-badge { display: inline-block; min-width: 1.3rem; padding: 0 .35rem; margin-left: .3rem; border-radius: 999px; background: var(--gold); color: var(--navy-dark); font-size: .78rem; line-height: 1.3rem; text-align: center; }
+    .reg-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: .5rem; }
+    .reg-head h2 { margin-bottom: 0; }
+    .reg-head select { width: auto; }
+    .reg-item { border: 1px solid var(--line); border-radius: var(--radius); background: #fafbfc; margin-bottom: .5rem; }
+    .reg-item[open] { background: #fff; border-color: #c9cfd9; }
+    .reg-item summary { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .85rem 1rem; cursor: pointer; list-style: none; }
+    .reg-item summary::-webkit-details-marker { display: none; }
+    .reg-item summary strong { display: block; }
+    .reg-item summary small { color: var(--muted); }
+    .reg-chips { display: flex; gap: .4rem; flex-wrap: wrap; justify-content: flex-end; flex-shrink: 0; }
+    .reg-chip { font-size: .78rem; font-weight: 700; padding: .2rem .55rem; border-radius: 999px; white-space: nowrap; background: #eef1f6; color: var(--navy); }
+    .reg-chip.is-new { background: var(--gold); color: var(--navy-dark); }
+    .reg-chip.is-ok { background: #e3f3ea; color: #1f6b41; }
+    .reg-chip.is-warn { background: #fdf1d8; color: #7a5200; }
+    .reg-chip.is-bad { background: #fdecea; color: #8c1d18; }
+    .reg-body { padding: 0 1rem 1rem; border-top: 1px solid var(--line); }
+    .reg-data { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: .75rem 1.25rem; margin: 1rem 0; }
+    .reg-data dt { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+    .reg-data dd { margin: .1rem 0 0; overflow-wrap: anywhere; }
+    .reg-match { padding: .75rem .9rem; border-radius: var(--radius); margin-bottom: 1rem; border: 1px solid var(--line); background: #f8f9fb; }
+    .reg-match.is-ok { background: #f0f9f4; border-color: #b9dfc9; }
+    .reg-match.is-warn { background: #fffaf0; border-color: #ecd59f; }
+    .reg-actions { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+    .reg-actions select { width: auto; padding: .45rem .7rem; }
+    @media (max-width: 700px) { .reg-item summary { flex-wrap: wrap; } .reg-chips { justify-content: flex-start; } }
     .register-badge { font-size: .8rem; font-weight: 700; color: var(--success, #2e7d4f); white-space: nowrap; }
 
     /* Kader */
@@ -149,7 +176,7 @@
   <header class="site-header">
     <div class="container nav-container">
       <a href="./" class="logo">
-        <picture><source srcset="images/Vanavil-Logo-180.webp" type="image/webp"><img src="images/Vanavil-Logo-180.png" alt="" class="logo-img" width="54" height="54"></picture>
+        <picture><source srcset="images/Vanavil-Wappen-180.webp" type="image/webp"><img src="images/Vanavil-Wappen-180.png" alt="" class="logo-img" width="54" height="54"></picture>
         <span class="logo-text">SC Vanavil <span>Admin-Panel</span></span>
       </a>
       <a href="./" class="btn btn-light btn-sm">Zur Website</a>
@@ -161,7 +188,7 @@
     <section id="authSection">
       <div class="admin-container">
         <div class="card login-card">
-          <picture><source srcset="images/Vanavil-Logo-180.webp" type="image/webp"><img src="images/Vanavil-Logo-180.png" alt="" width="88" height="88"></picture>
+          <picture><source srcset="images/Vanavil-Wappen-180.webp" type="image/webp"><img src="images/Vanavil-Wappen-180.png" alt="" width="88" height="88"></picture>
           <h1>Admin-Login</h1>
           <p class="text-muted">Zugang nur für den Vorstand.</p>
           <form id="loginForm">
@@ -197,6 +224,7 @@
             <button class="admin-tab active" data-tab="news" role="tab">News</button>
             <button class="admin-tab" data-tab="tournaments" role="tab">Turniere</button>
             <button class="admin-tab" data-tab="training" role="tab">Training</button>
+            <button class="admin-tab" data-tab="registrations" role="tab">Anmeldungen <span class="tab-badge" id="regBadge" hidden></span></button>
             <button class="admin-tab" data-tab="players" role="tab">Spieler</button>
             <button class="admin-tab" data-tab="roster" role="tab">Kader</button>
             <button class="admin-tab" data-tab="stats" role="tab">Statistik</button>
@@ -345,6 +373,23 @@
             <div id="trainingList" class="item-list">
               <div class="loading"><div class="spinner"></div></div>
             </div>
+          </div>
+        </div>
+
+        <!-- Registrations Tab -->
+        <div id="registrations" class="tab-content">
+          <div class="admin-section">
+            <div class="reg-head">
+              <h2>Anmeldungen</h2>
+              <select class="form-input" id="regFilter" aria-label="Anmeldungen filtern">
+                <option value="open">Offen</option>
+                <option value="all">Alle</option>
+                <option value="übernommen">Übernommen</option>
+                <option value="abgelehnt">Abgelehnt</option>
+              </select>
+            </div>
+            <p class="text-muted mb-2" id="regStatus">Wird geladen …</p>
+            <div id="regList" class="item-list"></div>
           </div>
         </div>
 
@@ -562,6 +607,9 @@
             <h3 class="mt-3">STFA-Spielerliste</h3>
             <p class="text-muted">Oben im Tab «Spieler»: Liste aus dem STFA-Portal einmal importieren (kopieren und einfügen), danach Spieler per Suche übernehmen. Die Liste ist nur im Admin-Bereich sichtbar. Damit das klappt, müssen in der Firebase Console unter Firestore → Regeln die Regeln aus der Datei <code>firestore.rules</code> veröffentlicht sein.</p>
 
+            <h3 class="mt-3">Anmeldungen</h3>
+            <p class="text-muted">Neue Spieler melden sich über das Formular auf scvanavil.ch/anmeldung.html an. Bei jeder Anmeldung kommt eine kurze E-Mail (nur Name, Jahrgang, Position, STFA-ID), alle Angaben stehen nur hier im Tab «Anmeldungen». Jede Anmeldung wird automatisch mit der STFA-Spielerliste verglichen: grün = gefunden, gelb = bitte prüfen, grau = noch nicht bei der STFA. Mit «Als Spieler übernehmen» wird der Spieler (mit STFA-ID, falls eindeutig gefunden) unter «Spieler» angelegt. Anmeldungen von Leuten, die nicht in den Verein kommen oder ihn verlassen, bitte löschen.</p>
+
             <h3 class="mt-3">Statistik</h3>
             <p class="text-muted">Unter «Statistik» stehen alle Spieler in einer Tabelle. Nach einem Turnier Spiele, Tore und Karten anpassen und einmal auf «Statistik speichern» klicken. Zu Saisonbeginn «Neue Saison: alles auf 0», Saison eintragen und speichern.</p>
 
@@ -585,7 +633,7 @@
     </section>
   </main>
 
-  <script src="js/firebase-config.js?v=18"></script>
+  <script src="js/firebase-config.js?v=19"></script>
   <script>
     // ===== State =====
     let allPlayers = [];
@@ -605,6 +653,7 @@
           loadTrainings();
           loadInstagram();
           loadPlayers();
+          loadRegistrations();
           loadGallery();
           loadTeamPhotoPreview();
         }
@@ -792,6 +841,9 @@
         if (!confirm('Alle Zahlen auf 0 setzen? Gespeichert wird erst mit «Statistik speichern».')) return;
         document.querySelectorAll('#statsBody input').forEach(i => { i.value = 0; });
       });
+
+      // ===== Anmeldungen =====
+      document.getElementById('regFilter').addEventListener('change', renderRegistrations);
 
       // ===== Roster =====
       document.getElementById('rosterTeamSelect').addEventListener('change', loadRoster);
@@ -1151,6 +1203,7 @@
       document.getElementById('stfaOptions').innerHTML = stfaRegister
         .map(e => `<option value="${escapeHtml(e.stfaId)}">${escapeHtml(registerName(e))}</option>`).join('');
       renderRegisterResults();
+      renderRegistrations();
     }
 
     function renderRegisterResults() {
@@ -1194,6 +1247,191 @@
         loadRegister();
       } else {
         alert('Import fehlgeschlagen. Sind die neuen Firestore-Regeln schon veröffentlicht? (siehe Hilfe)');
+      }
+    }
+
+    // ===== Anmeldungen =====
+    let registrations = null;
+    const REG_STATUS = ['neu', 'in Bearbeitung', 'übernommen', 'abgelehnt'];
+
+    async function loadRegistrations() {
+      registrations = await window.VanavilDB.getRegistrations();
+      renderRegistrations();
+    }
+
+    // Für den Vergleich: ohne Akzente, Gross/Klein, Leer- und Sonderzeichen
+    function nameKey(s) {
+      return cleanNamePart(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z]/g, '');
+    }
+
+    /**
+     * Anmeldung mit der STFA-Spielerliste vergleichen:
+     * zuerst über die angegebene ID, sonst über Vor- und Nachname
+     * (auch vertauscht, das kommt bei tamilischen Namen oft vor).
+     */
+    function matchRegistration(r) {
+      if (stfaRegister.length === 0) return { kind: 'nolist' };
+      const f = nameKey(r.firstName), l = nameKey(r.lastName);
+      const sameName = e => {
+        const ef = nameKey(e.firstName), el = nameKey(e.lastName);
+        return (ef === f && el === l) || (ef === l && el === f);
+      };
+      if (r.stfaId) {
+        const e = stfaRegister.find(x => x.stfaId === r.stfaId);
+        if (e) return { kind: sameName(e) ? 'id' : 'id-mismatch', entry: e };
+        const byName = stfaRegister.find(sameName);
+        return byName ? { kind: 'id-unknown-name', entry: byName } : { kind: 'id-unknown' };
+      }
+      const exact = stfaRegister.filter(sameName);
+      if (exact.length) return { kind: 'name', entry: exact[0], more: exact.length - 1 };
+      const similar = stfaRegister.filter(e => {
+        const ef = nameKey(e.firstName), el = nameKey(e.lastName);
+        return (el === l && ef.slice(0, 3) === f.slice(0, 3)) || (ef === l && el.slice(0, 3) === f.slice(0, 3));
+      });
+      if (similar.length) return { kind: 'similar', entries: similar.slice(0, 3) };
+      return { kind: 'none' };
+    }
+
+    function stfaLabel(e) {
+      return '<code>' + escapeHtml(e.stfaId) + '</code> ' + escapeHtml(registerName(e))
+        + (e.club ? ' · ' + escapeHtml(e.club) : '');
+    }
+
+    // Was der Abgleich für den Admin bedeutet; stfaId = ID, die beim Übernehmen gesetzt wird
+    function describeMatch(m) {
+      switch (m.kind) {
+        case 'id':      return { chip: ['is-ok', '✓ STFA'], cls: 'is-ok', stfaId: m.entry.stfaId, text: 'In der STFA-Liste gefunden: ' + stfaLabel(m.entry) };
+        case 'name':    return { chip: ['is-ok', '✓ STFA (Name)'], cls: 'is-ok', stfaId: m.more ? '' : m.entry.stfaId, text: 'Keine ID angegeben, aber Name in der STFA-Liste gefunden: ' + stfaLabel(m.entry) + (m.more ? ' (und ' + m.more + ' weitere mit gleichem Namen, ID bitte von Hand eintragen)' : '') };
+        case 'id-mismatch': return { chip: ['is-warn', 'STFA prüfen'], cls: 'is-warn', stfaId: '', text: 'Die angegebene ID gehört laut STFA-Liste zu einem anderen Namen: ' + stfaLabel(m.entry) };
+        case 'id-unknown-name': return { chip: ['is-warn', 'STFA prüfen'], cls: 'is-warn', stfaId: '', text: 'Die angegebene ID ist nicht in der Liste, der Name aber schon: ' + stfaLabel(m.entry) };
+        case 'id-unknown': return { chip: ['is-warn', 'STFA prüfen'], cls: 'is-warn', stfaId: '', text: 'Die angegebene ID ist nicht in der STFA-Liste des Vereins. Vielleicht spielt der Spieler noch für einen anderen Verein, oder die Liste ist nicht aktuell.' };
+        case 'similar': return { chip: ['is-warn', 'Ähnlicher Name'], cls: 'is-warn', stfaId: '', text: 'Kein exakter Treffer. Ähnliche Namen in der STFA-Liste: ' + m.entries.map(stfaLabel).join('; ') };
+        case 'none':    return { chip: ['', 'Neu bei STFA'], cls: '', stfaId: '', text: 'Nicht in der STFA-Liste. Der Spieler muss vermutlich neu bei der STFA registriert werden.' };
+        default:        return { chip: null, cls: '', stfaId: '', text: 'STFA-Liste noch nicht importiert, deshalb kein Abgleich möglich (siehe Tab «Spieler»).' };
+      }
+    }
+
+    function regDate(r) {
+      return r.createdAt && r.createdAt.toDate ? r.createdAt.toDate() : null;
+    }
+
+    function ageFrom(birthDate) {
+      if (!birthDate) return null;
+      const b = new Date(birthDate + 'T00:00:00'), t = new Date();
+      let a = t.getFullYear() - b.getFullYear();
+      if (t.getMonth() < b.getMonth() || (t.getMonth() === b.getMonth() && t.getDate() < b.getDate())) a--;
+      return a;
+    }
+
+    function renderRegistrations() {
+      const status = document.getElementById('regStatus');
+      const box = document.getElementById('regList');
+      const badge = document.getElementById('regBadge');
+      if (registrations === null) {
+        status.innerHTML = 'Die Anmeldungen können noch nicht gelesen werden. Bitte zuerst die neuen <strong>Firestore-Regeln</strong> in der Firebase Console veröffentlichen (siehe Hilfe).';
+        box.innerHTML = '';
+        badge.hidden = true;
+        return;
+      }
+      const newCount = registrations.filter(r => r.status === 'neu').length;
+      badge.textContent = newCount;
+      badge.hidden = newCount === 0;
+
+      const filter = document.getElementById('regFilter').value;
+      const list = registrations.filter(r =>
+        filter === 'all' ? true
+        : filter === 'open' ? (r.status === 'neu' || r.status === 'in Bearbeitung')
+        : r.status === filter);
+      status.textContent = registrations.length === 0
+        ? 'Noch keine Anmeldungen. Das Formular ist öffentlich unter scvanavil.ch/anmeldung.html.'
+        : registrations.length + ' Anmeldungen, davon ' + newCount + ' neu.';
+      if (registrations.length > 0 && list.length === 0) {
+        box.innerHTML = '<p class="text-muted">Keine Anmeldungen in dieser Ansicht.</p>';
+        return;
+      }
+
+      const onSiteIds = new Set(allPlayers.map(p => p.stfaId).filter(Boolean));
+      const field = (label, value) => `<div><dt>${label}</dt><dd>${value || '–'}</dd></div>`;
+      box.innerHTML = list.map(r => {
+        const d = regDate(r);
+        const age = ageFrom(r.birthDate);
+        const m = describeMatch(matchRegistration(r));
+        const birth = r.birthDate ? r.birthDate.split('-').reverse().join('.') : '';
+        const statusCls = { 'neu': 'is-new', 'übernommen': 'is-ok', 'abgelehnt': 'is-bad' }[r.status] || '';
+        return `
+        <details class="reg-item">
+          <summary>
+            <div>
+              <strong>${escapeHtml(r.firstName)} ${escapeHtml(r.lastName)}</strong>
+              <small>${[age !== null ? age + ' Jahre' : '', escapeHtml(r.position), d ? 'angemeldet am ' + d.toLocaleDateString('de-CH') : ''].filter(Boolean).join(' · ')}</small>
+            </div>
+            <div class="reg-chips">
+              ${m.chip ? `<span class="reg-chip ${m.chip[0]}">${m.chip[1]}</span>` : ''}
+              <span class="reg-chip ${statusCls}">${escapeHtml(r.status)}</span>
+            </div>
+          </summary>
+          <div class="reg-body">
+            <dl class="reg-data">
+              ${field('Geburtsdatum', escapeHtml(birth) + (age !== null && age < 18 ? ' (minderjährig)' : ''))}
+              ${field('Nationalität', escapeHtml(r.nationality))}
+              ${field('Beruf / Schule', escapeHtml(r.profession))}
+              ${field('Adresse', escapeHtml(r.street) + '<br>' + escapeHtml(r.zip) + ' ' + escapeHtml(r.city))}
+              ${field('Telefon', r.phone ? '<a href="tel:' + escapeHtml(r.phone.replace(/[^+\d]/g, '')) + '">' + escapeHtml(r.phone) + '</a>' : '')}
+              ${field('E-Mail', r.email ? '<a href="mailto:' + escapeHtml(r.email) + '">' + escapeHtml(r.email) + '</a>' : '')}
+              ${r.guardianName ? field('Erziehungsberechtigt', escapeHtml(r.guardianName) + (r.guardianPhone ? '<br>' + escapeHtml(r.guardianPhone) : '')) : ''}
+              ${field('Aktueller Verein', escapeHtml(r.currentClub))}
+              ${field('Position', escapeHtml(r.position) || 'noch offen')}
+              ${field('STFA-ID (angegeben)', escapeHtml(r.stfaId))}
+              ${r.notes ? field('Bemerkungen', escapeHtml(r.notes)) : ''}
+            </dl>
+            <div class="reg-match ${m.cls}">${m.text}</div>
+            <div class="reg-actions">
+              <select class="form-input" aria-label="Status" onchange="setRegistrationStatus('${r.id}', this.value)">
+                ${REG_STATUS.map(s => `<option value="${s}"${s === r.status ? ' selected' : ''}>${s}</option>`).join('')}
+              </select>
+              ${r.playerId || (m.stfaId && onSiteIds.has(m.stfaId))
+                ? '<span class="register-badge">✓ auf der Website</span>'
+                : `<button class="btn btn-sm btn-primary" onclick="adoptRegistration('${r.id}', '${escapeHtml(m.stfaId)}')">Als Spieler übernehmen</button>`}
+              <button class="btn btn-sm btn-danger" onclick="deleteRegistration('${r.id}')">Löschen</button>
+            </div>
+          </div>
+        </details>`;
+      }).join('');
+    }
+
+    async function setRegistrationStatus(id, status) {
+      if (await window.VanavilDB.updateDocument('registrations', id, { status })) {
+        const r = registrations.find(x => x.id === id);
+        if (r) r.status = status;
+        renderRegistrations();
+      } else {
+        alert('Fehler beim Speichern');
+      }
+    }
+
+    async function adoptRegistration(id, stfaId) {
+      const r = registrations.find(x => x.id === id);
+      if (!r) return;
+      const name = r.firstName + ' ' + r.lastName;
+      if (!confirm(name + ' als Spieler auf der Website erfassen' + (stfaId ? ' (mit ' + stfaId + ')' : '') + '?\nFoto und Trikotnummer kannst du danach unter «Spieler» ergänzen.')) return;
+      const position = ['Torwart', 'Verteidiger', 'Mittelfeld', 'Stürmer'].includes(r.position) ? r.position : '';
+      const playerId = await window.VanavilDB.addPlayer({ name, position, number: null, stfaId: stfaId || '', photoURL: '', photoStoragePath: '' });
+      if (!playerId) { alert('Fehler beim Speichern'); return; }
+      await window.VanavilDB.updateDocument('registrations', id, { status: 'übernommen', playerId });
+      r.status = 'übernommen';
+      r.playerId = playerId;
+      await loadPlayers();
+      renderRegistrations();
+    }
+
+    async function deleteRegistration(id) {
+      const r = registrations.find(x => x.id === id);
+      if (!r || !confirm('Anmeldung von ' + r.firstName + ' ' + r.lastName + ' endgültig löschen?')) return;
+      if (await window.VanavilDB.deleteDocument('registrations', id)) {
+        registrations = registrations.filter(x => x.id !== id);
+        renderRegistrations();
+      } else {
+        alert('Fehler beim Löschen');
       }
     }
 

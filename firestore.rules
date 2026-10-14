@@ -16,5 +16,35 @@ service cloud.firestore {
 
     // Vollständige Spielerliste aus dem STFA-Portal: nur für Admins
     match /stfaRegister/{doc} { allow read, write: if isAdmin(); }
+
+    // Anmeldeformular: alle dürfen eine Anmeldung abschicken,
+    // lesen, ändern und löschen nur Admins.
+    match /registrations/{doc} {
+      allow read, update, delete: if isAdmin();
+      allow create: if isValidRegistration(request.resource.data);
+    }
+
+    function text(d, key, min, max) {
+      return d[key] is string && d[key].size() >= min && d[key].size() <= max;
+    }
+
+    function isValidRegistration(d) {
+      return d.keys().hasOnly(['firstName', 'lastName', 'street', 'zip', 'city', 'phone', 'email',
+                               'birthDate', 'nationality', 'profession', 'currentClub', 'position',
+                               'stfaId', 'guardianName', 'guardianPhone', 'notes', 'consent',
+                               'status', 'createdAt'])
+        && text(d, 'firstName', 1, 60) && text(d, 'lastName', 1, 60)
+        && text(d, 'street', 1, 120) && text(d, 'zip', 4, 10) && text(d, 'city', 1, 80)
+        && text(d, 'phone', 6, 30) && text(d, 'email', 5, 120)
+        && d.birthDate is string && d.birthDate.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+        && text(d, 'nationality', 1, 80) && text(d, 'profession', 0, 80)
+        && text(d, 'currentClub', 0, 80) && text(d, 'position', 0, 40)
+        && text(d, 'stfaId', 0, 20)
+        && text(d, 'guardianName', 0, 120) && text(d, 'guardianPhone', 0, 30)
+        && text(d, 'notes', 0, 1000)
+        && d.consent == true
+        && d.status == 'neu'
+        && d.createdAt == request.time;
+    }
   }
 }

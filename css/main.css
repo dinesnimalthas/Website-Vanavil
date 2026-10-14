@@ -441,6 +441,28 @@ h3 { font-size: 1.35rem; }
 .form-input:focus, .form-textarea:focus { outline: none; border-color: var(--navy-light); box-shadow: 0 0 0 3px rgba(58,111,179,.2); }
 .form-textarea { resize: vertical; min-height: 110px; }
 .form-hint { font-size: .88rem; color: var(--muted); margin-top: .75rem; }
+/* Anmeldeformular */
+.reg-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 1.5rem; align-items: start; }
+.reg-aside { display: grid; gap: 1.5rem; }
+.reg-fieldset { border: 0; padding: 0; margin: 0 0 1.75rem; min-width: 0; }
+.reg-fieldset legend {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1.3rem; text-transform: uppercase;
+  color: var(--navy); width: 100%; padding-bottom: .4rem; margin-bottom: 1rem; border-bottom: 2px solid var(--line);
+}
+.reg-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }
+.reg-row--zip { grid-template-columns: 8rem 1fr; }
+.reg-note { margin: 0 0 1rem; }
+.reg-consent { display: flex; gap: .65rem; align-items: flex-start; margin-bottom: 1.25rem; line-height: 1.45; }
+.reg-consent input { width: 1.15rem; height: 1.15rem; margin-top: .15rem; flex-shrink: 0; accent-color: var(--navy); }
+.reg-error { background: #fdecea; border: 1px solid #f1b8b2; color: #8c1d18; border-radius: var(--radius); padding: .7rem .9rem; margin-bottom: 1rem; }
+.reg-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.reg-steps { padding-left: 1.2rem; color: var(--muted); display: grid; gap: .5rem; }
+@media (max-width: 860px) {
+  .reg-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .reg-row, .reg-row--zip { grid-template-columns: 1fr; }
+}
 .contact-list { list-style: none; }
 .contact-list li { padding: .85rem 0; border-bottom: 1px solid var(--line); }
 .contact-list li:last-child { border-bottom: 0; }

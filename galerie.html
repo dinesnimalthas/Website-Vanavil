@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Galerie – SC Vanavil Luzern</title>
   <meta name="description" content="Fotos von SC Vanavil Luzern: Turniere, Trainings und Vereinsanlässe.">
-  <link rel="icon" href="images/favicon-64.png" type="image/png">
-  <link rel="apple-touch-icon" href="images/Vanavil-Logo-180.png">
+  <link rel="icon" href="images/favicon-wappen-64.png" type="image/png">
+  <link rel="apple-touch-icon" href="images/Vanavil-Wappen-180.png">
   <meta name="theme-color" content="#0b1f44">
   <meta property="og:title" content="Galerie – SC Vanavil Luzern">
   <meta property="og:description" content="Fotos von SC Vanavil Luzern: Turniere, Trainings und Vereinsanlässe.">
-  <meta property="og:image" content="https://scvanavil.ch/images/og-vanavil-2.jpg">
+  <meta property="og:image" content="https://scvanavil.ch/images/og-vanavil-3.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="SC Vanavil Luzern – Teamfoto mit Vereinswappen">
@@ -19,7 +19,7 @@
   <meta property="og:url" content="https://scvanavil.ch/galerie.html">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://scvanavil.ch/images/og-vanavil-2.jpg">
+  <meta name="twitter:image" content="https://scvanavil.ch/images/og-vanavil-3.jpg">
   <meta name="twitter:title" content="Galerie – SC Vanavil Luzern">
   <meta name="twitter:description" content="Fotos von SC Vanavil Luzern: Turniere, Trainings und Vereinsanlässe.">
 
@@ -28,7 +28,7 @@
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=17">
+  <link rel="stylesheet" href="css/main.css?v=18">
 
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -38,7 +38,7 @@
   <header class="site-header">
     <div class="container nav-container">
       <a href="./" class="logo">
-        <picture><source srcset="images/Vanavil-Logo-180.webp" type="image/webp"><img src="images/Vanavil-Logo-180.png" alt="" class="logo-img" width="72" height="72"></picture>
+        <picture><source srcset="images/Vanavil-Wappen-180.webp" type="image/webp"><img src="images/Vanavil-Wappen-180.png" alt="" class="logo-img" width="72" height="72"></picture>
         <span class="logo-text">SC Vanavil <span>Luzern · seit 1993</span></span>
       </a>
       <button class="menu-toggle" id="menuToggle" aria-label="Menü öffnen" aria-controls="navMenu">
@@ -51,7 +51,7 @@
         <a href="mannschaft.html" class="nav-link">Mannschaft</a>
         <a href="galerie.html" class="nav-link active" aria-current="page">Galerie</a>
         <a href="kontakt.html" class="nav-link">Kontakt</a>
-        <a href="kontakt.html#mitglied" class="btn btn-primary btn-sm nav-cta">Mitspielen</a>
+        <a href="anmeldung.html" class="btn btn-primary btn-sm nav-cta">Mitspielen</a>
       </nav>
     </div>
   </header>
@@ -90,7 +90,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <picture><source srcset="images/Vanavil-Logo-180.webp" type="image/webp"><img src="images/Vanavil-Logo-180.png" alt="" width="96" height="96" loading="lazy"></picture>
+          <picture><source srcset="images/Vanavil-Wappen-180.webp" type="image/webp"><img src="images/Vanavil-Wappen-180.png" alt="" width="96" height="96" loading="lazy"></picture>
           <div>
             <strong>SC Vanavil Luzern</strong>
             <span class="tamil" lang="ta">வானவில் விளையாட்டுக் கழகம்</span>
@@ -109,6 +109,7 @@
             <a href="mannschaft.html">Mannschaft</a>
             <a href="galerie.html">Galerie</a>
             <a href="kontakt.html">Kontakt</a>
+            <a href="anmeldung.html">Anmeldung</a>
           </div>
         </div>
         <div>
@@ -138,7 +139,7 @@
     <button class="btn btn-light btn-sm" id="adminLogoutBtn">Logout</button>
   </div>
 
-  <script src="js/firebase-config.js?v=18"></script>
+  <script src="js/firebase-config.js?v=19"></script>
   <script src="js/main.js?v=17"></script>
   <script>
     let galleryImages = [];

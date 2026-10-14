@@ -494,6 +494,40 @@ async function importStfaRegister(entries, onProgress) {
   }
 }
 
+// ========== ANMELDUNGEN ==========
+
+/**
+ * Anmeldeformular absenden (öffentlich, ohne Login). Lesen dürfen nur Admins.
+ */
+async function submitRegistration(data) {
+  if (!db) return null;
+  try {
+    const docRef = await db.collection('registrations').add({
+      ...data,
+      status: 'neu',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    return docRef.id;
+  } catch (error) {
+    console.error('Error submitting registration:', error);
+    return null;
+  }
+}
+
+/**
+ * Alle Anmeldungen, neueste zuerst. null = keine Leseberechtigung.
+ */
+async function getRegistrations() {
+  if (!db || !auth.currentUser) return null;
+  try {
+    const snapshot = await db.collection('registrations').orderBy('createdAt', 'desc').get();
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    console.error('Error fetching registrations:', error);
+    return null;
+  }
+}
+
 // ========== ROSTER ==========
 
 /**
@@ -631,6 +665,9 @@ window.VanavilDB = {
   // STFA-Spielerliste
   getStfaRegister,
   importStfaRegister,
+  // Anmeldungen
+  submitRegistration,
+  getRegistrations,
   // Roster
   getRoster,
   setRoster,
