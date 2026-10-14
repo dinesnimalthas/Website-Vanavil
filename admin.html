@@ -140,6 +140,7 @@
     .reg-match.is-warn { background: #fffaf0; border-color: #ecd59f; }
     .reg-actions { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
     .reg-actions select { width: auto; padding: .45rem .7rem; }
+    .reg-edit { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0 1rem; margin: 1rem 0 .5rem; }
     @media (max-width: 700px) { .reg-item summary { flex-wrap: wrap; } .reg-chips { justify-content: flex-start; } }
     .register-badge { font-size: .8rem; font-weight: 700; color: var(--success, #2e7d4f); white-space: nowrap; }
 
@@ -608,7 +609,7 @@
             <p class="text-muted">Oben im Tab «Spieler»: Liste aus dem STFA-Portal einmal importieren (kopieren und einfügen), danach Spieler per Suche übernehmen. Die Liste ist nur im Admin-Bereich sichtbar. Damit das klappt, müssen in der Firebase Console unter Firestore → Regeln die Regeln aus der Datei <code>firestore.rules</code> veröffentlicht sein.</p>
 
             <h3 class="mt-3">Anmeldungen</h3>
-            <p class="text-muted">Neue Spieler melden sich über das Formular auf scvanavil.ch/anmeldung.html an. Bei jeder Anmeldung kommt eine kurze E-Mail (nur Name, Jahrgang, Position, STFA-ID), alle Angaben stehen nur hier im Tab «Anmeldungen». Jede Anmeldung wird automatisch mit der STFA-Spielerliste verglichen: grün = gefunden, gelb = bitte prüfen, grau = noch nicht bei der STFA. Mit «Als Spieler übernehmen» wird der Spieler (mit STFA-ID, falls eindeutig gefunden) unter «Spieler» angelegt. Anmeldungen von Leuten, die nicht in den Verein kommen oder ihn verlassen, bitte löschen.</p>
+            <p class="text-muted">Neue Spieler melden sich über das Formular auf scvanavil.ch/anmeldung.html an. Bei jeder Anmeldung kommt eine kurze E-Mail (nur Name, Jahrgang, Position, STFA-ID), alle Angaben stehen nur hier im Tab «Anmeldungen». Mit «Bearbeiten» lassen sich alle Angaben einer Anmeldung korrigieren. Jede Anmeldung wird automatisch mit der STFA-Spielerliste verglichen: grün = gefunden, gelb = bitte prüfen, grau = noch nicht bei der STFA. Mit «Als Spieler übernehmen» wird der Spieler (mit STFA-ID, falls eindeutig gefunden) unter «Spieler» angelegt. Anmeldungen von Leuten, die nicht in den Verein kommen oder ihn verlassen, bitte löschen.</p>
 
             <h3 class="mt-3">Statistik</h3>
             <p class="text-muted">Unter «Statistik» stehen alle Spieler in einer Tabelle. Nach einem Turnier Spiele, Tore und Karten anpassen und einmal auf «Statistik speichern» klicken. Zu Saisonbeginn «Neue Saison: alles auf 0», Saison eintragen und speichern.</p>
@@ -1350,6 +1351,9 @@
         return;
       }
 
+      // Aufgeklappte Einträge bleiben nach dem Neuzeichnen offen
+      const openIds = new Set([...box.querySelectorAll('.reg-item[open]')].map(el => el.dataset.id));
+      if (editingRegId) openIds.add(editingRegId);
       const onSiteIds = new Set(allPlayers.map(p => p.stfaId).filter(Boolean));
       const field = (label, value) => `<div><dt>${label}</dt><dd>${value || '–'}</dd></div>`;
       box.innerHTML = list.map(r => {
@@ -1359,7 +1363,7 @@
         const birth = r.birthDate ? r.birthDate.split('-').reverse().join('.') : '';
         const statusCls = { 'neu': 'is-new', 'übernommen': 'is-ok', 'abgelehnt': 'is-bad' }[r.status] || '';
         return `
-        <details class="reg-item">
+        <details class="reg-item" data-id="${r.id}"${openIds.has(r.id) ? ' open' : ''}>
           <summary>
             <div>
               <strong>${escapeHtml(r.firstName)} ${escapeHtml(r.lastName)}</strong>
@@ -1370,7 +1374,7 @@
               <span class="reg-chip ${statusCls}">${escapeHtml(r.status)}</span>
             </div>
           </summary>
-          <div class="reg-body">
+          ${r.id === editingRegId ? registrationEditForm(r) : `<div class="reg-body">
             <dl class="reg-data">
               ${field('Geburtsdatum', escapeHtml(birth) + (age !== null && age < 18 ? ' (minderjährig)' : ''))}
               ${field('Nationalität', escapeHtml(r.nationality))}
@@ -1392,11 +1396,82 @@
               ${r.playerId || (m.stfaId && onSiteIds.has(m.stfaId))
                 ? '<span class="register-badge">✓ auf der Website</span>'
                 : `<button class="btn btn-sm btn-primary" onclick="adoptRegistration('${r.id}', '${escapeHtml(m.stfaId)}')">Als Spieler übernehmen</button>`}
+              <button class="btn btn-sm btn-secondary" onclick="editRegistration('${r.id}')">Bearbeiten</button>
               <button class="btn btn-sm btn-danger" onclick="deleteRegistration('${r.id}')">Löschen</button>
             </div>
-          </div>
+          </div>`}
         </details>`;
       }).join('');
+    }
+
+    // ===== Anmeldung bearbeiten =====
+    let editingRegId = null;
+    const REG_EDIT_FIELDS = [
+      ['firstName', 'Vorname *'], ['lastName', 'Nachname *'],
+      ['birthDate', 'Geburtsdatum', 'date'], ['nationality', 'Nationalität'],
+      ['profession', 'Beruf / Schule'], ['currentClub', 'Aktueller Verein'],
+      ['street', 'Strasse und Nr.'], ['zip', 'PLZ'], ['city', 'Ort'],
+      ['phone', 'Telefon', 'tel'], ['email', 'E-Mail', 'email'],
+      ['guardianName', 'Erziehungsberechtigt: Name'], ['guardianPhone', 'Erziehungsberechtigt: Telefon', 'tel'],
+      ['position', 'Position', 'position'], ['stfaId', 'STFA-ID'],
+      ['notes', 'Bemerkungen', 'textarea']
+    ];
+
+    function registrationEditForm(r) {
+      const input = ([key, label, type]) => {
+        const id = 'regEdit_' + key;
+        const v = escapeHtml(r[key] || '').replace(/"/g, '&quot;');
+        let control;
+        if (type === 'textarea') {
+          control = `<textarea class="form-textarea" id="${id}" rows="3">${v}</textarea>`;
+        } else if (type === 'position') {
+          control = `<select class="form-input" id="${id}">` + ['', 'Torwart', 'Verteidiger', 'Mittelfeld', 'Stürmer']
+            .map(p => `<option value="${p}"${p === (r.position || '') ? ' selected' : ''}>${p || 'noch offen'}</option>`).join('') + '</select>';
+        } else {
+          control = `<input type="${type || 'text'}" class="form-input" id="${id}" value="${v}">`;
+        }
+        return `<div class="form-group"${type === 'textarea' ? ' style="grid-column: 1 / -1"' : ''}><label class="form-label" for="${id}">${label}</label>${control}</div>`;
+      };
+      return `<div class="reg-body">
+            <div class="reg-edit">${REG_EDIT_FIELDS.map(input).join('')}</div>
+            <div class="reg-actions">
+              <button class="btn btn-sm btn-primary" onclick="saveRegistration('${r.id}')">Speichern</button>
+              <button class="btn btn-sm btn-secondary" onclick="cancelEditRegistration()">Abbrechen</button>
+            </div>
+          </div>`;
+    }
+
+    function editRegistration(id) {
+      editingRegId = id;
+      renderRegistrations();
+      const el = document.getElementById('regEdit_firstName');
+      if (el) el.focus();
+    }
+
+    function cancelEditRegistration() {
+      editingRegId = null;
+      renderRegistrations();
+    }
+
+    async function saveRegistration(id) {
+      const r = registrations.find(x => x.id === id);
+      if (!r) return;
+      const data = {};
+      REG_EDIT_FIELDS.forEach(([key]) => { data[key] = document.getElementById('regEdit_' + key).value.trim(); });
+      if (!data.firstName || !data.lastName) { alert('Vor- und Nachname dürfen nicht leer sein.'); return; }
+      const stfaId = normalizeStfaId(/^\d+$/.test(data.stfaId) ? 'STFA' + data.stfaId : data.stfaId);
+      if (stfaId === null) {
+        alert('Die STFA-ID sieht nicht richtig aus. Sie beginnt mit «STFA» und hat danach nur Ziffern, z.B. STFA2053.');
+        return;
+      }
+      data.stfaId = stfaId;
+      if (await window.VanavilDB.updateDocument('registrations', id, data)) {
+        Object.assign(r, data);
+        editingRegId = null;
+        renderRegistrations();
+      } else {
+        alert('Fehler beim Speichern');
+      }
     }
 
     async function setRegistrationStatus(id, status) {
