@@ -42,6 +42,19 @@ a { color: var(--navy-light); }
 a:hover { color: var(--navy); }
 button { font-family: inherit; cursor: pointer; }
 :focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+a, button { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+h1, h2, h3 { text-wrap: balance; }
+[id] { scroll-margin-top: 90px; }
+.data-table td, .stat-tile strong, .match-date .day, .fact-value { font-variant-numeric: tabular-nums; }
+main:focus { outline: none; }
+
+/* Sprunglink für Tastatur und Screenreader */
+.skip-link {
+  position: absolute; left: 1rem; top: -100px; z-index: 1000;
+  background: var(--gold); color: var(--navy-dark); font-weight: 700;
+  padding: .6rem 1rem; border-radius: var(--radius); text-decoration: none;
+}
+.skip-link:focus { top: 1rem; }
 
 h1, h2, h3, h4 {
   font-family: 'Barlow Condensed', 'Barlow', sans-serif;

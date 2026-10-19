@@ -47,17 +47,18 @@
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=18">
+  <link rel="stylesheet" href="css/main.css?v=19">
 
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 </head>
 <body>
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
   <div id="vanavil-loader" aria-hidden="true">
     <div class="loader-inner">
       <div class="loader-crest">
-        <picture><source srcset="images/Vanavil-Wappen-180.webp" type="image/webp"><img src="images/Vanavil-Wappen-180.png" alt=""></picture>
+        <picture><source srcset="images/Vanavil-Wappen-180.webp" type="image/webp"><img src="images/Vanavil-Wappen-180.png" alt="" width="96" height="96"></picture>
       </div>
       <div class="loader-word">SC Vanavil Luzern</div>
       <div class="loader-rule"></div>
@@ -70,7 +71,7 @@
         <picture><source srcset="images/Vanavil-Wappen-180.webp" type="image/webp"><img src="images/Vanavil-Wappen-180.png" alt="" class="logo-img" width="72" height="72"></picture>
         <span class="logo-text">SC Vanavil <span>Luzern · seit 1993</span></span>
       </a>
-      <button class="menu-toggle" id="menuToggle" aria-label="Menü öffnen" aria-controls="navMenu">
+      <button class="menu-toggle" id="menuToggle" aria-label="Menü öffnen" aria-controls="navMenu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
       <nav class="nav-menu" id="navMenu" aria-label="Hauptnavigation">
@@ -85,7 +86,7 @@
     </div>
   </header>
 
-  <main>
+  <main id="main" tabindex="-1">
     <section class="hero" id="heroSection">
       <div class="hero-photo" id="heroPhoto" aria-hidden="true"></div>
       <div class="container hero-inner">
@@ -270,7 +271,7 @@
   </div>
 
   <script src="js/firebase-config.js?v=19"></script>
-  <script src="js/main.js?v=17"></script>
+  <script src="js/main.js?v=18"></script>
   <script>
     // Abschnitte nur anzeigen, wenn im Admin-Panel etwas eingetragen ist.
     document.addEventListener('DOMContentLoaded', async () => {

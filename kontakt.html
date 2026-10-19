@@ -30,20 +30,21 @@
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=18">
+  <link rel="stylesheet" href="css/main.css?v=19">
 
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 </head>
 <body>
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
   <header class="site-header">
     <div class="container nav-container">
       <a href="./" class="logo">
         <picture><source srcset="images/Vanavil-Wappen-180.webp" type="image/webp"><img src="images/Vanavil-Wappen-180.png" alt="" class="logo-img" width="72" height="72"></picture>
         <span class="logo-text">SC Vanavil <span>Luzern · seit 1993</span></span>
       </a>
-      <button class="menu-toggle" id="menuToggle" aria-label="Menü öffnen" aria-controls="navMenu">
+      <button class="menu-toggle" id="menuToggle" aria-label="Menü öffnen" aria-controls="navMenu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
       <nav class="nav-menu" id="navMenu" aria-label="Hauptnavigation">
@@ -58,7 +59,7 @@
     </div>
   </header>
 
-  <main>
+  <main id="main" tabindex="-1">
     <section class="page-header">
       <div class="container">
         <h1>Kontakt</h1>
@@ -79,7 +80,7 @@
             </div>
             <div class="form-group">
               <label class="form-label" for="cf-email">E-Mail *</label>
-              <input type="email" id="cf-email" name="email" class="form-input" required autocomplete="email">
+              <input type="email" id="cf-email" name="email" class="form-input" required autocomplete="email" spellcheck="false">
             </div>
             <div class="form-group">
               <label class="form-label" for="cf-phone">Telefon</label>
@@ -172,7 +173,7 @@
   </div>
 
   <script src="js/firebase-config.js?v=19"></script>
-  <script src="js/main.js?v=17"></script>
+  <script src="js/main.js?v=18"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
       const settings = await window.VanavilDB.getSettings();
@@ -202,7 +203,7 @@
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
           });
           if (!res.ok) throw new Error();
-          form.innerHTML = '<h3>Danke!</h3><p class="text-muted">Deine Anfrage ist angekommen. Wir melden uns bald bei dir.</p>';
+          form.innerHTML = '<div role="status"><h3>Danke!</h3><p class="text-muted">Deine Anfrage ist angekommen. Wir melden uns bald bei dir.</p></div>';
         } catch {
           btn.disabled = false;
           btn.textContent = 'Anfrage senden';

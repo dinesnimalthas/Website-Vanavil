@@ -79,6 +79,7 @@ function initNavigation() {
   if (toggle && menu) {
     const closeNav = () => {
       toggle.classList.remove('active');
+      toggle.setAttribute('aria-expanded', 'false');
       menu.classList.remove('open');
       document.body.style.overflow = '';
     };
@@ -86,6 +87,7 @@ function initNavigation() {
     toggle.addEventListener('click', () => {
       const isOpen = menu.classList.toggle('open');
       toggle.classList.toggle('active', isOpen);
+      toggle.setAttribute('aria-expanded', String(isOpen));
       document.body.style.overflow = isOpen ? 'hidden' : '';
     });
 
