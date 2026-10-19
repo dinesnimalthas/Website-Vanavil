@@ -430,9 +430,12 @@ function renderOfficials(list, container) {
       <div class="people-grid">
         ${people.map(p => `
           <div class="person">
-            <span class="person-avatar${p.photoURL ? ' has-photo' : ''}" aria-hidden="true">${p.photoURL
-              ? `<img src="${escapeHtml(p.photoURL)}" alt="" width="96" height="96" loading="lazy">`
-              : escapeHtml(playerInitials(p.name))}</span>
+            ${p.photoURL
+              ? `<button type="button" class="person-avatar has-photo" data-person-zoom
+                   data-src="${escapeHtml(p.photoURL)}" data-name="${escapeHtml(p.name)}" data-role="${escapeHtml(p.role || '')}"
+                   aria-label="Foto von ${escapeHtml(p.name)} vergrössern">
+                   <img src="${escapeHtml(p.photoURL)}" alt="" width="250" height="312" loading="lazy"></button>`
+              : `<span class="person-avatar" aria-hidden="true">${escapeHtml(playerInitials(p.name))}</span>`}
             <span class="person-name">${escapeHtml(p.name)}</span>
             <span class="person-role">${escapeHtml(p.role || '')}</span>
           </div>`).join('')}
@@ -440,6 +443,22 @@ function renderOfficials(list, container) {
     </div>`).join('');
   return groups.length;
 }
+
+// Klick auf ein Porträt: Foto gross im Fenster zeigen
+document.addEventListener('click', e => {
+  const dialog = document.getElementById('personDialog');
+  if (!dialog) return;
+  const btn = e.target.closest('[data-person-zoom]');
+  if (btn) {
+    dialog.querySelector('img').src = btn.dataset.src;
+    dialog.querySelector('img').alt = btn.dataset.name;
+    dialog.querySelector('strong').textContent = btn.dataset.name;
+    dialog.querySelector('span').textContent = btn.dataset.role;
+    dialog.showModal();
+    return;
+  }
+  if (e.target === dialog || e.target.closest('.person-dialog-close')) dialog.close();
+});
 
 // ========== STATISTIK ==========
 const STAT_KEYS = [
