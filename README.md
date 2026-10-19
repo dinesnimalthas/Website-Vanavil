@@ -7,7 +7,7 @@ Moderne, responsive Multi-Page Website für SC Vanavil Luzern mit dynamischem Co
 - **Multi-Page Struktur**: Home, News, Spielplan, Mannschaft, Galerie, Kontakt
 - **Admin Panel**: News, Spiele, Spieler, Kader und Galerie verwalten (Firebase)
 - **Spielerverwaltung**: Spieler erfassen mit Foto & Spielerausweis (nur Admin sichtbar)
-- **Kader-Management**: Spieler den Teams zuordnen (Erste Mannschaft, Junioren, Academy)
+- **Kader-Management**: Spieler den Teams zuordnen (Erste Mannschaft, Junioren)
 - **Galerie**: Bilder hochladen mit Lightbox-Ansicht
 - **Teamfoto**: Prominent auf der Startseite, vom Admin hochladbar
 - **STFA Integration**: Live-Ticker Link, Turnierübersicht, Rangliste

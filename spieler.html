@@ -169,7 +169,7 @@
       };
       if (!id) return notFound();
 
-      const TEAMS = { 'erste-mannschaft': 'Erste Mannschaft', 'junioren': 'Junioren', 'academy': 'Academy' };
+      const TEAMS = { 'erste-mannschaft': 'Erste Mannschaft', 'junioren': 'Junioren' };
       const keys = Object.keys(TEAMS);
       const [players, settings, ...rosters] = await Promise.all([
         window.VanavilDB.getPlayers(),

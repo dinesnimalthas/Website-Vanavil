@@ -532,7 +532,7 @@ async function getRegistrations() {
 
 /**
  * Get the player IDs for a team roster
- * team: "erste-mannschaft" | "junioren" | "academy"
+ * team: "erste-mannschaft" | "junioren"
  */
 async function getRoster(team) {
   if (!db) return [];
