@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=20">
+  <link rel="stylesheet" href="css/main.css?v=21">
   
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -231,6 +231,7 @@
             <button class="admin-tab" data-tab="players" role="tab">Spieler</button>
             <button class="admin-tab" data-tab="roster" role="tab">Kader</button>
             <button class="admin-tab" data-tab="stats" role="tab">Statistik</button>
+            <button class="admin-tab" data-tab="officials" role="tab">Vorstand</button>
             <button class="admin-tab" data-tab="gallery" role="tab">Galerie</button>
             <button class="admin-tab" data-tab="settings" role="tab">Einstellungen</button>
             <button class="admin-tab" data-tab="help" role="tab">Hilfe</button>
@@ -501,6 +502,57 @@
           </div>
         </div>
 
+        <!-- Vorstand Tab -->
+        <div id="officials" class="tab-content">
+          <div class="admin-section">
+            <h2 id="officialFormTitle">Person erfassen</h2>
+            <form id="officialForm">
+              <div class="grid grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="ofName">Name *</label>
+                  <input type="text" class="form-input" id="ofName" required maxlength="80" autocomplete="off">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="ofRole">Funktion *</label>
+                  <input type="text" class="form-input" id="ofRole" required maxlength="60" placeholder="z.B. Präsident, Trainer Junioren, Materialwart" autocomplete="off">
+                </div>
+              </div>
+              <div class="grid grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="ofGroup">Gruppe</label>
+                  <select class="form-input" id="ofGroup">
+                    <option value="Vorstand">Vorstand</option>
+                    <option value="Trainer">Trainer</option>
+                    <option value="Funktionäre">Funktionäre</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="ofPhoto">Foto</label>
+                  <div class="file-input-wrap">
+                    <input type="file" id="ofPhoto" accept="image/*">
+                  </div>
+                  <div id="ofPhotoPreview" class="upload-preview"></div>
+                  <label id="ofPhotoRemoveWrap" class="checkbox-row" hidden>
+                    <input type="checkbox" id="ofPhotoRemove"> Aktuelles Foto entfernen
+                  </label>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="ofSubmit">Person speichern</button>
+                <button type="button" class="btn btn-secondary" id="ofCancel" hidden>Abbrechen</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="admin-section">
+            <h2>Vorstand, Trainer &amp; Funktionäre</h2>
+            <p class="text-muted mb-2">Erscheinen auf der Website unter «Mannschaft», gruppiert und in dieser Reihenfolge. Mit ↑ und ↓ sortieren.</p>
+            <div id="officialsList" class="item-list">
+              <div class="loading"><div class="spinner"></div></div>
+            </div>
+          </div>
+        </div>
+
         <!-- Statistik Tab -->
         <div id="stats" class="tab-content">
           <div class="admin-section">
@@ -613,6 +665,9 @@
             <h3 class="mt-3">Anmeldungen</h3>
             <p class="text-muted">Neue Spieler melden sich über das Formular auf scvanavil.ch/anmeldung.html an. Bei jeder Anmeldung kommt eine kurze E-Mail (nur Name, Jahrgang, Position, STFA-ID), alle Angaben stehen nur hier im Tab «Anmeldungen». Mit «Bearbeiten» lassen sich alle Angaben einer Anmeldung korrigieren. Jede Anmeldung wird automatisch mit der STFA-Spielerliste verglichen: grün = gefunden, gelb = bitte prüfen, grau = noch nicht bei der STFA. Mit «Als Spieler übernehmen» wird der Spieler (mit STFA-ID, falls eindeutig gefunden) unter «Spieler» angelegt. Anmeldungen von Leuten, die nicht in den Verein kommen oder ihn verlassen, bitte löschen.</p>
 
+            <h3 class="mt-3">Vorstand, Trainer &amp; Funktionäre</h3>
+            <p class="text-muted">Im Tab «Vorstand» Personen mit Name, Funktion, Gruppe und Foto erfassen. Sie erscheinen unter «Mannschaft». Mit ↑ und ↓ die Reihenfolge innerhalb einer Gruppe ändern, mit «Bearbeiten» Foto oder Funktion anpassen. Beim ersten Mal «Bisherige 5 Personen übernehmen» klicken.</p>
+
             <h3 class="mt-3">Statistik</h3>
             <p class="text-muted">Unter «Statistik» stehen alle Spieler in einer Tabelle. Nach einem Turnier Spiele, Tore und Karten anpassen und einmal auf «Statistik speichern» klicken. Zu Saisonbeginn «Neue Saison: alles auf 0», Saison eintragen und speichern.</p>
 
@@ -654,6 +709,7 @@
           loadNews();
           loadTournaments();
           loadTrainings();
+          loadOfficials();
           loadInstagram();
           loadPlayers();
           loadRegistrations();
@@ -836,6 +892,14 @@
           const nameEl = document.getElementById('playerName');
           if (!nameEl.value.trim()) nameEl.value = registerName(entry);
         }
+      });
+
+      // ===== Vorstand & Trainer =====
+      document.getElementById('officialForm').addEventListener('submit', saveOfficial);
+      document.getElementById('ofCancel').addEventListener('click', resetOfficialForm);
+      document.getElementById('ofPhoto').addEventListener('change', e => {
+        const f = e.target.files[0];
+        document.getElementById('ofPhotoPreview').innerHTML = f ? '<img src="' + URL.createObjectURL(f) + '" alt="Vorschau">' : '';
       });
 
       // ===== Statistik =====
@@ -1123,6 +1187,169 @@
       if (result === null) return;
       await window.VanavilDB.updateDocument('tournaments', id, { result: result.trim() });
       loadTournaments();
+    }
+
+    // ===== Vorstand, Trainer & Funktionäre =====
+    let officials = [];
+    let editingOfficialId = null;
+    const OFFICIAL_GROUPS = ['Vorstand', 'Trainer', 'Funktionäre'];
+    // Bisher fest auf der Website, zum einmaligen Übernehmen
+    const DEFAULT_OFFICIALS = [
+      { name: 'Nanthan Kandasamy', role: 'Präsident', group: 'Vorstand' },
+      { name: 'Regan Fernando', role: 'Vizepräsident', group: 'Vorstand' },
+      { name: 'Anoyan Kandasamy', role: 'Kassier', group: 'Vorstand' },
+      { name: 'Theepan Sundaralingam', role: 'Trainer', group: 'Trainer' },
+      { name: 'Yatheesan Somasundaram', role: 'Trainer', group: 'Trainer' }
+    ];
+
+    const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+    function sortedOfficials() {
+      return OFFICIAL_GROUPS.flatMap(g => officials.filter(o => (o.group || 'Vorstand') === g)
+        .sort((a, b) => (a.order || 0) - (b.order || 0)));
+    }
+
+    async function saveOfficialsList() {
+      // Reihenfolge pro Gruppe neu durchnummerieren
+      OFFICIAL_GROUPS.forEach(g => officials.filter(o => o.group === g)
+        .sort((a, b) => (a.order || 0) - (b.order || 0)).forEach((o, i) => { o.order = i; }));
+      return window.VanavilDB.updateSettings({ officials });
+    }
+
+    async function loadOfficials() {
+      const settings = await window.VanavilDB.getSettings();
+      officials = Array.isArray(settings.officials) ? settings.officials : [];
+      const box = document.getElementById('officialsList');
+      if (!officials.length) {
+        box.innerHTML = `<p class="text-muted mb-2">Noch niemand erfasst. Bis dahin zeigt die Website die bisherige Liste (Präsident, Vizepräsident, Kassier, 2 Trainer).</p>
+          <button class="btn btn-secondary" onclick="importDefaultOfficials()">Bisherige 5 Personen übernehmen</button>`;
+        return;
+      }
+      const list = sortedOfficials();
+      box.innerHTML = list.map(o => {
+        const sameGroup = list.filter(x => x.group === o.group);
+        const idx = sameGroup.indexOf(o);
+        return `
+        <div class="player-list-item">
+          <div class="player-list-thumb" style="${o.photoURL ? "background-image:url('" + escapeHtml(o.photoURL) + "')" : ''}">
+            ${o.photoURL ? '' : escapeHtml(o.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase())}
+          </div>
+          <div class="player-list-info">
+            <strong>${escapeHtml(o.name)}</strong>
+            <small>${escapeHtml(o.role || '')} • ${escapeHtml(o.group)}</small>
+          </div>
+          <div class="item-actions">
+            <button class="btn btn-sm btn-secondary" onclick="moveOfficial('${o.id}', -1)" ${idx === 0 ? 'disabled' : ''} aria-label="Nach oben">↑</button>
+            <button class="btn btn-sm btn-secondary" onclick="moveOfficial('${o.id}', 1)" ${idx === sameGroup.length - 1 ? 'disabled' : ''} aria-label="Nach unten">↓</button>
+            <button class="btn btn-sm btn-secondary" onclick="startEditOfficial('${o.id}')">Bearbeiten</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteOfficial('${o.id}')">Löschen</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    async function importDefaultOfficials() {
+      officials = DEFAULT_OFFICIALS.map((o, i) => ({ ...o, id: newId() + i, order: i, photoURL: '', photoPath: '' }));
+      if (await saveOfficialsList()) loadOfficials();
+      else alert('Fehler beim Speichern');
+    }
+
+    async function moveOfficial(id, dir) {
+      const group = sortedOfficials().filter(o => o.group === officials.find(x => x.id === id).group);
+      const i = group.findIndex(o => o.id === id), j = i + dir;
+      if (j < 0 || j >= group.length) return;
+      [group[i].order, group[j].order] = [j, i];
+      if (await saveOfficialsList()) loadOfficials();
+    }
+
+    function startEditOfficial(id) {
+      const o = officials.find(x => x.id === id);
+      if (!o) return;
+      editingOfficialId = id;
+      document.getElementById('ofName').value = o.name;
+      document.getElementById('ofRole').value = o.role || '';
+      document.getElementById('ofGroup').value = o.group || 'Vorstand';
+      document.getElementById('ofPhoto').value = '';
+      document.getElementById('ofPhotoRemove').checked = false;
+      document.getElementById('ofPhotoRemoveWrap').hidden = !o.photoURL;
+      document.getElementById('ofPhotoPreview').innerHTML = o.photoURL ? '<img src="' + escapeHtml(o.photoURL) + '" alt="Aktuelles Foto">' : '';
+      document.getElementById('officialFormTitle').textContent = 'Person bearbeiten: ' + o.name;
+      document.getElementById('ofSubmit').textContent = 'Änderungen speichern';
+      document.getElementById('ofCancel').hidden = false;
+      const section = document.getElementById('officialForm').closest('.admin-section');
+      section.classList.add('is-editing');
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function resetOfficialForm() {
+      editingOfficialId = null;
+      document.getElementById('officialForm').reset();
+      document.getElementById('ofPhotoPreview').innerHTML = '';
+      document.getElementById('ofPhotoRemoveWrap').hidden = true;
+      document.getElementById('officialFormTitle').textContent = 'Person erfassen';
+      document.getElementById('ofSubmit').textContent = 'Person speichern';
+      document.getElementById('ofCancel').hidden = true;
+      document.getElementById('officialForm').closest('.admin-section').classList.remove('is-editing');
+    }
+
+    async function saveOfficial(e) {
+      e.preventDefault();
+      const DB = window.VanavilDB;
+      const btn = document.getElementById('ofSubmit');
+      const idle = editingOfficialId ? 'Änderungen speichern' : 'Person speichern';
+      const done = () => { btn.disabled = false; btn.textContent = idle; };
+      btn.disabled = true; btn.textContent = 'Speichern …';
+
+      const existing = editingOfficialId ? officials.find(o => o.id === editingOfficialId) : null;
+      const group = document.getElementById('ofGroup').value;
+      const data = {
+        name: document.getElementById('ofName').value.trim(),
+        role: document.getElementById('ofRole').value.trim(),
+        group
+      };
+      const file = document.getElementById('ofPhoto').files[0];
+      let oldPath = null;
+      try {
+        if (file) {
+          btn.textContent = 'Foto wird verkleinert …';
+          const [photo] = await DB.resizeImage(file, [{ maxSide: 600, quality: 0.85 }]);
+          // Ordner team/ ist bereits öffentlich lesbar und für Admins beschreibbar
+          const path = 'team/official_' + Date.now() + '_' + DB.safeBaseName(file) + '.jpg';
+          const url = await DB.uploadFile(path, photo, p => { btn.textContent = 'Foto hochladen … ' + Math.round(p * 100) + ' %'; });
+          if (!url) { alert('Das Foto konnte nicht hochgeladen werden.'); return done(); }
+          data.photoURL = url; data.photoPath = path;
+          if (existing && existing.photoPath) oldPath = existing.photoPath;
+        } else if (existing && document.getElementById('ofPhotoRemove').checked) {
+          data.photoURL = ''; data.photoPath = '';
+          oldPath = existing.photoPath || null;
+        }
+      } catch (err) {
+        alert('Das Bild konnte nicht verarbeitet werden: ' + err.message);
+        return done();
+      }
+
+      if (existing) {
+        const moved = existing.group !== group;
+        Object.assign(existing, data);
+        if (moved) existing.order = 999;            // ans Ende der neuen Gruppe
+      } else {
+        officials.push({ id: newId(), photoURL: '', photoPath: '', order: 999, ...data });
+      }
+      const ok = await saveOfficialsList();
+      if (ok && oldPath) await DB.deleteFile(oldPath);
+      done();
+      if (ok) { resetOfficialForm(); loadOfficials(); }
+      else alert('Fehler beim Speichern');
+    }
+
+    async function deleteOfficial(id) {
+      const o = officials.find(x => x.id === id);
+      if (!o || !confirm(o.name + ' wirklich löschen?')) return;
+      officials = officials.filter(x => x.id !== id);
+      if (await saveOfficialsList()) {
+        if (o.photoPath) await window.VanavilDB.deleteFile(o.photoPath);
+        loadOfficials();
+      }
     }
 
     async function deleteTraining(index) {

@@ -413,6 +413,34 @@ function renderPlayerCards(players, container) {
   `).join('');
 }
 
+// ========== VORSTAND, TRAINER, FUNKTIONÄRE ==========
+const OFFICIAL_GROUPS = ['Vorstand', 'Trainer', 'Funktionäre'];
+
+/**
+ * Personen nach Gruppe (feste Reihenfolge) und eigener Sortierung.
+ */
+function renderOfficials(list, container) {
+  if (!container) return 0;
+  const groups = OFFICIAL_GROUPS
+    .map(g => ({ g, people: list.filter(p => (p.group || 'Vorstand') === g).sort((a, b) => (a.order || 0) - (b.order || 0)) }))
+    .filter(x => x.people.length);
+  container.innerHTML = groups.map(({ g, people }) => `
+    <div class="people-group" style="--n:${Math.min(people.length, 4)}">
+      <h3>${escapeHtml(g)}</h3>
+      <div class="people-grid">
+        ${people.map(p => `
+          <div class="person">
+            <span class="person-avatar${p.photoURL ? ' has-photo' : ''}" aria-hidden="true">${p.photoURL
+              ? `<img src="${escapeHtml(p.photoURL)}" alt="" width="96" height="96" loading="lazy">`
+              : escapeHtml(playerInitials(p.name))}</span>
+            <span class="person-name">${escapeHtml(p.name)}</span>
+            <span class="person-role">${escapeHtml(p.role || '')}</span>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+  return groups.length;
+}
+
 // ========== STATISTIK ==========
 const STAT_KEYS = [
   ['games', 'Spiele'],
@@ -508,6 +536,8 @@ window.VanavilUI = {
   parseInstagramUrl,
   WEEKDAYS,
   renderPlayerCards,
+  renderOfficials,
+  OFFICIAL_GROUPS,
   renderStatsBoard,
   playerStats,
   hasStats,

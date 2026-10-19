@@ -562,12 +562,21 @@ h3 { font-size: 1.35rem; }
   box-shadow: var(--shadow); padding: 1.6rem 1rem 1.4rem; text-align: center;
 }
 .person-avatar {
-  width: 76px; height: 76px; margin: 0 auto 1rem; border-radius: 50%;
+  width: 96px; height: 96px; margin: 0 auto 1rem; border-radius: 50%; overflow: hidden;
   display: grid; place-items: center;
   background: var(--navy); color: var(--gold);
   font-family: 'Barlow Condensed', sans-serif; font-size: 1.75rem; font-weight: 700; letter-spacing: .02em;
   box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--gold);
 }
+/* Gruppen nebeneinander, so viel Platz da ist */
+#officialsContainer { display: flex; flex-wrap: wrap; gap: 2.25rem 3rem; align-items: flex-start; }
+#officialsContainer .people-group + .people-group { margin-top: 0; }
+#officialsContainer .people-grid { grid-template-columns: repeat(var(--n, 3), 190px); }
+@media (max-width: 700px) {
+  #officialsContainer .people-group { flex: 1 1 100%; }
+  #officialsContainer .people-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+}
+.person-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: center 25%; }
 .person-name { display: block; font-weight: 700; font-size: 1.08rem; line-height: 1.3; }
 .person-role { display: block; margin-top: .25rem; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gold-dark); }
 

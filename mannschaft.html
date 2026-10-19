@@ -30,7 +30,7 @@
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=20">
+  <link rel="stylesheet" href="css/main.css?v=21">
 
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -134,7 +134,8 @@
     <section class="section">
       <div class="container">
         <div class="section-head"><h2>Vorstand &amp; Trainer</h2></div>
-        <div class="people-group">
+        <div id="officialsContainer">
+        <div class="people-group" style="--n:3">
           <h3>Vorstand</h3>
           <div class="people-grid">
             <div class="person">
@@ -154,7 +155,7 @@
             </div>
           </div>
         </div>
-        <div class="people-group">
+        <div class="people-group" style="--n:2">
           <h3>Trainer</h3>
           <div class="people-grid">
             <div class="person">
@@ -168,6 +169,7 @@
               <span class="person-role">Trainer</span>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </section>
@@ -228,7 +230,7 @@
   </div>
 
   <script src="js/firebase-config.js?v=19"></script>
-  <script src="js/main.js?v=18"></script>
+  <script src="js/main.js?v=19"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
       const teams = [
@@ -249,6 +251,10 @@
         }
 
         window.VanavilDB.getSettings().then(settings => {
+          // Vorstand & Trainer aus dem Admin-Panel (sonst bleibt die Liste im HTML)
+          if (Array.isArray(settings.officials) && settings.officials.length) {
+            window.VanavilUI.renderOfficials(settings.officials, document.getElementById('officialsContainer'));
+          }
           if (settings.statsSeason) {
             document.getElementById('statsSeasonLabel').textContent = 'Saison ' + settings.statsSeason;
           }
