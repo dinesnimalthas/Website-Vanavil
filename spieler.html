@@ -30,7 +30,7 @@
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=19">
+  <link rel="stylesheet" href="css/main.css?v=20">
 
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -60,19 +60,31 @@
   </header>
 
   <main id="main" tabindex="-1">
-    <section class="page-header">
-      <div class="container">
-        <h1><span id="playerTitle">Spieler</span></h1>
-        <p><span id="playerLead">&nbsp;</span></p>
+    <section class="player-hero">
+      <div class="container player-hero-inner">
+        <div>
+          <a href="mannschaft.html" class="back-link">← Zur Mannschaft</a>
+          <p class="player-meta" id="playerMeta">&nbsp;</p>
+          <h1 id="playerTitle"><span>Spieler</span></h1>
+          <dl class="player-facts" id="playerFacts"></dl>
+          <div id="playerStats"></div>
+        </div>
+        <div class="player-portrait">
+          <div class="player-portrait-frame is-empty" id="playerPortrait">
+            <img src="images/Vanavil-Wappen-180.png" alt="" width="180" height="180">
+          </div>
+          <span class="player-portrait-number" id="playerBigNumber" aria-hidden="true"></span>
+        </div>
       </div>
     </section>
 
-    <section class="section">
+    <section class="section player-team" id="teamSection" hidden>
       <div class="container">
-        <a href="mannschaft.html" class="back-link">← Zur Mannschaft</a>
-        <div id="playerProfile">
-          <div class="loading"><div class="spinner"></div></div>
+        <div class="section-head">
+          <h2 id="teamHeading">Weitere Spieler</h2>
+          <a href="mannschaft.html" class="more-link">Ganzer Kader →</a>
         </div>
+        <div class="player-grid" id="teamGrid"></div>
       </div>
     </section>
   </main>
@@ -133,56 +145,96 @@
   <script src="js/firebase-config.js?v=19"></script>
   <script src="js/main.js?v=18"></script>
   <script>
+    // Namen so verkleinern, dass jeder Teil auf eine Zeile passt
+    function fitTitle() {
+      const h = document.getElementById('playerTitle');
+      h.style.fontSize = '';
+      const max = h.parentElement.clientWidth;
+      let size = parseFloat(getComputedStyle(h).fontSize);
+      const widest = () => Math.max(...[...h.children].map(s => s.scrollWidth));
+      while (widest() > max && size > 28) {
+        size *= 0.94;
+        h.style.fontSize = size + 'px';
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', async () => {
       const UI = window.VanavilUI, esc = UI.escapeHtml;
-      const el = document.getElementById('playerProfile');
+      const $ = id => document.getElementById(id);
       const id = new URLSearchParams(location.search).get('id');
 
       const notFound = () => {
-        document.getElementById('playerTitle').textContent = 'Spieler nicht gefunden';
-        el.innerHTML = '<p class="empty-state">Diesen Spieler gibt es nicht (mehr). <a href="mannschaft.html">Zur Mannschaft</a></p>';
+        $('playerTitle').innerHTML = '<span>Spieler nicht gefunden</span>';
+        $('playerMeta').textContent = 'Diesen Spieler gibt es nicht (mehr).';
       };
       if (!id) return notFound();
 
       const TEAMS = { 'erste-mannschaft': 'Erste Mannschaft', 'junioren': 'Junioren', 'academy': 'Academy' };
-      const [player, settings, ...rosters] = await Promise.all([
-        window.VanavilDB.getPlayer(id),
+      const keys = Object.keys(TEAMS);
+      const [players, settings, ...rosters] = await Promise.all([
+        window.VanavilDB.getPlayers(),
         window.VanavilDB.getSettings(),
-        ...Object.keys(TEAMS).map(k => window.VanavilDB.getRoster(k))
+        ...keys.map(k => window.VanavilDB.getRoster(k))
       ]);
+      const player = players.find(p => p.id === id);
       if (!player) return notFound();
 
-      const teams = Object.values(TEAMS).filter((name, i) => rosters[i].includes(player.id));
+      const teamIdx = keys.map((k, i) => i).filter(i => rosters[i].includes(player.id));
+      const teamNames = teamIdx.map(i => TEAMS[keys[i]]);
 
+      // Kopf: Name in zwei Zeilen (Vorname / Nachname)
       document.title = player.name + ' – SC Vanavil Luzern';
-      document.getElementById('playerTitle').textContent = player.name;
-      document.getElementById('playerLead').textContent =
-        [player.number ? '#' + player.number : '', player.position, teams.join(', ')].filter(Boolean).join(' · ');
+      const parts = player.name.trim().split(/\s+/);
+      const last = parts.length > 1 ? parts.pop() : '';
+      $('playerTitle').innerHTML = `<span>${esc(parts.join(' '))}</span>${last ? `<span>${esc(last)}</span>` : ''}`;
+      $('playerMeta').textContent = [player.position, teamNames.join(' · ')].filter(Boolean).join(' · ') || 'SC Vanavil Luzern';
+      fitTitle();
+      window.addEventListener('resize', fitTitle);
 
+      // Angaben
       const facts = [
-        ['Position', player.position || '–'],
-        ['Rückennummer', player.number ? '#' + player.number : '–'],
-        ['Team', teams.join(', ') || '–'],
-        ['STFA-ID', player.stfaId ? '<span class="stfa-id">' + esc(player.stfaId) + '</span>' : '–']
-      ];
+        ['Position', player.position || ''],
+        ['Team', teamNames.join(', ')],
+        ['STFA-ID', player.stfaId || '']
+      ].filter(([, v]) => v);
+      $('playerFacts').innerHTML = facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('');
 
-      el.innerHTML = `
-        <div class="player-profile">
-          <div class="player-profile-photo"${player.photoURL ? ` style="background-image:url('${esc(player.photoURL)}')"` : ''}>
-            ${player.photoURL ? '' : `<span class="player-initials">${esc(UI.playerInitials(player.name))}</span>`}
-            ${player.number ? `<span class="player-number">#${esc(String(player.number))}</span>` : ''}
+      // Statistik
+      if (UI.hasStats(player)) {
+        const st = UI.playerStats(player);
+        $('playerStats').innerHTML = `
+          <div class="player-stats">
+            ${UI.STAT_KEYS.map(([k, label]) => `<div><strong>${st[k]}</strong><span>${label}</span></div>`).join('')}
           </div>
-          <div>
-            <ul class="club-facts">
-              ${facts.map(([k, v]) => `<li><strong>${k}</strong><span>${k === 'STFA-ID' ? v : esc(v)}</span></li>`).join('')}
-            </ul>
-            ${UI.hasStats(player) ? `
-            <div class="stat-tiles">
-              ${UI.STAT_KEYS.map(([k, label]) => `<div class="stat-tile"><strong>${UI.playerStats(player)[k]}</strong><span>${label}</span></div>`).join('')}
-            </div>
-            ${settings.statsSeason ? `<p class="stat-season">Saison ${esc(settings.statsSeason)}</p>` : ''}` : ''}
-          </div>
-        </div>`;
+          ${settings.statsSeason ? `<p class="player-season">Saison ${esc(settings.statsSeason)}</p>` : ''}`;
+      }
+
+      // Porträt und grosse Rückennummer
+      if (player.number) {
+        $('playerBigNumber').textContent = player.number;
+        document.querySelector('.player-portrait').classList.add('has-number');
+      }
+      $('playerMeta').textContent = [player.number ? '#' + player.number : '', $('playerMeta').textContent].filter(Boolean).join(' · ');
+      if (player.photoURL) {
+        const frame = $('playerPortrait');
+        frame.classList.remove('is-empty');
+        frame.innerHTML = `<img src="${esc(player.photoURL)}" alt="${esc(player.name)}" width="460" height="575">`;
+      }
+
+      // Teamkollegen aus dem ersten Team des Spielers
+      if (teamIdx.length) {
+        const i = teamIdx[0];
+        const mates = rosters[i]
+          .filter(pid => pid !== player.id)
+          .map(pid => players.find(p => p.id === pid)).filter(Boolean)
+          .sort((a, b) => (a.number || 999) - (b.number || 999))
+          .slice(0, 6);
+        if (mates.length) {
+          $('teamHeading').textContent = 'Weitere Spieler der ' + (TEAMS[keys[i]] === 'Erste Mannschaft' ? 'Ersten Mannschaft' : TEAMS[keys[i]]);
+          UI.renderPlayerCards(mates, $('teamGrid'));
+          $('teamSection').hidden = false;
+        }
+      }
     });
   </script>
 </body>

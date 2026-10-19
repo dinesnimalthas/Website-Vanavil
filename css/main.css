@@ -377,23 +377,71 @@ h3 { font-size: 1.35rem; }
 .board-list span { color: var(--muted); font-size: .95rem; }
 
 /* Spielerseite */
-.back-link { display: inline-block; margin-bottom: 1.5rem; font-weight: 600; text-decoration: none; }
+.back-link { display: inline-block; font-weight: 600; text-decoration: none; }
 .back-link:hover { text-decoration: underline; }
-.player-profile { display: grid; grid-template-columns: 340px 1fr; gap: 3rem; align-items: start; }
-.player-profile-photo {
-  position: relative; aspect-ratio: 4 / 5; border-radius: var(--radius); overflow: hidden;
-  background: #e6e9ef center 20% / cover no-repeat; box-shadow: 0 12px 32px rgba(11,31,68,.16);
-  border-bottom: 4px solid var(--gold);
-  display: grid; place-items: center;
+
+.player-hero { background: var(--navy); color: #fff; overflow: hidden; }
+.player-hero-inner {
+  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem); align-items: center;
+  padding: clamp(2.5rem, 5vw, 4.5rem) 0 clamp(3rem, 6vw, 5.5rem);
 }
-.player-profile-photo .player-initials { position: static; font-size: 5rem; }
-.player-profile-photo .player-number { top: .75rem; left: .75rem; font-size: 1.1rem; padding: .2rem .6rem; }
-.player-profile .club-facts { margin-top: 0; }
-.player-profile .note-box { margin-top: 2rem; }
-.stfa-id { font-family: 'Barlow Condensed', sans-serif; font-size: 1.15rem; letter-spacing: .03em; color: var(--navy); }
-@media (max-width: 800px) {
-  .player-profile { grid-template-columns: 1fr; gap: 2rem; }
-  .player-profile-photo { max-width: 340px; }
+.player-hero .back-link { color: rgba(255,255,255,.8); margin-bottom: clamp(1.5rem, 3vw, 2.5rem); }
+.player-hero .back-link:hover { color: #fff; }
+.player-meta { font-size: 1.15rem; font-weight: 600; color: var(--gold); margin-bottom: .6rem; }
+.player-hero h1 {
+  color: #fff; font-size: clamp(2.6rem, 6.4vw, 5.6rem); line-height: .92;
+  letter-spacing: -.01em; white-space: nowrap;
+}
+.player-hero h1 span { display: block; }
+.player-hero h1::after { content: ''; display: block; width: 56px; height: 5px; background: var(--gold); margin-top: 1.4rem; }
+
+.player-facts { display: flex; flex-wrap: wrap; gap: 1.25rem 2.75rem; margin-top: 2rem; }
+.player-facts div { min-width: 0; }
+.player-facts dt { font-size: .95rem; color: rgba(255,255,255,.7); }
+.player-facts dd { font-family: 'Barlow Condensed', sans-serif; font-size: 1.75rem; font-weight: 700; line-height: 1.15; }
+
+.player-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem; margin-top: 2.25rem; }
+.player-stats div { background: var(--navy-dark); border-radius: var(--radius); padding: 1rem .9rem .9rem; }
+.player-stats strong { display: block; font-family: 'Barlow Condensed', sans-serif; font-size: clamp(2.2rem, 4vw, 3.2rem); line-height: 1; color: var(--gold); font-variant-numeric: tabular-nums; }
+.player-stats span { display: block; margin-top: .35rem; font-size: .95rem; color: rgba(255,255,255,.8); }
+.player-season { margin-top: .75rem; font-size: .95rem; color: rgba(255,255,255,.65); }
+
+/* Porträt mit der Rückennummer als grosse Zahl dahinter */
+.player-portrait { position: relative; justify-self: end; width: min(100%, 460px); }
+.player-portrait-number {
+  position: absolute; left: .12em; bottom: -.08em; z-index: 2;
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 700; line-height: 1;
+  font-size: clamp(6.5rem, 11vw, 10rem); letter-spacing: -.03em;
+  color: var(--gold); user-select: none; pointer-events: none;
+}
+.player-portrait-number:empty { display: none; }
+/* Neutraler Abdunkler unter der Nummer, nur über einem Foto */
+.player-portrait.has-number .player-portrait-frame:not(.is-empty)::after {
+  content: ''; position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(to top, rgba(7,21,48,.85) 0%, rgba(7,21,48,0) 38%); /* taste-skill-ignore: scrim over photo */
+}
+.player-portrait-frame {
+  position: relative; aspect-ratio: 4 / 5; border-radius: var(--radius); overflow: hidden;
+  background: var(--navy-dark); border-bottom: 5px solid var(--gold);
+}
+.player-portrait-frame img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
+.player-portrait-frame.is-empty { display: grid; place-items: center; }
+.player-portrait-frame.is-empty img { width: 46%; height: auto; object-fit: contain; }
+
+.player-team h2 { margin-bottom: 1.5rem; }
+.player-team .section-head { margin-bottom: 1.5rem; }
+
+@media (max-width: 860px) {
+  .player-hero-inner { grid-template-columns: minmax(0, 1fr) minmax(0, .85fr); gap: 2rem; }
+  .player-facts { gap: 1rem 1.75rem; }
+  .player-facts dd { font-size: 1.45rem; }
+}
+@media (max-width: 640px) {
+  .player-hero-inner { grid-template-columns: 1fr; gap: 2rem; padding-top: 2rem; }
+  .player-portrait { order: -1; justify-self: start; width: min(100%, 380px); }
+  .player-hero .back-link { margin-bottom: 1rem; }
+  .player-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 /* Statistik */
