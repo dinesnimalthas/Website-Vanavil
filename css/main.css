@@ -231,6 +231,10 @@ h3 { font-size: 1.35rem; }
 .news-card { padding: 0; overflow: hidden; display: flex; flex-direction: column; transition: transform .15s, box-shadow .15s; }
 .news-card:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(11,31,68,.12); }
 .news-card .card-image { aspect-ratio: 16 / 9; background: var(--navy-light) center / cover no-repeat; }
+/* Platzhalter, wenn ein Beitrag kein Bild hat */
+.news-card .card-image-fallback { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .6rem; background: var(--navy); border-bottom: 3px solid var(--gold); }
+.news-card .card-image-fallback img { width: 34%; max-width: 120px; height: auto; }
+.news-card .card-image-fallback span { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: .95rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
 .news-card .card-body { padding: 1.1rem 1.25rem 1.4rem; }
 .card-meta { display: flex; gap: .75rem; align-items: center; font-size: .88rem; color: var(--muted); margin-bottom: .4rem; }
 .card-tag { font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: .78rem; color: var(--gold-dark); }

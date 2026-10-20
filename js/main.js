@@ -199,7 +199,12 @@ function renderNewsCards(news, container) {
 
   container.innerHTML = news.map(item => `
     <article class="card news-card">
-      <div class="card-image"${item.image ? ` style="background-image:url('${escapeHtml(item.image)}')"` : ''}></div>
+      ${item.image
+        ? `<div class="card-image" style="background-image:url('${escapeHtml(item.image)}')"></div>`
+        : `<div class="card-image card-image-fallback" aria-hidden="true">
+            <img src="images/Vanavil-Wappen-180.webp" alt="" width="180" height="180" loading="lazy">
+            <span>${escapeHtml(item.category || 'News')}</span>
+          </div>`}
       <div class="card-body">
         <div class="card-meta">
           <span class="card-tag">${escapeHtml(item.category || 'News')}</span>
