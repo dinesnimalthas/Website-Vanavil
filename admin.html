@@ -830,7 +830,7 @@
         try {
           if (photoFile) {
             btn.textContent = 'Foto wird verkleinert …';
-            const [photo] = await DB.resizeImage(photoFile, [{ maxSide: 900, quality: 0.85 }]);
+            const [photo] = await DB.resizeImage(photoFile, [{ maxSide: 1600, quality: 0.85 }]);
             const path = 'players/photos/' + Date.now() + '_' + DB.safeBaseName(photoFile) + '.jpg';
             const url = await DB.uploadFile(path, photo, p => { btn.textContent = 'Foto hochladen … ' + Math.round(p * 100) + ' %'; });
             if (!url) { alert('Das Foto konnte nicht hochgeladen werden.'); return done(); }
@@ -1309,7 +1309,7 @@
       try {
         if (file) {
           btn.textContent = 'Foto wird verkleinert …';
-          const [photo] = await DB.resizeImage(file, [{ maxSide: 600, quality: 0.85 }]);
+          const [photo] = await DB.resizeImage(file, [{ maxSide: 1600, quality: 0.85 }]);
           // Ordner team/ ist bereits öffentlich lesbar und für Admins beschreibbar
           const path = 'team/official_' + Date.now() + '_' + DB.safeBaseName(file) + '.jpg';
           const url = await DB.uploadFile(path, photo, p => { btn.textContent = 'Foto hochladen … ' + Math.round(p * 100) + ' %'; });
